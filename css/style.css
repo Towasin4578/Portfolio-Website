@@ -1,7 +1,7 @@
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
-
 
 .circular {
   width: 77px;
@@ -36,6 +36,7 @@ p {
 
 .margin {
   margin-bottom: 45px;
+  font-weight: bold;
 }
 
 .bg-1 {
@@ -81,4 +82,13 @@ p {
 
 .navbar-nav li a:hover {
   color: #1abc9c !important;
+}
+
+#contact {
+  background-color: #496381;
+  color: #f7f7f7;
+}
+
+footer {
+  margin: 0;
 }
