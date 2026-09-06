@@ -1,155 +1,496 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Towasinn</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="I'm Towasin. Website made by Nusab Taha (Nusab19)"
-    />
-    <meta
-      name="keywords"
-      content="NusabTaha Nusab Taha Nusab19 Github Facebook Twitter Telegram Someone193 "
-    />
-    <meta name="author" content="Nusab Taha" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Montserrat"
-      rel="stylesheet"
-    />
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ashraf Siddiki Towasin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:      #0a0e1a;
+    --panel:    #121a2e;
+    --panel-2:  #182140;
+    --cyan:     #5ee7ff;
+    --violet:   #a78bfa;
+    --paper:    #eef1f8;
+    --muted:    #7c88a6;
+    --line:     rgba(238,241,248,0.09);
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 300;
+  }
+  .mono{ font-family:'Space Mono', monospace; }
+  a{ color: inherit; text-decoration:none; }
+  .wrap{ max-width: 1020px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
+  section{ scroll-margin-top: 80px; position: relative; z-index: 2; }
 
-    <!-- For Mobile View Side Bars -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  </head>
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
 
-  <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-default">
-      <div class="container">
-        <div class="navbar-header">
-          <button
-            type="button"
-            class="navbar-toggle"
-            data-toggle="collapse"
-            data-target="#myNavbar"
-          >
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">Towasin</a>
-        </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
+  #net{ position: fixed; inset:0; z-index: 0; }
+
+  /* ---------------- PROGRESS BAR ---------------- */
+  #progress{
+    position: fixed; top:0; left:0; height:2px; width:0%;
+    background: linear-gradient(90deg, var(--cyan), var(--violet));
+    z-index: 1001; transition: width 0.1s linear;
+  }
+
+  /* ---------------- NAV ---------------- */
+  nav{
+    position: sticky; top:0; z-index: 1000;
+    backdrop-filter: blur(14px);
+    background: rgba(10,14,26,0.72);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 16px 28px;
+  }
+  .brand{
+    font-family:'Space Mono', monospace; font-weight:700; font-size:0.95rem;
+    letter-spacing: 1px;
+  }
+  .brand span{ color: var(--cyan); }
+  .nav-links{ display:flex; gap: 34px; }
+  .nav-links a{
+    font-family:'Space Mono', monospace; font-size:0.85rem;
+    color: var(--muted); position: relative; padding: 4px 0;
+    transition: color 0.25s ease;
+  }
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:-2px; width:0; height:1.5px;
+    background: var(--cyan); transition: width 0.3s cubic-bezier(.16,.84,.24,1);
+  }
+  .nav-links a:hover{ color: var(--paper); }
+  .nav-links a:hover::after, .nav-links a.active::after{ width:100%; }
+  .nav-links a.active{ color: var(--cyan); }
+
+  /* ---------------- HERO ---------------- */
+  .hero{ min-height: 94vh; display:flex; align-items:center; }
+  .hero .wrap{
+    display:grid; grid-template-columns: 1.25fr 1fr; gap: 50px; align-items:center; width:100%;
+    padding: 70px 28px;
+  }
+  .kicker{
+    font-family:'Space Mono', monospace; color: var(--cyan); font-size: 0.85rem;
+    letter-spacing: 3px; margin-bottom: 20px; opacity:0;
+    animation: rise 0.8s cubic-bezier(.16,.84,.24,1) forwards;
+  }
+  .hero h1{
+    font-family:'Space Mono', monospace; font-weight:700;
+    font-size: clamp(1.9rem, 4.6vw, 3.1rem); line-height:1.15; margin-bottom: 22px;
+    opacity:0; animation: rise 0.9s cubic-bezier(.16,.84,.24,1) 0.15s forwards;
+    background: linear-gradient(100deg, var(--paper) 40%, var(--cyan));
+    -webkit-background-clip: text; background-clip: text;
+  }
+  .hero p{
+    max-width: 560px; font-size: 1.03rem; line-height: 1.9; color:#d6dbec;
+    opacity:0; animation: rise 0.9s cubic-bezier(.16,.84,.24,1) 0.3s forwards;
+  }
+  @keyframes rise{ from{opacity:0; transform: translateY(18px);} to{opacity:1; transform: translateY(0);} }
+
+  /* Hero photo slider */
+  .tilt-wrap{ perspective: 900px; justify-self:center; opacity:0; animation: pop 0.8s ease 0.25s forwards; }
+  @keyframes pop{ from{opacity:0; transform: scale(0.9);} to{opacity:1; transform: scale(1);} }
+  .photo-card{
+    width: min(280px, 68vw); aspect-ratio: 4/5; border-radius: 18px;
+    background: linear-gradient(160deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line); padding: 10px;
+    transform-style: preserve-3d; transition: transform 0.15s ease;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+  }
+  .photo-inner{
+    width:100%; height:100%; border-radius: 12px; overflow:hidden;
+    transform: translateZ(30px); position: relative;
+    cursor: grab; touch-action: pan-y; user-select:none;
+  }
+  .photo-inner.dragging{ cursor: grabbing; }
+  .slide-track{ display:flex; height:100%; width:100%; transition: transform 0.4s cubic-bezier(.22,.68,.31,1); }
+  .slide-track img{ width:100%; height:100%; object-fit:cover; display:block; flex:0 0 100%; pointer-events:none; }
+  .photo-inner::after{
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(160deg, rgba(94,231,255,0.15), transparent 60%);
+    pointer-events:none;
+  }
+  .dots{ display:flex; justify-content:center; gap:8px; margin-top:14px; transform: translateZ(30px); }
+  .dots button{
+    width:7px; height:7px; border-radius:50%; border:none;
+    background: rgba(238,241,248,0.25); cursor:pointer; padding:0;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .dots button.active{ background: var(--cyan); transform: scale(1.3); }
+  .photo-tag{
+    margin-top: 12px; font-family:'Space Mono', monospace; font-size:0.72rem;
+    letter-spacing:1px; color: var(--cyan); text-align:center; transform: translateZ(30px);
+  }
+
+  /* ---------------- SHARED SECTION ---------------- */
+  .section-pad{ padding: 100px 0; border-top: 1px solid var(--line); }
+  .num{ font-family:'Space Mono', monospace; color: var(--violet); font-size:0.85rem; margin-bottom:10px; }
+  h2{ font-family:'Space Mono', monospace; font-weight:700; font-size: clamp(1.4rem,3vw,2rem); margin-bottom:40px; }
+  .reveal{
+    opacity:0; transform: translateY(28px);
+    transition: opacity 0.9s cubic-bezier(.16,.84,.24,1), transform 0.9s cubic-bezier(.16,.84,.24,1);
+    transition-delay: var(--d, 0s);
+  }
+  .reveal.visible{ opacity:1; transform: translateY(0); }
+
+  .about-text p{ line-height:1.9; font-size:1.03rem; color:#d6dbec; }
+  .about-grid{
+    display:grid; grid-template-columns: 1.4fr 1fr; gap: 46px; align-items:start;
+  }
+  .facts{
+    background: linear-gradient(160deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line); border-radius: 14px; padding: 26px 28px;
+  }
+  .facts .row{
+    display:flex; justify-content:space-between; gap: 16px;
+    padding: 13px 0; border-bottom: 1px solid var(--line);
+    font-size: 0.9rem;
+  }
+  .facts .row:last-child{ border-bottom: none; }
+  .facts .row span:first-child{ font-family:'Space Mono', monospace; color: var(--muted); font-size:0.78rem; letter-spacing: 0.5px; }
+  .facts .row span:last-child{ color: var(--paper); text-align: right; }
+
+  @media (max-width: 820px){
+    .about-grid{ grid-template-columns: 1fr; }
+  }
+
+  /* ---------------- GALLERY (3 life-stage cards) ---------------- */
+  .gallery-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+  .life-card{
+    background: linear-gradient(160deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line); border-radius: 16px; overflow:hidden;
+    transition: transform 0.35s cubic-bezier(.16,.84,.24,1), border-color 0.3s ease, box-shadow 0.35s ease;
+  }
+  .life-card:hover{ transform: translateY(-6px); border-color: rgba(94,231,255,0.35); box-shadow: 0 22px 40px rgba(0,0,0,0.35); }
+  .life-card .accent{ height: 3px; width: 100%; }
+  .life-card.stage-1 .accent{ background: linear-gradient(90deg, var(--cyan), transparent); }
+  .life-card.stage-2 .accent{ background: linear-gradient(90deg, var(--violet), transparent); }
+  .life-card.stage-3 .accent{ background: linear-gradient(90deg, #ffb35e, transparent); }
+  .life-photo{ aspect-ratio: 4/3; overflow:hidden; }
+  .life-photo img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    transition: transform 0.5s cubic-bezier(.16,.84,.24,1), filter 0.5s ease;
+    filter: grayscale(25%) contrast(1.02);
+  }
+  .life-card:hover .life-photo img{ transform: scale(1.06); filter: grayscale(0%); }
+  .life-body{ padding: 24px 22px 28px; }
+  .life-body .stage{ font-family:'Space Mono', monospace; font-size:0.72rem; color: var(--muted); letter-spacing:1.5px; margin-bottom:8px; text-transform: uppercase; }
+  .life-body h3{ font-family:'Space Mono', monospace; font-size:1.08rem; color: var(--paper); margin-bottom: 4px; font-weight: 700; }
+  .life-body .school{ display:block; font-size: 0.85rem; color: var(--cyan); margin-bottom: 14px; }
+  .life-body p{ font-size:0.92rem; line-height:1.75; color:#c9cfe0; }
+
+  @media (max-width: 820px){
+    .hero .wrap{ grid-template-columns: 1fr; }
+    .tilt-wrap{ order:-1; justify-self:start; }
+    .gallery-grid{ grid-template-columns: 1fr; }
+  }
+
+  /* ---------------- CONNECT / FOOTER ---------------- */
+  .connect .wrap{ text-align:center; }
+  .socials{ display:flex; flex-wrap:wrap; justify-content:center; gap: 56px; margin-top: 10px; }
+  .social{ display:flex; flex-direction:column; align-items:center; max-width:200px; }
+  .icon{
+    width: 62px; height: 62px; border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--panel-2); border: 1px solid var(--line);
+    margin-bottom: 14px; transition: transform 0.3s cubic-bezier(.16,.84,.24,1), border-color 0.3s ease;
+  }
+  .icon svg{ width: 28px; height: 28px; }
+  .social:hover .icon{ transform: translateY(-6px) scale(1.06); border-color: rgba(94,231,255,0.4); }
+  .social p{ font-size: 0.85rem; color: var(--muted); line-height:1.5; }
+
+  footer{
+    text-align:center; padding: 34px 20px; font-family:'Space Mono', monospace;
+    font-size:0.75rem; color: var(--muted); border-top: 1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+  <div id="progress"></div>
+  <canvas id="net"></canvas>
+
+  <nav>
+    <div class="wrap">
+      <div class="brand">ASHRAF SIDDIKI <span>TOWASIN</span></div>
+      <div class="nav-links">
+        <a href="#about" data-nav="about">About</a>
+        <a href="#gallery" data-nav="gallery">Gallery</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero" id="hero">
+    <div class="wrap">
+      <div>
+        <div class="kicker">// PORTFOLIO</div>
+        <h1>Hi, I am<br>Ashraf Siddiki Towasin.</h1>
+        <p>
+          I'm a student from Bangladesh with a deep interest in mathematics
+          and programming. From my first lines of code in high school to
+          studying Electrical &amp; Electronic Engineering today, my journey
+          has been about steady, consistent growth — one problem, one
+          project, and one line of code at a time. I dream of becoming a
+          software engineer.
+        </p>
+      </div>
+      <div class="tilt-wrap">
+        <div class="photo-card" id="tiltCard">
+          <div class="photo-inner" id="slider">
+            <div class="slide-track" id="slideTrack">
+              <img src="mypic.jpg" alt="Ashraf Siddiki Towasin — photo 1" draggable="false">
+              <img src="mypic2.jpg" alt="Ashraf Siddiki Towasin — photo 2" draggable="false">
+              <img src="mypic3.jpg" alt="Ashraf Siddiki Towasin — photo 3" draggable="false">
+            </div>
+          </div>
+          <div class="dots" id="dots">
+            <button class="active" data-i="0" aria-label="Slide 1"></button>
+            <button data-i="1" aria-label="Slide 2"></button>
+            <button data-i="2" aria-label="Slide 3"></button>
+          </div>
         </div>
       </div>
-    </nav>
-
-    <!-- First Container -->
-    <div class="container-fluid bg-1 text-center">
-      <h3>Hi, I am Towasin.</h3>
-      <img
-        src="/Images/mypic.jpg"
-        class="img-responsive img-circle margin"
-        style="display: inline"
-        alt="Myself"
-        width="350"
-        height="350"
-      />
-      <h3><q>I am a High School Student</q></h3>
     </div>
+  </section>
 
-    <!-- Second Container -->
-    <div class="container-fluid bg-2 text-center" id="about">
-      <h3 class="margin">What do I do?</h3>
-      <p>
-        Hello! I am Towasin. I am a student from Bangladesh. I love eat, sleep.
-        I also love Math and Programming. I learn coding. I learn about web
-        development, I learn about software development. Solving mathematical
-        problem is also a part of my past time. I believe it is never late to
-        start the journey. I started learning about web development in 10th
-        January, 2023.I love doing teamwork.I dream of becoming a software
-        engineer. I have a lot to learn, a lot to do and a long journey to reach
-        my destination. Pray to Allah for me.
-        <br />
-      </p>
-    </div>
-
-    <!-- Third Container (Grid) -->
-    <div class="container-fluid bg-3 text-center" id="contact">
-      <h3 class="margin">Where To Find Me?</h3>
-      <br />
-      <div class="row">
-        <div class="col-sm-4">
-          <a
-            href="https://t.me/as_towasin"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="./Images/telegram.png"
-              class="circular img"
-              alt="Telegram"
-            />
-          </a>
+  <section class="section-pad about" id="about">
+    <div class="wrap">
+      <div class="num reveal">01 / ABOUT</div>
+      <h2 class="reveal">What I do</h2>
+      <div class="about-grid">
+        <div class="about-text reveal">
           <p>
-            <br />
-            I am available in Telegram. Reach out to me if you wanna talk!
+            Hello! I am Towasin, a student from Bangladesh. I love math and
+            programming — learning to build things for the web and beyond.
+            Solving mathematical problems is one of my favourite ways to spend
+            time, and I started learning web development back on 10th January,
+            2023. I believe it's never too late to start a journey. I enjoy
+            working in a team, and I'm working toward becoming a software
+            engineer, one step at a time.
           </p>
         </div>
+        <div class="facts reveal">
+          <div class="row"><span>LOCATION</span><span>Bangladesh</span></div>
+          <div class="row"><span>FOCUS</span><span>Math &amp; Programming</span></div>
+          <div class="row"><span>CURRENTLY</span><span>EEE Undergrad</span></div>
+          <div class="row"><span>LEARNING SINCE</span><span>Jan 2023</span></div>
+          <div class="row"><span>GOAL</span><span>Software Engineer</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="row">
-          <div class="col-sm-4">
-            <a
-              href="https://www.instagram.com/as_towasin/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="./Images/instagram.webp"
-                class="circular img"
-                alt="Instagram"
-              />
-            </a>
+  <section class="section-pad" id="gallery">
+    <div class="wrap">
+      <div class="num reveal">02 / GALLERY</div>
+      <h2 class="reveal">My Journey</h2>
+      <div class="gallery-grid">
+
+        <div class="life-card stage-1 reveal">
+          <div class="accent"></div>
+          <div class="life-photo"><img src="high.jpg" alt="Gouripur SA High School"></div>
+          <div class="life-body">
+            <div class="stage">2018 — 2023</div>
+            <h3>High School Life</h3>
+            <span class="school">Gouripur SA High School</span>
             <p>
-              <br />
-              I am available in Instagram. Reach out to me if you wanna talk!
+              This is where it all began — my first real exposure to coding
+              and joining school clubs that let me explore programming
+              outside the classroom, sparking a curiosity that shaped
+              everything after.
             </p>
           </div>
-
-          <a
-            href="https://www.facebook.com/profile.php?id=100085052266037"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="./Images/facebook.png"
-              class="circular img"
-              alt="Facebook logo"
-            />
-          </a>
-          <p>
-            <br />
-            I am available in Facebook too.
-            <br />
-            Click in the logo to view my profile!
-          </p>
         </div>
+
+        <div class="life-card stage-2 reveal">
+          <div class="accent"></div>
+          <div class="life-photo"><img src="college.jpg" alt="Dr. Mosharraf Foundation Degree College"></div>
+          <div class="life-body">
+            <div class="stage">2023 — 2025</div>
+            <h3>College Life</h3>
+            <span class="school">Dr. Mosharraf Foundation Degree College</span>
+            <p>
+              College is where I built my technical foundation — focusing
+              heavily on C programming to strengthen my logic, while
+              picking up HTML as my first real step toward web development.
+            </p>
+          </div>
+        </div>
+
+        <div class="life-card stage-3 reveal">
+          <div class="accent"></div>
+          <div class="life-photo"><img src="university.jpg" alt="Barishal Engineering College"></div>
+          <div class="life-body">
+            <div class="stage">2025 — Present</div>
+            <h3>University Life</h3>
+            <span class="school">Barishal Engineering College</span>
+            <p>
+              Now studying Electrical &amp; Electronic Engineering (EEE), I've
+              expanded into Python — applying programming to more technical
+              problems on the way to becoming a software engineer.
+            </p>
+          </div>
+        </div>
+
       </div>
     </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="container-fluid bg-4 text-center">
-      <p>&copy; 2022-present All rights reserved.</p>
-    </footer>
-  </body>
+  <section class="section-pad connect">
+    <div class="wrap">
+      <div class="num reveal">03 / CONNECT</div>
+      <h2 class="reveal">Where To Find Me</h2>
+      <div class="socials reveal">
+        <a class="social" href="https://facebook.com/towasinn/" target="_blank" rel="noopener">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="#1877F2"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z"/></svg></span>
+          <p>I am on Facebook.<br>Click to view my profile!</p>
+        </a>
+        <a class="social" href="https://instagram.com/towasinn/" target="_blank" rel="noopener">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="url(#ig)">
+              <defs><linearGradient id="ig" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%" stop-color="#feda75"/><stop offset="50%" stop-color="#d62976"/><stop offset="100%" stop-color="#4f5bd5"/>
+              </linearGradient></defs>
+              <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.31-1.46.72-2.13 1.39C1.35 2.68.94 3.35.63 4.14c-.3.76-.5 1.64-.56 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.79.72 1.46 1.39 2.13.67.67 1.34 1.08 2.13 1.39.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.13-1.39.67-.67 1.08-1.34 1.39-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.39-2.13C21.32 1.35 20.65.94 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0z"/>
+              <path d="M12 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zm0 10.16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+              <circle cx="18.41" cy="5.59" r="1.44"/>
+            </svg>
+          </span>
+          <p>I am on Instagram.<br>Reach out if you wanna talk!</p>
+        </a>
+        <a class="social" href="https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350" target="_blank" rel="noopener">
+          <span class="icon"><svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></span>
+          <p>I am on LinkedIn.<br>Connect with me there!</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2022–present Ashraf Siddiki Towasin. All rights reserved.</footer>
+
+<script>
+  /* Scroll progress bar */
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', ()=>{
+    const h = document.documentElement;
+    const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = pct + '%';
+  }, { passive:true });
+
+  /* Staggered reveal per section */
+  document.querySelectorAll('section').forEach(sec=>{
+    sec.querySelectorAll('.reveal').forEach((el,i)=> el.style.setProperty('--d', (i*0.12)+'s'));
+  });
+  const items = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target);} });
+  },{threshold:0.15});
+  items.forEach(el=>io.observe(el));
+
+  /* Active nav link on scroll */
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const navSections = [...navLinks].map(l=> document.querySelector(l.getAttribute('href')));
+  window.addEventListener('scroll', ()=>{
+    let current = navSections[0];
+    navSections.forEach(sec=>{ if(window.scrollY + 100 >= sec.offsetTop) current = sec; });
+    navLinks.forEach(l=> l.classList.toggle('active', l.getAttribute('href') === '#'+current.id));
+  }, { passive:true });
+
+  /* Photo slider (drag / swipe) */
+  const slider = document.getElementById('slider');
+  const track = document.getElementById('slideTrack');
+  const dots = document.querySelectorAll('#dots button');
+  let slideIndex = 0;
+  const total = 3;
+  let startX = 0, currentX = 0, dragging = false, widthPx = 0;
+
+  function updateSlide(animate=true){
+    widthPx = slider.getBoundingClientRect().width;
+    track.style.transition = animate ? 'transform 0.4s cubic-bezier(.22,.68,.31,1)' : 'none';
+    track.style.transform = `translateX(${-slideIndex*widthPx}px)`;
+    dots.forEach((d,i)=> d.classList.toggle('active', i===slideIndex));
+  }
+  window.addEventListener('resize', ()=> updateSlide(false));
+  updateSlide(false);
+  dots.forEach(d=> d.addEventListener('click', ()=>{ slideIndex = parseInt(d.dataset.i); updateSlide(); }));
+
+  function dragStart(x){ dragging=true; startX=x; widthPx=slider.getBoundingClientRect().width; slider.classList.add('dragging'); track.style.transition='none'; }
+  function dragMove(x){ if(!dragging) return; currentX = x - startX; track.style.transform = `translateX(${-slideIndex*widthPx + currentX}px)`; }
+  function dragEnd(){
+    if(!dragging) return; dragging=false; slider.classList.remove('dragging');
+    if(currentX < -60 && slideIndex < total-1) slideIndex++;
+    else if(currentX > 60 && slideIndex > 0) slideIndex--;
+    currentX = 0; updateSlide();
+  }
+  slider.addEventListener('mousedown', e=> dragStart(e.clientX));
+  window.addEventListener('mousemove', e=> dragMove(e.clientX));
+  window.addEventListener('mouseup', dragEnd);
+  slider.addEventListener('touchstart', e=> dragStart(e.touches[0].clientX), {passive:true});
+  slider.addEventListener('touchmove', e=> dragMove(e.touches[0].clientX), {passive:true});
+  slider.addEventListener('touchend', dragEnd);
+
+  /* 3D tilt on photo card */
+  const card = document.getElementById('tiltCard');
+  card.addEventListener('mousemove', e=>{
+    const r = card.getBoundingClientRect();
+    const px = (e.clientX - r.left)/r.width - 0.5;
+    const py = (e.clientY - r.top)/r.height - 0.5;
+    card.style.transform = `rotateY(${px*16}deg) rotateX(${-py*16}deg)`;
+  });
+  card.addEventListener('mouseleave', ()=>{ card.style.transform = 'rotateY(0) rotateX(0)'; });
+
+  /* Particle network background */
+  const canvas = document.getElementById('net');
+  const ctx = canvas.getContext('2d');
+  let w,h,particles;
+  function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  const COUNT = Math.min(90, Math.floor(window.innerWidth/14));
+  particles = Array.from({length: COUNT}, ()=>({
+    x: Math.random()*w, y: Math.random()*h,
+    vx: (Math.random()-0.5)*0.35, vy: (Math.random()-0.5)*0.35
+  }));
+  let mouse = {x:-9999, y:-9999};
+  window.addEventListener('mousemove', e=>{ mouse.x=e.clientX; mouse.y=e.clientY; });
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0||p.x>w) p.vx*=-1;
+      if(p.y<0||p.y>h) p.vy*=-1;
+      const dx=p.x-mouse.x, dy=p.y-mouse.y;
+      const dist = Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){ p.x += dx/dist*0.6; p.y += dy/dist*0.6; }
+    }
+    for(let a=0;a<particles.length;a++){
+      for(let b=a+1;b<particles.length;b++){
+        const dx=particles[a].x-particles[b].x, dy=particles[a].y-particles[b].y;
+        const d = Math.sqrt(dx*dx+dy*dy);
+        if(d<130){
+          ctx.strokeStyle = `rgba(94,231,255,${1-d/130})`;
+          ctx.lineWidth = 0.6;
+          ctx.beginPath(); ctx.moveTo(particles[a].x,particles[a].y);
+          ctx.lineTo(particles[b].x,particles[b].y); ctx.stroke();
+        }
+      }
+    }
+    for(const p of particles){
+      ctx.beginPath(); ctx.arc(p.x,p.y,1.8,0,Math.PI*2);
+      ctx.fillStyle = 'rgba(167,139,250,0.85)'; ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+</script>
+</body>
 </html>
