@@ -83,7 +83,7 @@
   .hero h1{
     font-family:'Space Mono', monospace; font-weight:700;
     font-size: clamp(1.8rem, 4.4vw, 2.9rem); line-height:1.18; margin-bottom: 20px;
-    opacity:0; animation: rise 0.9s cubic-bezier(.16,.84,.24,1) 0.15s forwards;
+    opacity:0;
     background: linear-gradient(100deg, var(--paper) 35%, var(--cyan) 55%, var(--paper) 75%);
     background-size: 220% auto;
     -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -259,6 +259,7 @@
   /* ---------------- CONNECT / FOOTER ---------------- */
   .connect .wrap{ text-align:center; }
   .socials{ display:flex; flex-wrap:wrap; justify-content:center; gap: 56px; margin-top: 10px; }
+  @media (max-width: 640px){ .socials{ gap: 32px 40px; } }
   .social{ display:flex; flex-direction:column; align-items:center; max-width:200px; }
   .icon{
     width: 62px; height: 62px; border-radius: 50%;
@@ -373,6 +374,7 @@
         <div class="skill-chip"><span class="bullet"></span>C Programming</div>
         <div class="skill-chip"><span class="bullet"></span>Python</div>
         <div class="skill-chip"><span class="bullet"></span>HTML</div>
+        <div class="skill-chip"><span class="bullet"></span>Web Development</div>
         <div class="skill-chip"><span class="bullet"></span>Mathematics</div>
         <div class="skill-chip"><span class="bullet"></span>Team Collaboration</div>
       </div>
@@ -471,6 +473,18 @@
         <a class="social" href="https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350" target="_blank" rel="noopener" aria-label="Ashraf's LinkedIn profile">
           <span class="icon"><svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></span>
           <p>I am on LinkedIn.<br>Connect with me there!</p>
+        </a>
+        <a class="social" href="mailto:towasin344533@gmail.com?subject=Hello%20Ashraf" aria-label="Email Ashraf">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <defs><linearGradient id="mail" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#5ee7ff"/><stop offset="100%" stop-color="#a78bfa"/>
+              </linearGradient></defs>
+              <rect x="2.5" y="5" width="19" height="14" rx="2.5" stroke="url(#mail)" stroke-width="1.6"/>
+              <path d="M3.5 6.5l8.5 7 8.5-7" stroke="url(#mail)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <p>Email me directly.<br>I usually reply fast!</p>
         </a>
       </div>
     </div>
