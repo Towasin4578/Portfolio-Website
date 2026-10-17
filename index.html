@@ -27,6 +27,9 @@ a{color:inherit;text-decoration:none}
 #word{font-weight:700;font-size:clamp(2.6rem,13vw,7rem);line-height:1;letter-spacing:-.02em;white-space:nowrap}
 #word span{display:inline-block;opacity:0;background:linear-gradient(#fff 30%,#777);-webkit-background-clip:text;background-clip:text;color:transparent;transition:transform .7s cubic-bezier(.2,1.3,.4,1),opacity .4s}
 #word span.in{opacity:1;transform:none!important}
+#rip{position:absolute;width:12px;height:4px;border:1px solid #fffb;border-radius:50%;opacity:0;transform:translate(-50%,-50%);pointer-events:none}
+#pfall{position:absolute;z-index:1;opacity:0;transition:opacity 1.8s;pointer-events:none;object-fit:cover;filter:grayscale(1) contrast(1.4) brightness(1.15);-webkit-mask-image:radial-gradient(circle,#000 34%,transparent 40%),radial-gradient(ellipse at center,#000 45%,transparent 72%);mask-image:radial-gradient(circle,#000 34%,transparent 40%),radial-gradient(ellipse at center,#000 45%,transparent 72%);-webkit-mask-size:5px 5px,100% 100%;mask-size:5px 5px,100% 100%;-webkit-mask-composite:source-in;mask-composite:intersect}
+#pfall.show{opacity:.9}
 #skip{position:fixed;bottom:22px;left:0;right:0;text-align:center;font-size:.7rem;color:#555;letter-spacing:.2em}
 /* nav */
 nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:16px 22px;mix-blend-mode:difference}
@@ -100,12 +103,13 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 </head>
 <body class="lock">
 
-<div id="intro"><div id="stage"><i id="dot"></i><i id="bar"></i><div id="word"></div></div><div id="skip">TAP TO SKIP</div></div>
+<div id="intro"><div id="stage"><i id="rip"></i><i id="dot"></i><i id="bar"></i><div id="word"></div></div><div id="skip">TAP TO SKIP</div></div>
 
 <nav><b>TOWASIN</b><div><a href="#about">About</a><a href="#projects">Projects</a><a href="#journey">Journey</a><a href="#play">Play</a><a href="#connect">Connect</a></div></nav>
 
 <header id="hero">
   <canvas id="dust"></canvas>
+  <img id="pfall" src="mypic.jpg" alt="" aria-hidden="true">
   <div class="hero-t">
     <h1 class="chrome">PORTFOLIO</h1>
     <p><b>Ashraf Siddiki Towasin</b> <em>Student · Programmer</em></p>
@@ -132,7 +136,7 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
   <div class="tl">
     <div class="st r"><small>2018 — 2023</small><h3>High School Life</h3><b>Gouripur SA High School</b><p>Where it all began — my first real exposure to coding, and school clubs that let me explore programming outside the classroom.</p><img src="high.jpg" alt="Gouripur SA High School" loading="lazy"></div>
     <div class="st r"><small>2023 — 2025</small><h3>College Life</h3><b>Dr. Mosharraf Foundation Degree College</b><p>I built my technical foundation — heavy C programming to sharpen my logic, and HTML as my first real step toward web development.</p><img src="college.jpg" alt="Dr. Mosharraf Foundation Degree College" loading="lazy"></div>
-    <div class="st r"><small>2025 — PRESENT</small><h3>University Life</h3><b>Barishal Engineering College</b><p>Studying Electrical &amp; Electronic Engineering (EEE) and expanding into Python on the way to becoming a software engineer.</p><img src="university.jpg" alt="Barishal Engineering College" loading="lazy"></div>
+    <div class="st r"><small>2025 — PRESENT</small><h3>University Life</h3><b>Barishal Engineering College</b><p>Studying Electrical &amp; Electronic Engineering (EEE) and expanding into Python on the way to becoming a software engineer.</p><img src="university.jpg.jpeg" alt="Barishal Engineering College" loading="lazy"></div>
   </div>
 </section>
 
@@ -167,9 +171,9 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 <footer>© 2022–present Ashraf Siddiki Towasin. All rights reserved.</footer>
 
 <script>
-/* ===== INTRO: the dot becomes the "I" of TOWASIN, then the other letters tumble in ===== */
+/* ===== INTRO: a drop falls from the top and lands where the "I" of TOWASIN will be ===== */
 (function(){
-  const intro=document.getElementById('intro'),st=document.getElementById('stage'),word=document.getElementById('word'),dot=document.getElementById('dot'),bar=document.getElementById('bar');
+  const intro=document.getElementById('intro'),st=document.getElementById('stage'),word=document.getElementById('word'),dot=document.getElementById('dot'),bar=document.getElementById('bar'),rip=document.getElementById('rip');
   let done=false,timers=[];
   const T=(f,ms)=>timers.push(setTimeout(f,ms));
   function finish(){
@@ -193,18 +197,30 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
     m.font=`700 ${fs}px "Space Grotesk",sans-serif`;const tm=m.measureText('I');
     const ch=tm.actualBoundingBoxAscent||fs*.7,sw=Math.max(6,(tm.actualBoundingBoxRight+tm.actualBoundingBoxLeft)||fs*.16);
     const d=sw*1.1,gap=sw*.5,bh=ch-d-gap,cx=ir.left-sr.left+ir.width/2;
-    g={cx,base,ch,d,gap,bh};
-    dot.style.cssText=`width:${d}px;height:${d}px;left:${cx}px;top:${base-d}px`;
+    g={cx,base,ch,d,gap,bh,fall:sr.top+base+60};
+    dot.style.cssText=`width:${d}px;height:${d}px;left:${cx}px;top:${base-d}px;opacity:0;transform-origin:50% 100%`;
     bar.style.cssText=`width:${sw}px;height:0;left:${cx}px;top:${base-d-gap}px`;
+    rip.style.cssText=`left:${cx}px;top:${base}px`;
     st.style.setProperty('--rise',-(d+gap)+'px');
+  }
+  function drop(){
+    const a=dot.animate([
+      {transform:`translate(-50%,${-g.fall}px) scale(.9,1.25)`,opacity:1,offset:0,easing:'cubic-bezier(.55,0,.9,.55)'},
+      {transform:'translate(-50%,0) scale(1,1.15)',opacity:1,offset:.58},
+      {transform:'translate(-50%,0) scale(1.5,.5)',opacity:1,offset:.66,easing:'ease-out'},
+      {transform:`translate(-50%,${-g.d*1.1}px) scale(.85,1.15)`,opacity:1,offset:.82,easing:'ease-in'},
+      {transform:'translate(-50%,0) scale(1,1)',opacity:1,offset:1}
+    ],{duration:950,fill:'both'});
+    rip.animate([{transform:'translate(-50%,-50%) scale(1)',opacity:.9},{transform:'translate(-50%,-50%) scale(10,6)',opacity:0}],{duration:800,delay:540,easing:'ease-out',fill:'both'});
+    a.onfinish=()=>{st.classList.add('on');dot.style.opacity='';dot.style.transformOrigin='';a.cancel()};
   }
   function run(){
     if(done)return;measure();
-    T(()=>st.classList.add('on'),300);                       /* 1. a dot appears where the I will be */
-    T(()=>{bar.style.top=(g.base-g.d-g.gap-g.bh)+'px';bar.style.height=g.bh+'px'},1100); /* 2. it grows into "!" */
-    T(()=>sp.forEach((s,i)=>{if(i!==II)setTimeout(()=>s.classList.add('in'),i*90)}),1900);  /* 3. T-O-W-A-S . N tumble in around it */
-    T(()=>{bar.style.top=(g.base-g.ch)+'px';bar.style.height=g.ch+'px';st.classList.add('merge')},3000); /* 4. dot merges into the I stem */
-    T(()=>{sp[II].style.transition='none';sp[II].classList.add('in');st.classList.add('gone')},3600);   /* 5. real "I" takes over */
+    T(drop,250);                                                                                      /* 1. a drop falls, lands, splashes */
+    T(()=>{bar.style.top=(g.base-g.d-g.gap-g.bh)+'px';bar.style.height=g.bh+'px'},1450);             /* 2. it stretches into "!" */
+    T(()=>sp.forEach((s,i)=>{if(i!==II)setTimeout(()=>s.classList.add('in'),i*90)}),2200);          /* 3. T-O-W-A-S . N tumble in around it */
+    T(()=>{bar.style.top=(g.base-g.ch)+'px';bar.style.height=g.ch+'px';st.classList.add('merge')},3300); /* 4. dot merges into the I stem */
+    T(()=>{sp[II].style.transition='none';sp[II].classList.add('in');st.classList.add('gone')},3900);   /* 5. real "I" takes over */
     T(()=>{
       word.className='chrome';
       const target='PORTFOLIO',pool='ABCDEFGHIJKLMNOPQRSTUVWXYZ',t0=performance.now(),dur=1000;
@@ -214,8 +230,8 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
         word.textContent=target.split('').map((c,i)=>p>(i+1)/target.length?c:pool[Math.random()*26|0]).join('');
         if(p<1)requestAnimationFrame(tick);else word.textContent=target;
       })();
-    },4300);
-    T(finish,5700);
+    },4500);
+    T(finish,5900);
   }
   const fr=(document.fonts&&document.fonts.ready)?Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,900))]):Promise.resolve();
   fr.then(run);
@@ -227,28 +243,38 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
 
 /* ===== PARTICLE-DUST PORTRAIT ===== */
 (function(){
-  const c=document.getElementById('dust'),x=c.getContext('2d'),hero=document.getElementById('hero');
-  let W,H,P=[],vis=true,mouse={x:-999,y:-999},box;
+  const c=document.getElementById('dust'),x=c.getContext('2d'),hero=document.getElementById('hero'),pf=document.getElementById('pfall');
+  let W,H,P=[],vis=true,mouse={x:-999,y:-999},box=null,fallback=false,shown=false;
   function size(){const d=devicePixelRatio>1?1.5:1;W=c.width=hero.clientWidth*d;H=c.height=hero.clientHeight*d;c.k=d;layout()}
   function rnd(n){const a=[];for(let i=0;i<n;i++)a.push({x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,tx:null,ty:null,a:.25+Math.random()*.6});return a}
   function layout(){
     if(!P.targets)return;
-    const ph=H*.62,pw=ph*P.ar;box={l:(W-pw)/2,t:H*.34,w:pw,h:ph};
+    const ph=H*.62,pw=Math.min(ph*P.ar,W*.9),h2=pw/P.ar;box={l:(W-pw)/2,t:H*.34,w:pw,h:h2};
     P.forEach((p,i)=>{const t=P.targets[i%P.targets.length];p.tx=box.l+t[0]*box.w;p.ty=box.t+t[1]*box.h;p.a=.3+t[2]*.7});
+    if(fallback){pf.style.left=box.l/c.k+'px';pf.style.top=box.t/c.k+'px';pf.style.width=box.w/c.k+'px';pf.style.height=box.h/c.k+'px'}
+  }
+  function useFallback(ar){          /* pixels can't be read (opened from a folder) -> dust forms an oval, then the dotted photo fades in */
+    const T=[];for(let i=0;i<4000;i++){const an=Math.random()*6.283,r=Math.sqrt(Math.random());T.push([.5+.5*r*Math.cos(an),.5+.5*r*Math.sin(an),.3+Math.random()*.4])}
+    fallback=true;P=rnd(3200);P.targets=T;P.ar=ar||.8;layout();
   }
   P=rnd(1400);size();addEventListener('resize',size);
-  const img=new Image();img.src='mypic.jpg';
-  img.onload=()=>{try{
-    const iw=130,ih=Math.round(iw*img.height/img.width),o=document.createElement('canvas');o.width=iw;o.height=ih;
-    const q=o.getContext('2d');q.drawImage(img,0,0,iw,ih);const d=q.getImageData(0,0,iw,ih).data,T=[];
-    for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){
-      const k=(j*iw+i)*4,l=(.3*d[k]+.59*d[k+1]+.11*d[k+2])/255,
-      dx=(i/iw-.5)*2,dy=(j/ih-.5)*2,f=Math.max(0,1-(dx*dx*.9+dy*dy*.9));
-      if(Math.random()<l*l*f*1.6)T.push([i/iw,j/ih,l]);
-    }
-    if(T.length<200)return;
-    const n=Math.min(T.length,4200);P=rnd(n);P.targets=T.sort(()=>Math.random()-.5);P.ar=iw/ih;layout();
-  }catch(e){}};
+  const img=new Image();
+  img.onload=()=>{
+    const ar=img.naturalWidth/img.naturalHeight;
+    try{
+      const iw=130,ih=Math.round(iw/ar),o=document.createElement('canvas');o.width=iw;o.height=ih;
+      const q=o.getContext('2d');q.drawImage(img,0,0,iw,ih);const d=q.getImageData(0,0,iw,ih).data,L=new Float32Array(iw*ih);
+      for(let i=0;i<L.length;i++)L[i]=(.3*d[i*4]+.59*d[i*4+1]+.11*d[i*4+2])/255;
+      const s=[...L].sort((a,b)=>a-b),lo=s[(L.length*.08)|0],hi=s[(L.length*.97)|0],T=[];
+      for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){
+        const l=Math.max(0,Math.min(1,(L[j*iw+i]-lo)/((hi-lo)||1))),dx=(i/iw-.5)*2,dy=(j/ih-.5)*2,f=Math.max(0,1-(dx*dx*.9+dy*dy*.9));
+        if(Math.random()<Math.pow(l,1.3)*f*1.5)T.push([i/iw,j/ih,l]);
+      }
+      if(T.length<200)throw 0;
+      P=rnd(Math.min(T.length,4200));P.targets=T.sort(()=>Math.random()-.5);P.ar=ar;layout();
+    }catch(e){useFallback(ar)}
+  };
+  img.src='mypic.jpg';
   new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(hero);
   hero.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();mouse.x=(e.clientX-r.left)*c.k;mouse.y=(e.clientY-r.top)*c.k});
   hero.addEventListener('pointerleave',()=>mouse.x=-999);
@@ -256,13 +282,14 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     requestAnimationFrame(loop);if(!vis)return;
     x.clearRect(0,0,W,H);
     const t=window.dustStart?performance.now()-window.dustStart:-1,form=t>1200,R=70*c.k;
+    if(fallback&&!shown&&t>3000){shown=true;pf.classList.add('show')}
     for(const p of P){
       if(form&&p.tx!=null){p.vx+=(p.tx-p.x)*.012;p.vy+=(p.ty-p.y)*.012}
       else{p.vx+=(Math.random()-.5)*.08;p.vy+=(Math.random()-.5)*.08}
       const dx=p.x-mouse.x,dy=p.y-mouse.y,dd=dx*dx+dy*dy;
       if(dd<R*R){const f=(1-Math.sqrt(dd)/R)*3;p.vx+=dx/Math.sqrt(dd+1)*f;p.vy+=dy/Math.sqrt(dd+1)*f}
       p.vx*=.9;p.vy*=.9;p.x+=p.vx;p.y+=p.vy;
-      x.fillStyle=`rgba(255,255,255,${p.a})`;x.fillRect(p.x,p.y,1.5*c.k,1.5*c.k);
+      x.fillStyle=`rgba(255,255,255,${shown?p.a*.35:p.a})`;x.fillRect(p.x,p.y,1.5*c.k,1.5*c.k);
     }
   })();
 })();
