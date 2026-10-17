@@ -1,672 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Personal portfolio of Ashraf Siddiki Towasin — student, programmer, and aspiring software engineer from Bangladesh.">
-  <meta name="author" content="Ashraf Siddiki Towasin">
-  <!-- Open Graph / LinkedIn Preview Tags -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://towasin.pages.dev/">
-  <meta property="og:title" content="Ashraf Siddiki Towasin | Portfolio">
-  <meta property="og:description" content="Personal portfolio of Ashraf Siddiki Towasin — student, programmer, and aspiring software engineer from Bangladesh.">
-<meta property="og:image" content="https://towasin.pages.dev/Images/coverpage.jpg">
-  <title>Ashraf Siddiki Towasin</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  
-  <style>
-    :root {
-      --ink:      #0a0e1a;
-      --panel:    #121a2e;
-      --panel-2:  #182140;
-      --cyan:     #5ee7ff;
-      --violet:   #a78bfa;
-      --amber:    #ffb35e;
-      --paper:    #eef1f8;
-      --muted:    #7c88a6;
-      --line:     rgba(238,241,248,0.09);
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body {
-      background: var(--ink);
-      color: var(--paper);
-      font-family: 'Work Sans', sans-serif;
-      font-weight: 300;
-    }
-    .mono { font-family:'Space Mono', monospace; }
-    a { color: inherit; text-decoration:none; }
-    .wrap { max-width: 1020px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
-    section { scroll-margin-top: 76px; position: relative; z-index: 2; }
-    img { max-width:100%; }
-
-    @media (prefers-reduced-motion: reduce) {
-      * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-    }
-
-    #net { position: fixed; inset:0; z-index: 0; }
-
-    /* ---------------- PROGRESS BAR ---------------- */
-    #progress {
-      position: fixed; top:0; left:0; height:2px; width:0%;
-      background: linear-gradient(90deg, var(--cyan), var(--violet));
-      z-index: 1001; transition: width 0.1s linear;
-    }
-
-    /* ---------------- NAV ---------------- */
-    nav {
-      position: sticky; top:0; z-index: 1000;
-      backdrop-filter: blur(14px);
-      background: rgba(10,14,26,0.72);
-      border-bottom: 1px solid var(--line);
-    }
-    nav .wrap { display:flex; align-items:center; justify-content:space-between; padding: 16px 28px; }
-    .brand { font-family:'Space Mono', monospace; font-weight:700; font-size:0.92rem; letter-spacing: 1px; }
-    .brand span { color: var(--cyan); }
-    .nav-links { display:flex; gap: 26px; }
-    .nav-links a {
-      font-family:'Space Mono', monospace; font-size:0.82rem; color: var(--muted);
-      position: relative; padding: 4px 0; transition: color 0.25s ease;
-    }
-    .nav-links a::after {
-      content:''; position:absolute; left:0; bottom:-2px; width:0; height:1.5px;
-      background: var(--cyan); transition: width 0.3s cubic-bezier(.16,.84,.24,1);
-    }
-    .nav-links a:hover { color: var(--paper); }
-    .nav-links a:hover::after, .nav-links a.active::after { width:100%; }
-    .nav-links a.active { color: var(--cyan); }
-
-    /* ---------------- HERO ---------------- */
-    .hero { min-height: 92vh; display:flex; align-items:center; }
-    .hero .wrap {
-      display:grid; grid-template-columns: 1.25fr 1fr; gap: 50px; align-items:center; width:100%;
-      padding: 60px 28px;
-    }
-    .kicker {
-      font-family:'Space Mono', monospace; color: var(--cyan); font-size: 0.85rem;
-      letter-spacing: 3px; margin-bottom: 20px; opacity:0;
-      animation: rise 0.8s cubic-bezier(.16,.84,.24,1) forwards;
-    }
-    .hero h1 {
-      font-family:'Space Mono', monospace; font-weight:700;
-      font-size: clamp(1.8rem, 4.4vw, 2.9rem); line-height:1.18; margin-bottom: 20px;
-      opacity:0;
-      background: linear-gradient(100deg, var(--paper) 35%, var(--cyan) 55%, var(--paper) 75%);
-      background-size: 220% auto;
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-      animation: rise 0.9s cubic-bezier(.16,.84,.24,1) 0.15s forwards, shimmer 8s linear 1.2s infinite;
-    }
-    @keyframes shimmer { from{ background-position: 0% 0; } to{ background-position: -220% 0; } }
-    .hero p {
-      max-width: 540px; font-size: 1.02rem; line-height: 1.9; color:#d6dbec;
-      margin-bottom: 30px;
-      opacity:0; animation: rise 0.9s cubic-bezier(.16,.84,.24,1) 0.3s forwards;
-    }
-    @keyframes rise { from{opacity:0; transform: translateY(18px);} to{opacity:1; transform: translateY(0);} }
-
-    .cta {
-      display:inline-flex; align-items:center; gap:10px;
-      font-family:'Space Mono', monospace; font-size:0.85rem;
-      padding: 13px 24px; border-radius: 30px;
-      border: 1px solid rgba(94,231,255,0.4); color: var(--cyan);
-      opacity:0; animation: rise 0.9s cubic-bezier(.16,.84,.24,1) 0.45s forwards;
-      transition: background 0.3s ease, transform 0.3s ease;
-    }
-    .cta:hover { background: rgba(94,231,255,0.1); transform: translateY(-3px); }
-
-    /* Hero photo slider */
-    .tilt-wrap { perspective: 900px; justify-self:center; opacity:0; animation: pop 0.8s ease 0.25s forwards; }
-    @keyframes pop { from{opacity:0; transform: scale(0.9);} to{opacity:1; transform: scale(1);} }
-    .photo-card {
-      width: min(270px, 66vw); aspect-ratio: 4/5; border-radius: 18px;
-      background: linear-gradient(160deg, var(--panel-2), var(--panel));
-      border: 1px solid var(--line); padding: 10px;
-      transform-style: preserve-3d; transition: transform 0.15s ease;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.45);
-    }
-    .photo-inner {
-      width:100%; height:100%; border-radius: 12px; overflow:hidden;
-      transform: translateZ(30px); position: relative;
-      cursor: grab; touch-action: pan-y; user-select:none;
-    }
-    .photo-inner.dragging { cursor: grabbing; }
-    .slide-track { display:flex; height:100%; width:100%; transition: transform 0.4s cubic-bezier(.22,.68,.31,1); }
-    .slide-track img { width:100%; height:100%; object-fit:cover; display:block; flex:0 0 100%; pointer-events:none; }
-    .photo-inner::after {
-      content:''; position:absolute; inset:0;
-      background: linear-gradient(160deg, rgba(94,231,255,0.15), transparent 60%);
-      pointer-events:none;
-    }
-    .dots { display:flex; justify-content:center; gap:8px; margin-top:14px; transform: translateZ(30px); }
-    .dots button {
-      width:7px; height:7px; border-radius:50%; border:none;
-      background: rgba(238,241,248,0.25); cursor:pointer; padding:0;
-      transition: background 0.25s ease, transform 0.25s ease;
-    }
-    .dots button.active { background: var(--cyan); transform: scale(1.3); }
-    .swipe-hint {
-      text-align:center; margin-top:12px; font-size:0.68rem; color: var(--muted);
-      letter-spacing:0.5px; transform: translateZ(30px);
-    }
-
-    /* ---------------- SHARED SECTION ---------------- */
-    .section-pad { padding: 96px 0; border-top: 1px solid var(--line); }
-    .num { font-family:'Space Mono', monospace; color: var(--violet); font-size:0.85rem; margin-bottom:10px; }
-    h2 { font-family:'Space Mono', monospace; font-weight:700; font-size: clamp(1.4rem,3vw,2rem); margin-bottom:40px; }
-    .reveal {
-      opacity:0; transform: translateY(28px);
-      transition: opacity 0.9s cubic-bezier(.16,.84,.24,1), transform 0.9s cubic-bezier(.16,.84,.24,1);
-      transition-delay: var(--d, 0s);
-    }
-    .reveal.visible { opacity:1; transform: translateY(0); }
-
-    /* ---------------- ABOUT ---------------- */
-    .about-text p { line-height:1.9; font-size:1.03rem; color:#d6dbec; }
-    .about-grid { display:grid; grid-template-columns: 1.4fr 1fr; gap: 46px; align-items:start; }
-    .facts {
-      background: linear-gradient(160deg, var(--panel-2), var(--panel));
-      border: 1px solid var(--line); border-radius: 14px; padding: 26px 28px;
-    }
-    .facts .row { display:flex; justify-content:space-between; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 0.9rem; }
-    .facts .row:last-child { border-bottom: none; }
-    .facts .row span:first-child { font-family:'Space Mono', monospace; color: var(--muted); font-size:0.78rem; letter-spacing: 0.5px; }
-    .facts .row span:last-child { color: var(--paper); text-align: right; }
-
-    @media (max-width: 820px) { .about-grid { grid-template-columns: 1fr; } }
-
-    /* ---------------- SKILLS ---------------- */
-    .skills-grid { display:flex; flex-wrap:wrap; gap: 14px; }
-    .skill-chip {
-      display:flex; align-items:center; gap:10px;
-      font-family:'Space Mono', monospace; font-size:0.85rem;
-      padding: 12px 20px; border-radius: 12px;
-      background: linear-gradient(160deg, var(--panel-2), var(--panel));
-      border: 1px solid var(--line);
-      transition: transform 0.3s cubic-bezier(.16,.84,.24,1), border-color 0.3s ease;
-    }
-    .skill-chip:hover { transform: translateY(-4px); border-color: rgba(94,231,255,0.4); }
-    .skill-chip .bullet { width:7px; height:7px; border-radius:50%; background: var(--cyan); flex-shrink:0; }
-
-    /* ---------------- JOURNEY (scroll-linked timeline) ---------------- */
-    .journey-track { position: relative; padding: 10px 0 0; }
-    .journey-rail {
-      position:absolute; left:50%; top:0; bottom:0; width:3px;
-      background: rgba(238,241,248,0.12); border-radius: 2px; transform: translateX(-50%);
-    }
-    .journey-rail-fill {
-      position:absolute; left:0; top:0; width:100%; height:0%;
-      background: linear-gradient(180deg, var(--cyan), var(--violet) 55%, var(--amber));
-      border-radius: 2px;
-    }
-    .journey-traveler {
-      position:absolute; left:50%; top:0; width:14px; height:14px;
-      background: var(--paper); border-radius:50%; transform: translate(-50%,-50%);
-      box-shadow: 0 0 16px 4px rgba(94,231,255,0.6); z-index:3;
-    }
-    .journey-traveler::after {
-      content:''; position:absolute; inset:-6px; border-radius:50%;
-      border: 1px solid rgba(94,231,255,0.5); animation: pulse-ring 1.8s ease-out infinite;
-    }
-    @keyframes pulse-ring { 0%{ transform:scale(0.6); opacity:0.8; } 100%{ transform:scale(1.8); opacity:0; } }
-    .traveler-tag {
-      position:absolute; left: calc(50% + 20px); top:0; transform: translateY(-50%);
-      font-size: 0.68rem; letter-spacing:1px; color: var(--cyan);
-      background: rgba(10,14,26,0.85); border:1px solid rgba(94,231,255,0.35);
-      padding: 4px 10px; border-radius: 20px; white-space:nowrap; opacity:0;
-      transition: opacity 0.4s ease; z-index:3;
-    }
-    .journey-node {
-      position:absolute; left:50%; width:13px; height:13px; border-radius:50%;
-      transform: translate(-50%,-50%); background: var(--panel-2);
-      border: 2px solid rgba(238,241,248,0.25); z-index:2;
-      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-    }
-    .journey-node.stage-1.active { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 12px 3px rgba(94,231,255,0.55); }
-    .journey-node.stage-2.active { background: var(--violet); border-color: var(--violet); box-shadow: 0 0 12px 3px rgba(167,139,250,0.55); }
-    .journey-node.stage-3.active { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 12px 3px rgba(255,179,94,0.55); }
-
-    .journey-item { position:relative; width:44%; margin-bottom:56px; }
-    .journey-item.left { margin-right:56%; }
-    .journey-item.right { margin-left:56%; }
-    .journey-item:last-child { margin-bottom:0; }
-
-    .life-card {
-      background: linear-gradient(160deg, var(--panel-2), var(--panel));
-      border: 1px solid var(--line); border-radius: 16px; overflow:hidden;
-      transition: transform 0.35s cubic-bezier(.16,.84,.24,1), border-color 0.3s ease, box-shadow 0.35s ease;
-    }
-    .life-card:hover { transform: translateY(-6px); border-color: rgba(94,231,255,0.35); box-shadow: 0 22px 40px rgba(0,0,0,0.35); }
-    .life-card .accent { height: 3px; width: 100%; }
-    .life-card.stage-1 .accent { background: linear-gradient(90deg, var(--cyan), transparent); }
-    .life-card.stage-2 .accent { background: linear-gradient(90deg, var(--violet), transparent); }
-    .life-card.stage-3 .accent { background: linear-gradient(90deg, var(--amber), transparent); }
-    .life-photo { aspect-ratio: 4/3; overflow:hidden; }
-    .life-photo img {
-      width:100%; height:100%; object-fit:cover; display:block;
-      transition: transform 0.5s cubic-bezier(.16,.84,.24,1), filter 0.5s ease;
-      filter: grayscale(25%) contrast(1.02);
-    }
-    .life-card:hover .life-photo img { transform: scale(1.06); filter: grayscale(0%); }
-    .life-body { padding: 24px 22px 28px; }
-    .life-body .stage { font-family:'Space Mono', monospace; font-size:0.72rem; color: var(--muted); letter-spacing:1.5px; margin-bottom:8px; text-transform: uppercase; }
-    .life-body h3 { font-family:'Space Mono', monospace; font-size:1.08rem; color: var(--paper); margin-bottom: 4px; font-weight: 700; }
-    .life-body .school { display:block; font-size: 0.85rem; color: var(--cyan); margin-bottom: 14px; }
-    .life-body p { font-size:0.92rem; line-height:1.75; color:#c9cfe0; }
-
-    @media (max-width: 820px) {
-      .journey-rail, .journey-node, .journey-traveler { left: 22px; }
-      .traveler-tag { left: 50px; }
-      .journey-item, .journey-item.left, .journey-item.right {
-        width: calc(100% - 50px); margin-left:50px; margin-right:0;
-      }
-      .hero .wrap { grid-template-columns: 1fr; }
-      .tilt-wrap { order:-1; justify-self:start; }
-    }
-
-    /* ---------------- CONNECT / FOOTER ---------------- */
-    .connect .wrap { text-align:center; }
-    .socials { display:flex; flex-wrap:wrap; justify-content:center; gap: 56px; margin-top: 10px; }
-    @media (max-width: 640px) { .socials { gap: 32px 40px; } }
-    .social { display:flex; flex-direction:column; align-items:center; max-width:200px; }
-    .icon {
-      width: 62px; height: 62px; border-radius: 50%;
-      display:flex; align-items:center; justify-content:center;
-      background: var(--panel-2); border: 1px solid var(--line);
-      margin-bottom: 14px; transition: transform 0.3s cubic-bezier(.16,.84,.24,1), border-color 0.3s ease;
-    }
-    .icon svg { width: 28px; height: 28px; }
-    .social:hover .icon { transform: translateY(-6px) scale(1.06); border-color: rgba(94,231,255,0.4); }
-    .social p { font-size: 0.85rem; color: var(--muted); line-height:1.5; }
-
-    footer {
-      text-align:center; padding: 34px 20px; font-family:'Space Mono', monospace;
-      font-size:0.75rem; color: var(--muted); border-top: 1px solid var(--line);
-    }
-
-    /* ---------------- BACK TO TOP ---------------- */
-    #toTop {
-      position: fixed; right: 24px; bottom: 24px; width: 44px; height: 44px;
-      border-radius: 50%; background: var(--panel-2); border: 1px solid var(--line);
-      display:flex; align-items:center; justify-content:center; cursor:pointer;
-      opacity:0; pointer-events:none; transition: opacity 0.3s ease, transform 0.3s ease;
-      z-index: 900;
-    }
-    #toTop.show { opacity:1; pointer-events:auto; }
-    #toTop:hover { transform: translateY(-4px); border-color: rgba(94,231,255,0.4); }
-    #toTop svg { width:18px; height:18px; stroke: var(--cyan); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Portfolio of Ashraf Siddiki Towasin — student, programmer, aspiring software engineer from Bangladesh.">
+<title>Ashraf Siddiki Towasin</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--m:#8a8a8a;--l:rgba(255,255,255,.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#000;color:#fff;font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+body.lock{overflow:hidden}
+a{color:inherit;text-decoration:none}
+.chrome{background:linear-gradient(#fff 30%,#777);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* intro */
+#intro{position:fixed;inset:0;background:radial-gradient(circle at 50% 50%,#161616,#000 60%);z-index:100;display:flex;align-items:center;justify-content:center;transition:opacity .9s;cursor:pointer}
+#intro.out{opacity:0;pointer-events:none}
+#stage{position:relative;width:100%;height:170px;display:flex;align-items:center;justify-content:center}
+#dot,#bar{position:absolute;background:#fff;transition:opacity .25s}
+#dot{border-radius:50%;box-shadow:0 0 26px #fff9;transform:translate(-50%,0) scale(0);transition:transform .6s cubic-bezier(.2,1.4,.4,1),opacity .25s}
+#bar{border-radius:3px;transform:translateX(-50%);transition:height .55s cubic-bezier(.2,1.1,.4,1),top .55s cubic-bezier(.2,1.1,.4,1),opacity .25s}
+#stage.on #dot{transform:translate(-50%,0) scale(1)}
+#stage.merge #dot{transform:translate(-50%,var(--rise)) scale(.7);opacity:.2;transition:transform .55s ease,opacity .55s}
+#stage.gone #dot,#stage.gone #bar{opacity:0}
+#word{font-weight:700;font-size:clamp(2.6rem,13vw,7rem);line-height:1;letter-spacing:-.02em;white-space:nowrap}
+#word span{display:inline-block;opacity:0;background:linear-gradient(#fff 30%,#777);-webkit-background-clip:text;background-clip:text;color:transparent;transition:transform .7s cubic-bezier(.2,1.3,.4,1),opacity .4s}
+#word span.in{opacity:1;transform:none!important}
+#skip{position:fixed;bottom:22px;left:0;right:0;text-align:center;font-size:.7rem;color:#555;letter-spacing:.2em}
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:16px 22px;mix-blend-mode:difference}
+nav b{letter-spacing:.14em;font-size:.85rem}
+nav div{display:flex;gap:16px;font-size:.72rem;color:#ddd}
+nav a:hover{text-decoration:underline}
+/* hero */
+#hero{position:relative;height:100svh;min-height:640px;text-align:center;overflow:hidden}
+#dust{position:absolute;inset:0;width:100%;height:100%}
+.hero-t{position:relative;z-index:2;padding-top:15vh;pointer-events:none}
+.hero-t h1{font-size:clamp(2.6rem,12vw,7.5rem);font-weight:700;line-height:1;letter-spacing:-.02em}
+.hero-t p{margin-top:12px;font-size:1rem}
+.hero-t p em{color:var(--m)}
+.hero-t a{pointer-events:auto;display:inline-block;margin-top:18px;padding:9px 22px;border:1px solid var(--l);border-radius:30px;font-size:.8rem;color:#ccc;background:#0008}
+/* sections */
+section.s{max-width:980px;margin:0 auto;padding:100px 24px}
+.lab{font-size:.7rem;letter-spacing:.25em;color:var(--m);margin-bottom:10px}
+h2{font-size:clamp(2.2rem,7vw,4rem);line-height:1.05;margin-bottom:34px}
+.r{opacity:0;transform:translateY(30px);transition:opacity .9s,transform .9s}
+.r.in{opacity:1;transform:none}
+.box{border:1px solid var(--l);border-radius:18px;padding:26px;background:#0a0a0a;color:#bbb;line-height:1.85}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.facts span,.chips span{border:1px solid var(--l);border-radius:30px;padding:7px 16px;font-size:.82rem;color:#ddd}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.prj{display:flex;gap:18px;align-items:baseline;padding:24px 0;border-top:1px solid var(--l)}
+.prj i{font-style:normal;color:var(--m);font-size:.8rem}
+.prj h3{font-size:1.3rem}
+.prj p{color:#999;margin:8px 0 10px;line-height:1.7;font-size:.92rem;max-width:560px}
+.prj a{font-size:.8rem;border-bottom:1px solid #666}
+.tl{border-left:1px solid var(--l);margin-left:6px}
+.st{padding:0 0 46px 26px;position:relative}
+.st:before{content:'';position:absolute;left:-5px;top:6px;width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 14px #fff}
+.st small{color:var(--m);letter-spacing:.15em;font-size:.7rem}
+.st h3{font-size:1.4rem;margin:4px 0}
+.st b{font-weight:500;color:#ccc;font-size:.9rem}
+.st p{color:#999;line-height:1.75;margin:8px 0 14px;font-size:.92rem;max-width:560px}
+.st img{width:100%;max-width:420px;aspect-ratio:16/9;object-fit:cover;border-radius:12px;filter:grayscale(1);border:1px solid var(--l);transition:filter .5s}
+.st img:hover{filter:none}
+.con{display:flex;flex-wrap:wrap;gap:12px}
+.con a{border:1px solid var(--l);border-radius:30px;padding:12px 24px;font-size:.9rem;transition:.3s}
+.con a:hover{background:#fff;color:#000}
+/* game */
+.gm{max-width:560px;margin:0 auto;padding:60px 18px 90px}
+.gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.gh p{font-size:.85rem;border-bottom:1px solid #fff;padding-bottom:3px}
+.lv{display:flex;gap:6px}.lv i{width:9px;height:9px;border-radius:50%;background:#fff}.lv i.x{background:#333}
+canvas#g{width:100%;display:block;touch-action:pan-y;cursor:default;-webkit-tap-highlight-color:transparent}
+.gb{display:flex;gap:12px;justify-content:center;margin-top:18px}
+.gb button{font-family:inherit;font-size:.85rem;padding:11px 26px;border-radius:30px;border:1px solid #555;background:transparent;color:#fff;cursor:pointer;transition:.3s}
+.gb button:hover,.gb button.on{background:#fff;color:#000}
+.gt{position:relative;padding:110px 24px;border-top:1px solid var(--l);overflow:hidden}
+.gt:before{content:'';position:absolute;inset:-30%;background:repeating-radial-gradient(circle at 30% 40%,#fff0 0 22px,#ffffff09 24px 26px),repeating-radial-gradient(circle at 75% 65%,#fff0 0 30px,#ffffff07 32px 35px);animation:sw 50s linear infinite}
+@keyframes sw{to{transform:rotate(360deg)}}
+.gw{position:relative;max-width:1040px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+@media(max-width:820px){.gw{grid-template-columns:1fr}}
+.pill{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--l);border-radius:30px;padding:9px 18px;font-size:.66rem;letter-spacing:.22em;color:#ccc;background:#0b0b0b}
+.pill i{width:7px;height:7px;border-radius:50%;background:#2fd07d;box-shadow:0 0 8px #2fd07d}
+.gl h2{margin:22px 0 20px;font-size:clamp(2.6rem,8vw,4.6rem)}
+.gl p{color:#aaa;line-height:1.8;max-width:420px;font-size:1.05rem}
+.bt{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.b1,.b2{padding:15px 26px;border-radius:40px;font-size:.92rem;transition:.3s}
+.b1{background:#ece7de;color:#111}.b1:hover{background:#fff}
+.b2{border:1px solid #444;color:#fff}.b2:hover{background:#fff;color:#000}
+.card{border:1px solid var(--l);border-radius:26px;background:#0f0f0fd0;backdrop-filter:blur(6px);overflow:hidden}
+.rw{padding:22px 30px;border-bottom:1px solid var(--l)}.rw:last-child{border:0}
+.rw small{display:block;font-size:.66rem;letter-spacing:.25em;color:#777;margin-bottom:10px}
+.rw b,.rw a.v{font-weight:400;font-size:1.1rem;color:#e6e6e6;word-break:break-all}
+.ic{display:flex;gap:12px}.ic a{width:46px;height:46px;border-radius:50%;border:1px solid var(--l);background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;transition:.3s}.ic a:hover{background:#fff;color:#000}
+footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
+</style>
 </head>
-<body>
+<body class="lock">
 
-  <div id="progress"></div>
-  <canvas id="net"></canvas>
+<div id="intro"><div id="stage"><i id="dot"></i><i id="bar"></i><div id="word"></div></div><div id="skip">TAP TO SKIP</div></div>
 
-  <nav>
-    <div class="wrap">
-      <div class="brand">ASHRAF SIDDIKI <span>TOWASIN</span></div>
-      <div class="nav-links">
-        <a href="#about" data-nav="about">About</a>
-        <a href="#skills" data-nav="skills">Skills</a>
-        <a href="#journey" data-nav="journey">Journey</a>
-        <a href="#connect" data-nav="connect">Connect</a>
-      </div>
-    </div>
-  </nav>
+<nav><b>TOWASIN</b><div><a href="#about">About</a><a href="#projects">Projects</a><a href="#journey">Journey</a><a href="#play">Play</a><a href="#connect">Connect</a></div></nav>
 
-  <section class="hero" id="hero">
-    <div class="wrap">
-      <div>
-        <div class="kicker">// PORTFOLIO</div>
-        <h1>Hi, I am<br>Ashraf Siddiki Towasin.</h1>
-        <p>
-          I'm a student from Bangladesh with a deep interest in mathematics
-          and programming. From my first lines of code in high school to
-          studying Electrical &amp; Electronic Engineering today, my journey
-          has been about steady, consistent growth — one problem, one
-          project, and one line of code at a time. I dream of becoming a
-          software engineer.
-        </p>
-        <a class="cta" href="#connect">Get in touch ↓</a>
-      </div>
-      <div class="tilt-wrap">
-        <div class="photo-card" id="tiltCard">
-          <div class="photo-inner" id="slider">
-            <div class="slide-track" id="slideTrack">
-              <img src="Images/mypic.jpg" alt="Ashraf Siddiki Towasin — photo 1" draggable="false">
-              <img src="Images/mypic1.jpeg" alt="Ashraf Siddiki Towasin — photo 2" draggable="false">
-              <img src="Images/mypic2.jpeg" alt="Ashraf Siddiki Towasin — photo 3" draggable="false">
-            </div>
-          </div>
-          <div class="dots" id="dots">
-            <button class="active" data-i="0" aria-label="Slide 1"></button>
-            <button data-i="1" aria-label="Slide 2"></button>
-            <button data-i="2" aria-label="Slide 3"></button>
-          </div>
-          <div class="swipe-hint">← swipe →</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section-pad about" id="about">
-    <div class="wrap">
-      <div class="num reveal">01 / ABOUT</div>
-      <h2 class="reveal">What I do</h2>
-      <div class="about-grid">
-        <div class="about-text reveal">
-          <p>
-            Hello! I am Towasin, a student from Bangladesh. I love math and
-            programming — learning to build things for the web and beyond.
-            Solving mathematical problems is one of my favourite ways to spend
-            time, and I started learning web development back on 10th January,
-            2023. I believe it's never too late to start a journey. I enjoy
-            working in a team, and I'm working toward becoming a software
-            engineer, one step at a time.
-          </p>
-        </div>
-        <div class="facts reveal">
-          <div class="row"><span>LOCATION</span><span>Bangladesh</span></div>
-          <div class="row"><span>CURRENTLY</span><span>EEE Undergrad</span></div>
-          <div class="row"><span>LEARNING SINCE</span><span>Jan 2023</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section-pad" id="skills">
-    <div class="wrap">
-      <div class="num reveal">02 / SKILLS</div>
-      <h2 class="reveal">What I Work With</h2>
-      <div class="skills-grid reveal">
-        <div class="skill-chip"><span class="bullet"></span>C Programming</div>
-        <div class="skill-chip"><span class="bullet"></span>Python</div>
-        <div class="skill-chip"><span class="bullet"></span>HTML</div>
-        <div class="skill-chip"><span class="bullet"></span>Web Development</div>
-        <div class="skill-chip"><span class="bullet"></span>Mathematics</div>
-        <div class="skill-chip"><span class="bullet"></span>Team Collaboration</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section-pad" id="journey">
-    <div class="wrap">
-      <div class="num reveal">03 / JOURNEY</div>
-      <h2 class="reveal">My Journey</h2>
-
-      <div class="journey-track" id="journeyTrack">
-        <div class="journey-rail">
-          <div class="journey-rail-fill" id="railFill"></div>
-        </div>
-        <div class="journey-traveler" id="traveler"></div>
-        <div class="traveler-tag mono" id="travelerTag">YOU ARE HERE</div>
-
-        <div class="journey-item left">
-          <div class="life-card stage-1 reveal">
-            <div class="accent"></div>
-            <div class="life-photo"><img src="high.jpg" alt="Gouripur SA High School"></div>
-            <div class="life-body">
-              <div class="stage">2018 — 2023</div>
-              <h3>High School Life</h3>
-              <span class="school">Gouripur SA High School</span>
-              <p>
-                This is where it all began — my first real exposure to coding
-                and joining school clubs that let me explore programming
-                outside the classroom, sparking a curiosity that shaped
-                everything after.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="journey-item right">
-          <div class="life-card stage-2 reveal">
-            <div class="accent"></div>
-            <div class="life-photo"><img src="college.jpg" alt="Dr. Mosharraf Foundation Degree College"></div>
-            <div class="life-body">
-              <div class="stage">2023 — 2025</div>
-              <h3>College Life</h3>
-              <span class="school">Dr. Mosharraf Foundation Degree College</span>
-              <p>
-                College is where I built my technical foundation — focusing
-                heavily on C programming to strengthen my logic, while
-                picking up HTML as my first real step toward web development.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="journey-item left">
-          <div class="life-card stage-3 reveal">
-            <div class="accent"></div>
-            <div class="life-photo"><img src="Images/university.jpg.jpeg" alt="Barishal Engineering College"></div>
-            <div class="life-body">
-              <div class="stage">2025 — Present</div>
-              <h3>University Life</h3>
-              <span class="school">Barishal Engineering College</span>
-              <p>
-                Now studying Electrical &amp; Electronic Engineering (EEE), I've
-                expanded into Python — applying programming to more technical
-                problems on the way to becoming a software engineer.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section-pad connect" id="connect">
-    <div class="wrap">
-      <div class="num reveal">04 / CONNECT</div>
-      <h2 class="reveal">Where To Find Me</h2>
-      <div class="socials reveal">
-        <a class="social" href="https://facebook.com/towasinn/" target="_blank" rel="noopener" aria-label="Ashraf's Facebook profile">
-          <span class="icon"><svg viewBox="0 0 24 24" fill="#1877F2"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z"/></svg></span>
-          <p>I am on Facebook.<br>Click to view my profile!</p>
-        </a>
-        <a class="social" href="https://instagram.com/towasinn/" target="_blank" rel="noopener" aria-label="Ashraf's Instagram profile">
-          <span class="icon">
-            <svg viewBox="0 0 24 24" fill="url(#ig)">
-              <defs><linearGradient id="ig" x1="0" y1="1" x2="1" y2="0">
-                <stop offset="0%" stop-color="#feda75"/><stop offset="50%" stop-color="#d62976"/><stop offset="100%" stop-color="#4f5bd5"/>
-              </linearGradient></defs>
-              <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.31-1.46.72-2.13 1.39C1.35 2.68.94 3.35.63 4.14c-.3.76-.5 1.64-.56 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.79.72 1.46 1.39 2.13.67.67 1.34 1.08 2.13 1.39.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.13-1.39.67-.67 1.08-1.34 1.39-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.39-2.13C21.32 1.35 20.65.94 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0z"/>
-              <path d="M12 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zm0 10.16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
-              <circle cx="18.41" cy="5.59" r="1.44"/>
-            </svg>
-          </span>
-          <p>I am on Instagram.<br>Reach out if you wanna talk!</p>
-        </a>
-        <a class="social" href="https://www.linkedin.com/in/towasinn/" target="_blank" rel="noopener" aria-label="Ashraf's LinkedIn profile">
-          <span class="icon"><svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></span>
-          <p>I am on LinkedIn.<br>Connect with me there!</p>
-        </a>
-        <a class="social" href="mailto:towasin344533@gmail.com?subject=Hello%20Ashraf" aria-label="Email Ashraf">
-          <span class="icon">
-            <svg viewBox="0 0 24 24" fill="none">
-              <defs><linearGradient id="mail" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#5ee7ff"/><stop offset="100%" stop-color="#a78bfa"/>
-              </linearGradient></defs>
-              <rect x="2.5" y="5" width="19" height="14" rx="2.5" stroke="url(#mail)" stroke-width="1.6"/>
-              <path d="M3.5 6.5l8.5 7 8.5-7" stroke="url(#mail)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-          <p>Email me directly.<br>I usually reply fast!</p>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <footer>© 2022–present Ashraf Siddiki Towasin. All rights reserved.</footer>
-
-  <div id="toTop" role="button" aria-label="Back to top" tabindex="0">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+<header id="hero">
+  <canvas id="dust"></canvas>
+  <div class="hero-t">
+    <h1 class="chrome">PORTFOLIO</h1>
+    <p><b>Ashraf Siddiki Towasin</b> <em>Student · Programmer</em></p>
+    <a href="#connect">Contact</a>
   </div>
+</header>
 
-  <script>
-    /* ---------- Scroll progress bar ---------- */
-    const progress = document.getElementById('progress');
-    window.addEventListener('scroll', ()=>{
-      const h = document.documentElement;
-      const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
-      progress.style.width = pct + '%';
-    }, { passive:true });
+<section class="s" id="about">
+  <div class="lab r">ABOUT ME</div><h2 class="chrome r">Intro</h2>
+  <div class="box r">Hello! I am Towasin, a student from Bangladesh. I love math and programming — learning to build things for the web and beyond. Solving mathematical problems is one of my favourite ways to spend time, and I started learning web development back on 10th January, 2023. I believe it's never too late to start a journey. I enjoy working in a team, and I'm working toward becoming a software engineer, one step at a time.
+    <div class="facts"><span>Bangladesh</span><span>EEE Undergrad</span><span>Learning since Jan 2023</span></div>
+  </div>
+  <div class="lab r" style="margin-top:50px">THE STACK</div>
+  <div class="chips r"><span>C Programming</span><span>Python</span><span>HTML</span><span>Web Development</span><span>Mathematics</span><span>Competitive Programming</span><span>Team Collaboration</span></div>
+</section>
 
-    /* ---------- Staggered reveal ---------- */
-    document.querySelectorAll('section').forEach(sec=>{
-      sec.querySelectorAll('.reveal').forEach((el,i)=> el.style.setProperty('--d', (i*0.12)+'s'));
-    });
-    const items = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver(entries=>{
-      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target);} });
-    },{threshold:0.15});
-    items.forEach(el=>io.observe(el));
+<section class="s" id="projects">
+  <div class="lab r">WHAT I'VE BUILT</div><h2 class="chrome r">Projects</h2>
+  <div class="prj r"><i>01</i><div><h3>Personal Portfolio Website</h3><p>Designed and built from scratch — an animated intro, a particle-dust portrait, a scroll timeline and a playable game, all in one page.</p><a href="REPLACE_WITH_YOUR_GITHUB_REPO_LINK" target="_blank" rel="noopener">View Source ↗</a></div></div>
+  </section>
 
-    /* ---------- Active nav link on scroll ---------- */
-    const navLinks = document.querySelectorAll('.nav-links a');
-    const navSections = [...navLinks].map(l=> document.querySelector(l.getAttribute('href')));
-    window.addEventListener('scroll', ()=>{
-      let current = navSections[0];
-      navSections.forEach(sec=>{ if(window.scrollY + 100 >= sec.offsetTop) current = sec; });
-      navLinks.forEach(l=> l.classList.toggle('active', l.getAttribute('href') === '#'+current.id));
-    }, { passive:true });
+<section class="s" id="journey">
+  <div class="lab r">MY PATH</div><h2 class="chrome r">Journey</h2>
+  <div class="tl">
+    <div class="st r"><small>2018 — 2023</small><h3>High School Life</h3><b>Gouripur SA High School</b><p>Where it all began — my first real exposure to coding, and school clubs that let me explore programming outside the classroom.</p><img src="high.jpg" alt="Gouripur SA High School" loading="lazy"></div>
+    <div class="st r"><small>2023 — 2025</small><h3>College Life</h3><b>Dr. Mosharraf Foundation Degree College</b><p>I built my technical foundation — heavy C programming to sharpen my logic, and HTML as my first real step toward web development.</p><img src="college.jpg" alt="Dr. Mosharraf Foundation Degree College" loading="lazy"></div>
+    <div class="st r"><small>2025 — PRESENT</small><h3>University Life</h3><b>Barishal Engineering College</b><p>Studying Electrical &amp; Electronic Engineering (EEE) and expanding into Python on the way to becoming a software engineer.</p><img src="university.jpg" alt="Barishal Engineering College" loading="lazy"></div>
+  </div>
+</section>
 
-    /* ---------- Back to top ---------- */
-    const toTop = document.getElementById('toTop');
-    window.addEventListener('scroll', ()=>{
-      toTop.classList.toggle('show', window.scrollY > 500);
-    }, { passive:true });
-    toTop.addEventListener('click', ()=> window.scrollTo({ top:0, behavior:'smooth' }));
-    toTop.addEventListener('keypress', e=>{ if(e.key==='Enter') window.scrollTo({ top:0, behavior:'smooth' }); });
+<section class="gm" id="play">
+  <div class="gh"><p id="cap">Break it if you can. I still ship.</p><div class="lv" id="lv"><i></i><i></i><i></i></div></div>
+  <canvas id="g"></canvas>
+  <div class="gb"><button id="pl">▶ Play</button><button id="sp">■ Stop</button></div>
+</section>
 
-    /* ---------- Hero photo slider (drag / swipe) ---------- */
-    const slider = document.getElementById('slider');
-    const track = document.getElementById('slideTrack');
-    const dots = document.querySelectorAll('#dots button');
-    let slideIndex = 0;
-    const totalSlides = 3;
-    let startX = 0, currentX = 0, dragging = false, widthPx = 0;
-    function updateSlide(animate=true){
-      widthPx = slider.getBoundingClientRect().width;
-      track.style.transition = animate ? 'transform 0.4s cubic-bezier(.22,.68,.31,1)' : 'none';
-      track.style.transform = `translateX(${-slideIndex*widthPx}px)`;
-      dots.forEach((d,i)=> d.classList.toggle('active', i===slideIndex));
+<section class="gt" id="connect">
+  <div class="gw">
+    <div class="gl r">
+      <span class="pill"><i></i>OPEN TO COLLABORATE</span>
+      <h2 class="chrome">Get in touch</h2>
+      <p>Open to team projects, internships and collaborations. Say hello — I'd love to hear from you.</p>
+      <div class="bt">
+        <a class="b1" href="https://wa.me/REPLACE_WITH_NUMBER_WITH_COUNTRY_CODE" target="_blank" rel="noopener">Message on WhatsApp ↗</a>
+        <a class="b2" href="mailto:REPLACE_WITH_YOUR_EMAIL@gmail.com?subject=Hello%20Ashraf">Send an email ✉</a>
+      </div>
+    </div>
+    <div class="card r">
+      <div class="rw"><small>EMAIL</small><a class="v" href="mailto:REPLACE_WITH_YOUR_EMAIL@gmail.com">REPLACE_WITH_YOUR_EMAIL@gmail.com</a></div>
+      <div class="rw"><small>BASED IN</small><b>Bangladesh</b></div>
+      <div class="rw"><small>ELSEWHERE</small><div class="ic">
+        <a href="https://facebook.com/towasinn/" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+        <a href="https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
+        <a href="https://instagram.com/towasinn/" target="_blank" rel="noopener" aria-label="Instagram">ig</a>
+      </div></div>
+    </div>
+  </div>
+</section>
+<footer>© 2022–present Ashraf Siddiki Towasin. All rights reserved.</footer>
+
+<script>
+/* ===== INTRO: the dot becomes the "I" of TOWASIN, then the other letters tumble in ===== */
+(function(){
+  const intro=document.getElementById('intro'),st=document.getElementById('stage'),word=document.getElementById('word'),dot=document.getElementById('dot'),bar=document.getElementById('bar');
+  let done=false,timers=[];
+  const T=(f,ms)=>timers.push(setTimeout(f,ms));
+  function finish(){
+    if(done)return;done=true;timers.forEach(clearTimeout);
+    intro.classList.add('out');document.body.classList.remove('lock');
+    window.dustStart=performance.now();
+    setTimeout(()=>intro.remove(),1000);
+  }
+  intro.addEventListener('click',finish);
+  const II=5; /* index of the I in T-O-W-A-S-I-N */
+  word.innerHTML='TOWASIN'.split('').map(c=>`<span>${c}</span>`).join('');
+  const sp=[...word.children];
+  sp.forEach((s,i)=>{if(i!==II)s.style.transform=`translateY(${-50-Math.random()*40}px) rotate(${(Math.random()-.5)*90}deg)`});
+  let g;
+  function measure(){
+    const probe=document.createElement('u');probe.style.cssText='display:inline-block;width:0;height:0';
+    sp[II].appendChild(probe);
+    const sr=st.getBoundingClientRect(),ir=sp[II].getBoundingClientRect(),base=probe.getBoundingClientRect().bottom-sr.top;
+    probe.remove();
+    const fs=parseFloat(getComputedStyle(word).fontSize),m=document.createElement('canvas').getContext('2d');
+    m.font=`700 ${fs}px "Space Grotesk",sans-serif`;const tm=m.measureText('I');
+    const ch=tm.actualBoundingBoxAscent||fs*.7,sw=Math.max(6,(tm.actualBoundingBoxRight+tm.actualBoundingBoxLeft)||fs*.16);
+    const d=sw*1.1,gap=sw*.5,bh=ch-d-gap,cx=ir.left-sr.left+ir.width/2;
+    g={cx,base,ch,d,gap,bh};
+    dot.style.cssText=`width:${d}px;height:${d}px;left:${cx}px;top:${base-d}px`;
+    bar.style.cssText=`width:${sw}px;height:0;left:${cx}px;top:${base-d-gap}px`;
+    st.style.setProperty('--rise',-(d+gap)+'px');
+  }
+  function run(){
+    if(done)return;measure();
+    T(()=>st.classList.add('on'),300);                       /* 1. a dot appears where the I will be */
+    T(()=>{bar.style.top=(g.base-g.d-g.gap-g.bh)+'px';bar.style.height=g.bh+'px'},1100); /* 2. it grows into "!" */
+    T(()=>sp.forEach((s,i)=>{if(i!==II)setTimeout(()=>s.classList.add('in'),i*90)}),1900);  /* 3. T-O-W-A-S . N tumble in around it */
+    T(()=>{bar.style.top=(g.base-g.ch)+'px';bar.style.height=g.ch+'px';st.classList.add('merge')},3000); /* 4. dot merges into the I stem */
+    T(()=>{sp[II].style.transition='none';sp[II].classList.add('in');st.classList.add('gone')},3600);   /* 5. real "I" takes over */
+    T(()=>{
+      word.className='chrome';
+      const target='PORTFOLIO',pool='ABCDEFGHIJKLMNOPQRSTUVWXYZ',t0=performance.now(),dur=1000;
+      (function tick(){
+        if(done)return;
+        const p=(performance.now()-t0)/dur;
+        word.textContent=target.split('').map((c,i)=>p>(i+1)/target.length?c:pool[Math.random()*26|0]).join('');
+        if(p<1)requestAnimationFrame(tick);else word.textContent=target;
+      })();
+    },4300);
+    T(finish,5700);
+  }
+  const fr=(document.fonts&&document.fonts.ready)?Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,900))]):Promise.resolve();
+  fr.then(run);
+})();
+
+/* ===== scroll reveal ===== */
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.15});
+document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*.08+'s';io.observe(el)});
+
+/* ===== PARTICLE-DUST PORTRAIT ===== */
+(function(){
+  const c=document.getElementById('dust'),x=c.getContext('2d'),hero=document.getElementById('hero');
+  let W,H,P=[],vis=true,mouse={x:-999,y:-999},box;
+  function size(){const d=devicePixelRatio>1?1.5:1;W=c.width=hero.clientWidth*d;H=c.height=hero.clientHeight*d;c.k=d;layout()}
+  function rnd(n){const a=[];for(let i=0;i<n;i++)a.push({x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,tx:null,ty:null,a:.25+Math.random()*.6});return a}
+  function layout(){
+    if(!P.targets)return;
+    const ph=H*.62,pw=ph*P.ar;box={l:(W-pw)/2,t:H*.34,w:pw,h:ph};
+    P.forEach((p,i)=>{const t=P.targets[i%P.targets.length];p.tx=box.l+t[0]*box.w;p.ty=box.t+t[1]*box.h;p.a=.3+t[2]*.7});
+  }
+  P=rnd(1400);size();addEventListener('resize',size);
+  const img=new Image();img.src='mypic.jpg';
+  img.onload=()=>{try{
+    const iw=130,ih=Math.round(iw*img.height/img.width),o=document.createElement('canvas');o.width=iw;o.height=ih;
+    const q=o.getContext('2d');q.drawImage(img,0,0,iw,ih);const d=q.getImageData(0,0,iw,ih).data,T=[];
+    for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){
+      const k=(j*iw+i)*4,l=(.3*d[k]+.59*d[k+1]+.11*d[k+2])/255,
+      dx=(i/iw-.5)*2,dy=(j/ih-.5)*2,f=Math.max(0,1-(dx*dx*.9+dy*dy*.9));
+      if(Math.random()<l*l*f*1.6)T.push([i/iw,j/ih,l]);
     }
-    window.addEventListener('resize', ()=> updateSlide(false));
-    updateSlide(false);
-    dots.forEach(d=> d.addEventListener('click', ()=>{ slideIndex = parseInt(d.dataset.i); updateSlide(); }));
-    function dragStart(x){ dragging=true; startX=x; widthPx=slider.getBoundingClientRect().width; slider.classList.add('dragging'); track.style.transition='none'; }
-    function dragMove(x){ if(!dragging) return; currentX = x - startX; track.style.transform = `translateX(${-slideIndex*widthPx + currentX}px)`; }
-    function dragEnd(){
-      if(!dragging) return; dragging=false; slider.classList.remove('dragging');
-      if(currentX < -60 && slideIndex < totalSlides-1) slideIndex++;
-      else if(currentX > 60 && slideIndex > 0) slideIndex--;
-      currentX = 0; updateSlide();
+    if(T.length<200)return;
+    const n=Math.min(T.length,4200);P=rnd(n);P.targets=T.sort(()=>Math.random()-.5);P.ar=iw/ih;layout();
+  }catch(e){}};
+  new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(hero);
+  hero.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();mouse.x=(e.clientX-r.left)*c.k;mouse.y=(e.clientY-r.top)*c.k});
+  hero.addEventListener('pointerleave',()=>mouse.x=-999);
+  (function loop(){
+    requestAnimationFrame(loop);if(!vis)return;
+    x.clearRect(0,0,W,H);
+    const t=window.dustStart?performance.now()-window.dustStart:-1,form=t>1200,R=70*c.k;
+    for(const p of P){
+      if(form&&p.tx!=null){p.vx+=(p.tx-p.x)*.012;p.vy+=(p.ty-p.y)*.012}
+      else{p.vx+=(Math.random()-.5)*.08;p.vy+=(Math.random()-.5)*.08}
+      const dx=p.x-mouse.x,dy=p.y-mouse.y,dd=dx*dx+dy*dy;
+      if(dd<R*R){const f=(1-Math.sqrt(dd)/R)*3;p.vx+=dx/Math.sqrt(dd+1)*f;p.vy+=dy/Math.sqrt(dd+1)*f}
+      p.vx*=.9;p.vy*=.9;p.x+=p.vx;p.y+=p.vy;
+      x.fillStyle=`rgba(255,255,255,${p.a})`;x.fillRect(p.x,p.y,1.5*c.k,1.5*c.k);
     }
-    slider.addEventListener('mousedown', e=> dragStart(e.clientX));
-    window.addEventListener('mousemove', e=> dragMove(e.clientX));
-    window.addEventListener('mouseup', dragEnd);
-    slider.addEventListener('touchstart', e=> dragStart(e.touches[0].clientX), {passive:true});
-    slider.addEventListener('touchmove', e=> dragMove(e.touches[0].clientX), {passive:true});
-    slider.addEventListener('touchend', dragEnd);
+  })();
+})();
 
-    /* ---------- 3D tilt on photo card ---------- */
-    const card = document.getElementById('tiltCard');
-    card.addEventListener('mousemove', e=>{
-      const r = card.getBoundingClientRect();
-      const px = (e.clientX - r.left)/r.width - 0.5;
-      const py = (e.clientY - r.top)/r.height - 0.5;
-      card.style.transform = `rotateY(${px*16}deg) rotateX(${-py*16}deg)`;
-    });
-    card.addEventListener('mouseleave', ()=>{ card.style.transform = 'rotateY(0) rotateX(0)'; });
+/* ===== GAME: break the dot-matrix HELLO WORLD (Play / Stop) ===== */
+(function(){
+  const F={H:['10001','10001','10001','11111','10001','10001','10001'],E:['11111','10000','10000','11110','10000','10000','11111'],L:['10000','10000','10000','10000','10000','10000','11111'],O:['01110','10001','10001','10001','10001','10001','01110'],W:['10001','10001','10001','10101','10101','11011','10001'],R:['11110','10001','10001','11110','10100','10010','10001'],D:['11110','10001','10001','10001','10001','10001','11110']};
+  const c=document.getElementById('g'),x=c.getContext('2d'),cap=document.getElementById('cap'),lv=[...document.querySelectorAll('#lv i')],pl=document.getElementById('pl'),sp=document.getElementById('sp');
+  let s,B,lives,ball,padX,tx,padW,SP,run=false,vis=false,playing=false,over=false,timer,last=0,key={l:0,r:0};
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  function ui(){pl.classList.toggle('on',playing);sp.classList.toggle('on',!playing);lv.forEach((e,i)=>e.className=i<lives?'':'x')}
+  function build(){
+    const w=Math.min(560,c.parentElement.clientWidth-36),d=Math.min(devicePixelRatio||1,2);
+    s=w/31;c.style.width=w+'px';c.width=w*d;c.height=w*1.4*d;x.setTransform(d,0,0,d,0,0);c.W=w;c.H=w*1.4;
+    B=[];['HELLO','WORLD'].forEach((wd,li)=>{for(let k=0;k<5;k++)F[wd[k]].forEach((row,r)=>[...row].forEach((v,cc)=>{if(v==='1')B.push({x:s*(1+k*6+cc),y:s*(1+li*8+r),a:true})}))});
+    padW=s*7.5;padX=tx=c.W/2;SP=s*17;playing=false;reset(true);
+  }
+  function reset(full){
+    clearTimeout(timer);run=false;over=false;
+    if(full){lives=3;B.forEach(b=>b.a=true);cap.textContent='Press Play. Break it if you can.'}
+    ball={x:padX,y:c.H-s*3,vx:0,vy:0};ui();
+  }
+  function launch(){clearTimeout(timer);timer=setTimeout(()=>{if(!playing)return;const a=Math.random()*.7-.35;ball.vx=Math.sin(a)*SP;ball.vy=-Math.cos(a)*SP;run=true},500)}
+  pl.onclick=()=>{if(playing)return;if(over)reset(true);playing=true;cap.textContent='Break it if you can. I still ship.';ui();if(!run)launch()};
+  sp.onclick=()=>{if(!playing)return;playing=false;cap.textContent='Paused — press Play to continue.';ui()};
 
-    /* ---------- Journey scroll-linked timeline ---------- */
-    let journeyTrackHeight = 0;
-    let journeyNodeY = [];
-    function buildJourney(){
-      const trackEl = document.getElementById('journeyTrack');
-      document.querySelectorAll('.journey-node').forEach(n=>n.remove());
-      const trackRect = trackEl.getBoundingClientRect();
-      const cards = trackEl.querySelectorAll('.life-card');
-      journeyNodeY = [];
-      cards.forEach((cardEl, i)=>{
-        const r = cardEl.getBoundingClientRect();
-        const y = (r.top - trackRect.top) + r.height/2;
-        journeyNodeY.push(y);
-        const node = document.createElement('div');
-        node.className = 'journey-node stage-' + (i+1);
-        node.style.top = y + 'px';
-        trackEl.appendChild(node);
-      });
-      journeyTrackHeight = trackEl.offsetHeight;
-      updateJourneyScroll();
-    }
-    function updateJourneyScroll(){
-      const trackEl = document.getElementById('journeyTrack');
-      const rect = trackEl.getBoundingClientRect();
-      const vh = window.innerHeight;
-      let progress = (vh - rect.top) / (rect.height + vh);
-      progress = Math.min(1, Math.max(0, progress));
-      const yPos = progress * journeyTrackHeight;
-      document.getElementById('railFill').style.height = yPos + 'px';
-      const traveler = document.getElementById('traveler');
-      traveler.style.top = yPos + 'px';
-      const tag = document.getElementById('travelerTag');
-      tag.style.top = yPos + 'px';
-      tag.style.opacity = progress > 0.92 ? '1' : '0';
-      document.querySelectorAll('.journey-node').forEach((node, i)=>{
-        node.classList.toggle('active', yPos >= journeyNodeY[i] - 4);
-      });
-    }
-    window.addEventListener('scroll', updateJourneyScroll, { passive:true });
-    window.addEventListener('resize', buildJourney);
-    window.addEventListener('load', buildJourney);
-    setTimeout(buildJourney, 300);
+  /* controls: mouse hover / finger drag move the paddle; vertical swipes still scroll the page */
+  function aim(e){const r=c.getBoundingClientRect();tx=clamp((e.clientX-r.left)*(c.W/r.width),padW/2,c.W-padW/2)}
+  c.addEventListener('pointermove',aim);
+  c.addEventListener('pointerdown',e=>{aim(e);try{c.setPointerCapture(e.pointerId)}catch(_){}});
+  addEventListener('keydown',e=>{if(!vis)return;if(e.key==='ArrowLeft'){key.l=1;e.preventDefault()}if(e.key==='ArrowRight'){key.r=1;e.preventDefault()}});
+  addEventListener('keyup',e=>{if(e.key==='ArrowLeft')key.l=0;if(e.key==='ArrowRight')key.r=0});
+  new IntersectionObserver(e=>{vis=e[0].isIntersecting;if(!vis&&playing){playing=false;cap.textContent='Paused — press Play to continue.';ui()}}).observe(c);
 
-    /* ---------- Particle network background (subtle) ---------- */
-    const canvas = document.getElementById('net');
-    const ctx = canvas.getContext('2d');
-    let w,h,particles;
-    function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-    resize(); window.addEventListener('resize', resize);
-    const COUNT = Math.min(65, Math.floor(window.innerWidth/18));
-    particles = Array.from({length: COUNT}, ()=>({
-      x: Math.random()*w, y: Math.random()*h,
-      vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3
-    }));
-    let mouse = {x:-9999, y:-9999};
-    window.addEventListener('mousemove', e=>{ mouse.x=e.clientX; mouse.y=e.clientY; });
-    function draw(){
-      ctx.clearRect(0,0,w,h);
-      for(const p of particles){
-        p.x += p.vx; p.y += p.vy;
-        if(p.x<0||p.x>w) p.vx*=-1;
-        if(p.y<0||p.y>h) p.vy*=-1;
-        const dx=p.x-mouse.x, dy=p.y-mouse.y;
-        const dist = Math.sqrt(dx*dx+dy*dy);
-        if(dist<110){ p.x += dx/dist*0.5; p.y += dy/dist*0.5; }
-      }
-      for(let a=0;a<particles.length;a++){
-        for(let b=a+1;b<particles.length;b++){
-          const dx=particles[a].x-particles[b].x, dy=particles[a].y-particles[b].y;
-          const d = Math.sqrt(dx*dx+dy*dy);
-          if(d<120){
-            ctx.strokeStyle = `rgba(94,231,255,${(1-d/120)*0.8})`;
-            ctx.lineWidth = 0.6;
-            ctx.beginPath(); ctx.moveTo(particles[a].x,particles[a].y);
-            ctx.lineTo(particles[b].x,particles[b].y); ctx.stroke();
-          }
-        }
-      }
-      for(const p of particles){
-        ctx.beginPath(); ctx.arc(p.x,p.y,1.6,0,Math.PI*2);
-        ctx.fillStyle = 'rgba(167,139,250,0.75)'; ctx.fill();
-      }
-      requestAnimationFrame(draw);
+  function sub(h){
+    const r=s*.48;
+    ball.x+=ball.vx*h;ball.y+=ball.vy*h;
+    if(ball.x<r){ball.x=r;ball.vx=Math.abs(ball.vx)}
+    if(ball.x>c.W-r){ball.x=c.W-r;ball.vx=-Math.abs(ball.vx)}
+    if(ball.y<r){ball.y=r;ball.vy=Math.abs(ball.vy)}
+    const py=c.H-s*2;
+    if(ball.vy>0&&ball.y+r>=py&&ball.y-r<py+s*.85&&Math.abs(ball.x-padX)<padW/2+r){
+      const k=clamp((ball.x-padX)/(padW/2),-1,1),spd=Math.min(SP*1.35,Math.hypot(ball.vx,ball.vy)*1.015),ang=k*1.0;
+      ball.vx=Math.sin(ang)*spd;ball.vy=-Math.cos(ang)*spd;ball.y=py-r;
     }
-    draw();
-  </script>
+    for(const b of B){if(!b.a)continue;const cx=b.x+s*.43,cy=b.y+s*.43;
+      if(Math.abs(ball.x-cx)<s*.43+r&&Math.abs(ball.y-cy)<s*.43+r){b.a=false;
+        if(Math.abs(ball.x-cx)>Math.abs(ball.y-cy))ball.vx=Math.abs(ball.vx)*Math.sign(ball.x-cx);else ball.vy=Math.abs(ball.vy)*Math.sign(ball.y-cy);break}}
+  }
+  function update(dt){
+    tx=clamp(tx+(key.r-key.l)*s*24*dt,padW/2,c.W-padW/2);
+    padX+=(tx-padX)*Math.min(1,dt*22);               /* eased paddle = no jerks */
+    if(!run){ball.x=padX;return}
+    if(!playing)return;
+    const n=Math.max(1,Math.ceil(Math.hypot(ball.vx,ball.vy)*dt/(s*.3)));
+    for(let i=0;i<n;i++)sub(dt/n);                    /* sub-steps = no tunnelling */
+    if(ball.y>c.H+s){
+      lives--;run=false;ball={x:padX,y:c.H-s*3,vx:0,vy:0};ui();
+      if(lives<=0){playing=false;over=true;cap.textContent='Game over — press Play to try again.';ui()}else launch();
+    }else if(!B.some(b=>b.a)){run=false;playing=false;over=true;cap.textContent='You broke it. I still ship. 🚀';ui()}
+  }
+  function draw(){
+    x.clearRect(0,0,c.W,c.H);
+    for(const b of B){x.fillStyle=b.a?'#eeebe3':'#101010';x.fillRect(b.x,b.y,s*.86,s*.86)}
+    x.fillStyle='#ece8dc';x.beginPath();x.roundRect(padX-padW/2,c.H-s*2,padW,s*.85,s*.42);x.fill();
+    x.fillStyle='#fff';x.beginPath();x.arc(ball.x,ball.y,s*.48,0,7);x.fill();
+  }
+  function loop(t){
+    requestAnimationFrame(loop);
+    if(!vis){last=t;return}
+    const dt=Math.min(.033,(t-last)/1000||0);last=t;   /* same speed on 60Hz and 120Hz screens */
+    update(dt);draw();
+  }
+  requestAnimationFrame(loop);
+  build();addEventListener('resize',build);
+})();
+</script>
 </body>
 </html>
