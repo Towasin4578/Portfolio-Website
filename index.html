@@ -30,6 +30,14 @@ a{color:inherit;text-decoration:none}
 #rip{position:absolute;width:12px;height:4px;border:1px solid #fffb;border-radius:50%;opacity:0;transform:translate(-50%,-50%);pointer-events:none}
 #pfall{position:absolute;z-index:1;opacity:0;transition:opacity 1.8s;pointer-events:none;object-fit:cover;filter:grayscale(1) contrast(1.4) brightness(1.15);-webkit-mask-image:radial-gradient(circle,#000 34%,transparent 40%),radial-gradient(ellipse at center,#000 45%,transparent 72%);mask-image:radial-gradient(circle,#000 34%,transparent 40%),radial-gradient(ellipse at center,#000 45%,transparent 72%);-webkit-mask-size:5px 5px,100% 100%;mask-size:5px 5px,100% 100%;-webkit-mask-composite:source-in;mask-composite:intersect}
 #pfall.show{opacity:.9}
+#cf{position:fixed;inset:0;z-index:90;pointer-events:none;display:none}
+#gift{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) scale(.6);opacity:0;pointer-events:none;text-align:center;background:#0b0b0bf2;border:1px solid var(--l);border-radius:22px;padding:24px 28px;width:min(86%,330px);transition:opacity .4s,transform .6s cubic-bezier(.2,1.4,.4,1);z-index:5}
+#gift.show{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
+#gift b{font-size:3.2rem;display:block;line-height:1.1;animation:bob .8s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(-10px) rotate(8deg)}}
+#gift h3{font-size:1.3rem;margin:6px 0}
+#gift p{color:#bbb;font-size:.88rem;line-height:1.6;margin-bottom:16px}
+#gift a{display:inline-block;background:#ece8dc;color:#111;border-radius:30px;padding:10px 22px;font-size:.85rem}
 #skip{position:fixed;bottom:22px;left:0;right:0;text-align:center;font-size:.7rem;color:#555;letter-spacing:.2em}
 /* nav */
 nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:16px 22px;mix-blend-mode:difference}
@@ -39,15 +47,15 @@ nav a:hover{text-decoration:underline}
 /* hero */
 #hero{position:relative;height:100svh;min-height:640px;text-align:center;overflow:hidden}
 #dust{position:absolute;inset:0;width:100%;height:100%}
-.hero-t{position:relative;z-index:2;padding-top:15vh;pointer-events:none}
+.hero-t{position:relative;z-index:2;padding-top:12vh;pointer-events:none}
 .hero-t h1{font-size:clamp(2.6rem,12vw,7.5rem);font-weight:700;line-height:1;letter-spacing:-.02em}
 .hero-t p{margin-top:12px;font-size:1rem}
 .hero-t p em{color:var(--m)}
 .hero-t a{pointer-events:auto;display:inline-block;margin-top:18px;padding:9px 22px;border:1px solid var(--l);border-radius:30px;font-size:.8rem;color:#ccc;background:#0008}
 /* sections */
-section.s{max-width:980px;margin:0 auto;padding:100px 24px}
-.lab{font-size:.7rem;letter-spacing:.25em;color:var(--m);margin-bottom:10px}
-h2{font-size:clamp(2.2rem,7vw,4rem);line-height:1.05;margin-bottom:34px}
+section.s{max-width:980px;margin:0 auto;padding:64px 24px}
+.lab{font-size:.7rem;letter-spacing:.25em;color:var(--m);margin-bottom:8px}
+h2{font-size:clamp(2.2rem,7vw,4rem);line-height:1.05;margin-bottom:24px}
 .r{opacity:0;transform:translateY(30px);transition:opacity .9s,transform .9s}
 .r.in{opacity:1;transform:none}
 .box{border:1px solid var(--l);border-radius:18px;padding:26px;background:#0a0a0a;color:#bbb;line-height:1.85}
@@ -60,7 +68,7 @@ h2{font-size:clamp(2.2rem,7vw,4rem);line-height:1.05;margin-bottom:34px}
 .prj p{color:#999;margin:8px 0 10px;line-height:1.7;font-size:.92rem;max-width:560px}
 .prj a{font-size:.8rem;border-bottom:1px solid #666}
 .tl{border-left:1px solid var(--l);margin-left:6px}
-.st{padding:0 0 46px 26px;position:relative}
+.st{padding:0 0 30px 26px;position:relative}
 .st:before{content:'';position:absolute;left:-5px;top:6px;width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 14px #fff}
 .st small{color:var(--m);letter-spacing:.15em;font-size:.7rem}
 .st h3{font-size:1.4rem;margin:4px 0}
@@ -72,7 +80,7 @@ h2{font-size:clamp(2.2rem,7vw,4rem);line-height:1.05;margin-bottom:34px}
 .con a{border:1px solid var(--l);border-radius:30px;padding:12px 24px;font-size:.9rem;transition:.3s}
 .con a:hover{background:#fff;color:#000}
 /* game */
-.gm{max-width:560px;margin:0 auto;padding:60px 18px 90px}
+.gm{position:relative;max-width:560px;margin:0 auto;padding:36px 18px 56px}
 .gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .gh p{font-size:.85rem;border-bottom:1px solid #fff;padding-bottom:3px}
 .lv{display:flex;gap:6px}.lv i{width:9px;height:9px;border-radius:50%;background:#fff}.lv i.x{background:#333}
@@ -80,7 +88,7 @@ canvas#g{width:100%;display:block;touch-action:pan-y;cursor:default;-webkit-tap-
 .gb{display:flex;gap:12px;justify-content:center;margin-top:18px}
 .gb button{font-family:inherit;font-size:.85rem;padding:11px 26px;border-radius:30px;border:1px solid #555;background:transparent;color:#fff;cursor:pointer;transition:.3s}
 .gb button:hover,.gb button.on{background:#fff;color:#000}
-.gt{position:relative;padding:110px 24px;border-top:1px solid var(--l);overflow:hidden}
+.gt{position:relative;padding:72px 24px;border-top:1px solid var(--l);overflow:hidden}
 .gt:before{content:'';position:absolute;inset:-30%;background:repeating-radial-gradient(circle at 30% 40%,#fff0 0 22px,#ffffff09 24px 26px),repeating-radial-gradient(circle at 75% 65%,#fff0 0 30px,#ffffff07 32px 35px);animation:sw 50s linear infinite}
 @keyframes sw{to{transform:rotate(360deg)}}
 .gw{position:relative;max-width:1040px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
@@ -109,7 +117,7 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 
 <header id="hero">
   <canvas id="dust"></canvas>
-  <img id="pfall" src="Images/mypic.jpg" alt="" aria-hidden="true">
+  <div id="pfall" aria-hidden="true"></div>
   <div class="hero-t">
     <h1 class="chrome">PORTFOLIO</h1>
     <p><b>Ashraf Siddiki Towasin</b> <em>Student · Programmer</em></p>
@@ -122,7 +130,7 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
   <div class="box r">Hello! I am Towasin, a student from Bangladesh. I love math and programming — learning to build things for the web and beyond. Solving mathematical problems is one of my favourite ways to spend time, and I started learning web development back on 10th January, 2023. I believe it's never too late to start a journey. I enjoy working in a team, and I'm working toward becoming a software engineer, one step at a time.
     <div class="facts"><span>Bangladesh</span><span>EEE Undergrad</span><span>Learning since Jan 2023</span></div>
   </div>
-  <div class="lab r" style="margin-top:50px">THE STACK</div>
+  <div class="lab r" style="margin-top:34px">THE STACK</div>
   <div class="chips r"><span>C Programming</span><span>Python</span><span>HTML</span><span>Web Development</span><span>Mathematics</span><span>Competitive Programming</span><span>Team Collaboration</span></div>
 </section>
 
@@ -134,8 +142,8 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 <section class="s" id="journey">
   <div class="lab r">MY PATH</div><h2 class="chrome r">Journey</h2>
   <div class="tl">
-    <div class="st r"><small>2018 — 2023</small><h3>High School Life</h3><b>Gouripur SA High School</b><p>Where it all began — my first real exposure to coding, and school clubs that let me explore programming outside the classroom.</p><img src="high.jpg" alt="Gouripur SA High School" loading="lazy"></div>
-    <div class="st r"><small>2023 — 2025</small><h3>College Life</h3><b>Dr. Mosharraf Foundation Degree College</b><p>I built my technical foundation — heavy C programming to sharpen my logic, and HTML as my first real step toward web development.</p><img src="college.jpg" alt="Dr. Mosharraf Foundation Degree College" loading="lazy"></div>
+    <div class="st r"><small>2018 — 2023</small><h3>High School Life</h3><b>Gouripur SA High School</b><p>Where it all began — my first real exposure to coding, and school clubs that let me explore programming outside the classroom.</p><img src="Images/high.jpg" alt="Gouripur SA High School" loading="lazy"></div>
+    <div class="st r"><small>2023 — 2025</small><h3>College Life</h3><b>Dr. Mosharraf Foundation Degree College</b><p>I built my technical foundation — heavy C programming to sharpen my logic, and HTML as my first real step toward web development.</p><img src="Images/college.jpg" alt="Dr. Mosharraf Foundation Degree College" loading="lazy"></div>
     <div class="st r"><small>2025 — PRESENT</small><h3>University Life</h3><b>Barishal Engineering College</b><p>Studying Electrical &amp; Electronic Engineering (EEE) and expanding into Python on the way to becoming a software engineer.</p><img src="Images/university.jpg" alt="Barishal Engineering College" loading="lazy"></div>
   </div>
 </section>
@@ -143,6 +151,7 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 <section class="gm" id="play">
   <div class="gh"><p id="cap">Break it if you can. I still ship.</p><div class="lv" id="lv"><i></i><i></i><i></i></div></div>
   <canvas id="g"></canvas>
+  <div id="gift"><b>🎁</b><h3>You broke it!</h3><p>Gift unlocked: a big high-five and my thanks for playing. Say hi if you liked it!</p><a href="#connect">Say hi 👋</a></div>
   <div class="gb"><button id="pl">▶ Play</button><button id="sp">■ Stop</button></div>
 </section>
 
@@ -154,7 +163,7 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
       <p>Open to team projects, internships and collaborations. Say hello — I'd love to hear from you.</p>
       <div class="bt">
         <a class="b1" href="https://wa.me/+8801971124566" target="_blank" rel="noopener">Message on WhatsApp ↗</a>
-        <a class="b2" href="mailto:REPLACE_WITH_YOUR_EMAIL@gmail.com?subject=Hello%20Ashraf">Send an email ✉</a>
+        <a class="b2" href="mailto:towasin344533@gmail.com?subject=Hello%20Ashraf">Send an email ✉</a>
       </div>
     </div>
     <div class="card r">
@@ -168,6 +177,7 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
     </div>
   </div>
 </section>
+<canvas id="cf"></canvas>
 <footer>© 2022–present Ashraf Siddiki Towasin. All rights reserved.</footer>
 
 <script>
@@ -244,37 +254,47 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
 /* ===== PARTICLE-DUST PORTRAIT ===== */
 (function(){
   const c=document.getElementById('dust'),x=c.getContext('2d'),hero=document.getElementById('hero'),pf=document.getElementById('pfall');
-  let W,H,P=[],vis=true,mouse={x:-999,y:-999},box=null,fallback=false,shown=false;
+  const SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg'];
+  let W,H,P=[],vis=true,mouse={x:-999,y:-999},box=null,fallback=false,shown=false,C=null,src='';
   function size(){const d=devicePixelRatio>1?1.5:1;W=c.width=hero.clientWidth*d;H=c.height=hero.clientHeight*d;c.k=d;layout()}
   function rnd(n){const a=[];for(let i=0;i<n;i++)a.push({x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,tx:null,ty:null,a:.25+Math.random()*.6});return a}
   function layout(){
     if(!P.targets)return;
     const ph=H*.62,pw=Math.min(ph*P.ar,W*.9),h2=pw/P.ar;box={l:(W-pw)/2,t:H*.34,w:pw,h:h2};
     P.forEach((p,i)=>{const t=P.targets[i%P.targets.length];p.tx=box.l+t[0]*box.w;p.ty=box.t+t[1]*box.h;p.a=.3+t[2]*.7});
-    if(fallback){pf.style.left=box.l/c.k+'px';pf.style.top=box.t/c.k+'px';pf.style.width=box.w/c.k+'px';pf.style.height=box.h/c.k+'px'}
+    if(fallback&&C){
+      const bw=box.w/c.k,k=bw/C.cw;
+      pf.style.cssText+=`;left:${box.l/c.k}px;top:${box.t/c.k}px;width:${bw}px;height:${box.h/c.k}px;background-image:url("${src}");background-repeat:no-repeat;background-size:${C.iw*k}px ${C.ih*k}px;background-position:${-C.sx*k}px ${-C.sy*k}px`;
+    }
   }
-  function useFallback(ar){          /* pixels can't be read (opened from a folder) -> dust forms an oval, then the dotted photo fades in */
+  function useFallback(){            /* pixels can't be read (opened from a folder) -> dust forms an oval, then the dotted photo fades in */
     const T=[];for(let i=0;i<4000;i++){const an=Math.random()*6.283,r=Math.sqrt(Math.random());T.push([.5+.5*r*Math.cos(an),.5+.5*r*Math.sin(an),.3+Math.random()*.4])}
-    fallback=true;P=rnd(3200);P.targets=T;P.ar=ar||.8;layout();
+    fallback=true;P=rnd(3200);P.targets=T;P.ar=C.cw/C.ch;layout();
   }
   P=rnd(1400);size();addEventListener('resize',size);
-  const img=new Image();
-  img.onload=()=>{
-    const ar=img.naturalWidth/img.naturalHeight;
-    try{
-      const iw=130,ih=Math.round(iw/ar),o=document.createElement('canvas');o.width=iw;o.height=ih;
-      const q=o.getContext('2d');q.drawImage(img,0,0,iw,ih);const d=q.getImageData(0,0,iw,ih).data,L=new Float32Array(iw*ih);
-      for(let i=0;i<L.length;i++)L[i]=(.3*d[i*4]+.59*d[i*4+1]+.11*d[i*4+2])/255;
-      const s=[...L].sort((a,b)=>a-b),lo=s[(L.length*.08)|0],hi=s[(L.length*.97)|0],T=[];
-      for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){
-        const l=Math.max(0,Math.min(1,(L[j*iw+i]-lo)/((hi-lo)||1))),dx=(i/iw-.5)*2,dy=(j/ih-.5)*2,f=Math.max(0,1-(dx*dx*.9+dy*dy*.9));
-        if(Math.random()<Math.pow(l,1.3)*f*1.5)T.push([i/iw,j/ih,l]);
-      }
-      if(T.length<200)throw 0;
-      P=rnd(Math.min(T.length,4200));P.targets=T.sort(()=>Math.random()-.5);P.ar=ar;layout();
-    }catch(e){useFallback(ar)}
-  };
-  img.src='mypic.jpg';
+  function load(i){
+    if(i>=SRC.length)return;
+    const img=new Image();src=SRC[i];
+    img.onerror=()=>load(i+1);
+    img.onload=()=>{
+      const iw0=img.naturalWidth,ih0=img.naturalHeight,cw=Math.min(iw0*.5,ih0/1.25),ch=cw*1.25;   /* crop: head + shoulders, top-centre of the photo */
+      C={iw:iw0,ih:ih0,cw,ch,sx:Math.max(0,Math.min(iw0-cw,iw0*.49-cw/2)),sy:0};
+      try{
+        const iw=130,ih=Math.round(iw*1.25),o=document.createElement('canvas');o.width=iw;o.height=ih;
+        const q=o.getContext('2d');q.drawImage(img,C.sx,C.sy,C.cw,C.ch,0,0,iw,ih);const d=q.getImageData(0,0,iw,ih).data,L=new Float32Array(iw*ih);
+        for(let k=0;k<L.length;k++)L[k]=(.3*d[k*4]+.59*d[k*4+1]+.11*d[k*4+2])/255;
+        const s=[...L].sort((a,b)=>a-b),lo=s[(L.length*.08)|0],hi=s[(L.length*.97)|0],T=[];
+        for(let j=0;j<ih;j++)for(let k=0;k<iw;k++){
+          const l=Math.max(0,Math.min(1,(L[j*iw+k]-lo)/((hi-lo)||1))),dx=(k/iw-.5)*2,dy=(j/ih-.5)*2,f=Math.max(0,1-(dx*dx*.9+dy*dy*.9));
+          if(Math.random()<Math.pow(l,1.3)*f*1.5)T.push([k/iw,j/ih,l]);
+        }
+        if(T.length<200)throw 0;
+        P=rnd(Math.min(T.length,4200));P.targets=T.sort(()=>Math.random()-.5);P.ar=.8;layout();
+      }catch(e){useFallback()}
+    };
+    img.src=SRC[i];
+  }
+  load(0);
   new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(hero);
   hero.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();mouse.x=(e.clientX-r.left)*c.k;mouse.y=(e.clientY-r.top)*c.k});
   hero.addEventListener('pointerleave',()=>mouse.x=-999);
@@ -297,7 +317,7 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
 /* ===== GAME: break the dot-matrix HELLO WORLD (Play / Stop) ===== */
 (function(){
   const F={H:['10001','10001','10001','11111','10001','10001','10001'],E:['11111','10000','10000','11110','10000','10000','11111'],L:['10000','10000','10000','10000','10000','10000','11111'],O:['01110','10001','10001','10001','10001','10001','01110'],W:['10001','10001','10001','10101','10101','11011','10001'],R:['11110','10001','10001','11110','10100','10010','10001'],D:['11110','10001','10001','10001','10001','10001','11110']};
-  const c=document.getElementById('g'),x=c.getContext('2d'),cap=document.getElementById('cap'),lv=[...document.querySelectorAll('#lv i')],pl=document.getElementById('pl'),sp=document.getElementById('sp');
+  const c=document.getElementById('g'),x=c.getContext('2d'),cap=document.getElementById('cap'),lv=[...document.querySelectorAll('#lv i')],pl=document.getElementById('pl'),sp=document.getElementById('sp'),gift=document.getElementById('gift');
   let s,B,lives,ball,padX,tx,padW,SP,run=false,vis=false,playing=false,over=false,timer,last=0,key={l:0,r:0};
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   function ui(){pl.classList.toggle('on',playing);sp.classList.toggle('on',!playing);lv.forEach((e,i)=>e.className=i<lives?'':'x')}
@@ -307,8 +327,20 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     B=[];['HELLO','WORLD'].forEach((wd,li)=>{for(let k=0;k<5;k++)F[wd[k]].forEach((row,r)=>[...row].forEach((v,cc)=>{if(v==='1')B.push({x:s*(1+k*6+cc),y:s*(1+li*8+r),a:true})}))});
     padW=s*7.5;padX=tx=c.W/2;SP=s*17;playing=false;reset(true);
   }
+  function celebrate(){
+    gift.classList.add('show');
+    const cv=document.getElementById('cf'),cx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;cv.style.display='block';
+    const cols=['#ffffff','#ffd166','#ef476f','#06d6a0','#4cc9f0','#a78bfa'];
+    const ps=Array.from({length:170},()=>({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.7,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,w:6+Math.random()*6,h:4+Math.random()*6,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[Math.random()*6|0]}));
+    const t0=performance.now();
+    (function f(t){
+      cx.clearRect(0,0,cv.width,cv.height);
+      for(const p of ps){p.x+=p.vx;p.y+=p.vy;p.vy+=.04;p.r+=p.vr;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);cx.restore()}
+      if(t-t0<4800)requestAnimationFrame(f);else{cx.clearRect(0,0,cv.width,cv.height);cv.style.display='none'}
+    })(t0);
+  }
   function reset(full){
-    clearTimeout(timer);run=false;over=false;
+    clearTimeout(timer);run=false;over=false;gift.classList.remove('show');
     if(full){lives=3;B.forEach(b=>b.a=true);cap.textContent='Press Play. Break it if you can.'}
     ball={x:padX,y:c.H-s*3,vx:0,vy:0};ui();
   }
@@ -349,7 +381,7 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     if(ball.y>c.H+s){
       lives--;run=false;ball={x:padX,y:c.H-s*3,vx:0,vy:0};ui();
       if(lives<=0){playing=false;over=true;cap.textContent='Game over — press Play to try again.';ui()}else launch();
-    }else if(!B.some(b=>b.a)){run=false;playing=false;over=true;cap.textContent='You broke it. I still ship. 🚀';ui()}
+    }else if(!B.some(b=>b.a)){run=false;playing=false;over=true;cap.textContent='You broke it. I still ship. 🚀';ui();celebrate()}
   }
   function draw(){
     x.clearRect(0,0,c.W,c.H);
