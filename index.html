@@ -28,8 +28,6 @@ a{color:inherit;text-decoration:none}
 #word span{display:inline-block;opacity:0;background:linear-gradient(#fff 30%,#777);-webkit-background-clip:text;background-clip:text;color:transparent;transition:transform .7s cubic-bezier(.2,1.3,.4,1),opacity .4s}
 #word span.in{opacity:1;transform:none!important}
 #rip{position:absolute;width:12px;height:4px;border:1px solid #fffb;border-radius:50%;opacity:0;transform:translate(-50%,-50%);pointer-events:none}
-#pfall{position:absolute;z-index:1;opacity:0;transition:opacity 1.8s;pointer-events:none;object-fit:cover;filter:grayscale(1) contrast(1.4) brightness(1.15);-webkit-mask-image:radial-gradient(circle,#000 34%,transparent 40%),radial-gradient(ellipse at center,#000 45%,transparent 72%);mask-image:radial-gradient(circle,#000 34%,transparent 40%),radial-gradient(ellipse at center,#000 45%,transparent 72%);-webkit-mask-size:5px 5px,100% 100%;mask-size:5px 5px,100% 100%;-webkit-mask-composite:source-in;mask-composite:intersect}
-#pfall.show{opacity:.9}
 #cf{position:fixed;inset:0;z-index:90;pointer-events:none;display:none}
 #gift{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) scale(.6);opacity:0;pointer-events:none;text-align:center;background:#0b0b0bf2;border:1px solid var(--l);border-radius:22px;padding:24px 28px;width:min(86%,330px);transition:opacity .4s,transform .6s cubic-bezier(.2,1.4,.4,1);z-index:5}
 #gift.show{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
@@ -48,16 +46,16 @@ nav a:hover{text-decoration:underline}
 /* hero */
 #hero{position:relative;height:100svh;min-height:640px;text-align:center;overflow:hidden}
 #dust{position:absolute;inset:0;width:100%;height:100%}
-.hero-t{position:relative;z-index:2;padding-top:11vh;pointer-events:none}
-.kick{display:inline-flex;align-items:center;gap:14px;font-size:.72rem;letter-spacing:.45em;color:var(--m);margin-bottom:16px}
+.hero-t{position:relative;z-index:2;height:100%;pointer-events:none}
+.kick{position:absolute;top:13vh;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:14px;font-size:.72rem;letter-spacing:.45em;color:var(--m)}
 .kick:before,.kick:after{content:'';width:34px;height:1px;background:var(--l)}
-.hero-t h1{font-size:clamp(2rem,10vw,4rem);font-weight:700;line-height:1.05;letter-spacing:-.02em}
-.hero-t p{margin-top:14px;font-size:.95rem;color:#aaa;letter-spacing:.04em}
-.hb{display:flex;gap:10px;justify-content:center;margin-top:20px;pointer-events:auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.hero-b{position:absolute;bottom:8vh;left:0;right:0}
+.hero-b p{font-size:.95rem;color:#aaa;letter-spacing:.04em;padding:0 16px}
+.hb{display:flex;gap:10px;justify-content:center;margin-top:18px;pointer-events:auto}
 .hb a{padding:10px 24px;border:1px solid var(--l);border-radius:30px;font-size:.82rem;color:#ddd;background:#0009;transition:.3s}
 .hb a.fill{background:#ece8dc;color:#111;border-color:#ece8dc}
 .hb a:hover{transform:translateY(-2px)}
-@media(min-width:900px){.hero-t h1 br{display:none}.hero-t h1{font-size:3.9rem}}
 /* sections */
 section.s{max-width:980px;margin:0 auto;padding:64px 24px}
 .lab{font-size:.7rem;letter-spacing:.25em;color:var(--m);margin-bottom:8px}
@@ -133,14 +131,15 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 
 <header id="hero">
   <canvas id="dust"></canvas>
-  <div id="pfall" aria-hidden="true"></div>
   <div class="hero-t">
     <div class="kick">PORTFOLIO</div>
-    <h1 class="chrome">ASHRAF SIDDIKI<br> TOWASIN</h1>
-    <p>Student · Programmer · Aspiring Software Engineer</p>
-    <div class="hb"><a href="#about">About me</a><a class="fill" href="#connect">Get in touch</a></div>
+    <h1 class="sr">Ashraf Siddiki Towasin</h1>
+    <div class="hero-b">
+      <p>Student · Programmer · Aspiring Software Engineer</p>
+      <div class="hb"><a href="#about">About me</a><a class="fill" href="#connect">Get in touch</a></div>
+    </div>
   </div>
-</header>
+  </header>
 
 <section class="s" id="about">
   <div class="lab r">ABOUT ME</div><h2 class="chrome r">Intro</h2>
@@ -271,91 +270,46 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.15});
 document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*.08+'s';io.observe(el)});
 
-/* ===== PARTICLE-DUST PORTRAIT ===== */
+/* ===== NAME MADE OF DUST: particles drift, then gather into "ASHRAF SIDDIKI TOWASIN" ===== */
 (function(){
-  const c=document.getElementById('dust'),x=c.getContext('2d'),hero=document.getElementById('hero'),pf=document.getElementById('pfall');
-  const SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg'];
-  let W,H,P=[],vis=true,mouse={x:-999,y:-999},box=null,fallback=false,shown=false,C=null,src='';
-  function size(){const d=devicePixelRatio>1?1.5:1;W=c.width=hero.clientWidth*d;H=c.height=hero.clientHeight*d;c.k=d;layout()}
-  function rnd(n){const a=[];for(let i=0;i<n;i++)a.push({x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,tx:null,ty:null,a:.25+Math.random()*.6});return a}
-  function layout(){
-    if(!P.targets)return;
-    const ph=H*.55,pw=Math.min(ph*P.ar,W*.9),h2=pw/P.ar;box={l:(W-pw)/2,t:H*.43,w:pw,h:h2};
-    P.forEach((p,i)=>{const t=P.targets[i%P.targets.length];p.tx=box.l+t[0]*box.w;p.ty=box.t+t[1]*box.h;p.a=.3+t[2]*.7});
-    if(fallback&&C){
-      const bw=box.w/c.k,k=bw/C.cw;
-      pf.style.cssText+=`;left:${box.l/c.k}px;top:${box.t/c.k}px;width:${bw}px;height:${box.h/c.k}px;background-image:url("${src}");background-repeat:no-repeat;background-size:${C.iw*k}px ${C.ih*k}px;background-position:${-C.sx*k}px ${-C.sy*k}px`;
-    }
+  const c=document.getElementById('dust'),x=c.getContext('2d'),hero=document.getElementById('hero');
+  let W=1,H=1,k=1,P=[],vis=true,mouse={x:-999,y:-999},rt;
+  const lines=()=>hero.clientWidth>=900?['ASHRAF SIDDIKI','TOWASIN']:['ASHRAF','SIDDIKI','TOWASIN'];
+  function dust(n){const a=[];for(let i=0;i<n;i++)a.push({x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,tx:null,ty:null,a:.15+Math.random()*.25});return a}
+  function build(){
+    k=devicePixelRatio>1?1.5:1;W=c.width=Math.round(hero.clientWidth*k);H=c.height=Math.round(hero.clientHeight*k);
+    const L=lines(),o=document.createElement('canvas');o.width=W;o.height=H;const q=o.getContext('2d');
+    q.font='700 100px "Space Grotesk",sans-serif';
+    const mw=Math.max(...L.map(s=>q.measureText(s).width));
+    const f=Math.min(W*.88/mw*100,H*.46/(L.length*1.04),W*.22);
+    q.font='700 '+f+'px "Space Grotesk",sans-serif';q.fillStyle='#fff';q.textAlign='center';q.textBaseline='middle';
+    L.forEach((s,i)=>q.fillText(s,W/2,H*.5+(i-(L.length-1)/2)*f*1.04));
+    const d=q.getImageData(0,0,W,H).data,step=Math.max(3,Math.round(f/26)),T=[];
+    for(let y=0;y<H;y+=step)for(let u=0;u<W;u+=step)if(d[(y*W+u)*4+3]>128)T.push([u+(Math.random()-.5)*step*.5,y+(Math.random()-.5)*step*.5]);
+    T.sort(()=>Math.random()-.5);if(T.length>9000)T.length=9000;
+    while(P.length<T.length+300)P.push(dust(1)[0]);
+    P.forEach((p,i)=>{if(i<T.length){p.tx=T[i][0];p.ty=T[i][1];p.a=.55+Math.random()*.4}else{p.tx=null;p.a=.15+Math.random()*.25}});
+    c.dotSize=Math.max(1.6*k,step*.52);
   }
-  /* Turns a face crop (RGBA pixels) into dust targets: skin-tone shading + hair + edges, centred on the head */
-  function targets(d,iw,ih){
-    const N=iw*ih,Y=new Float32Array(N),sk=new Float32Array(N),hr=new Float32Array(N),f=new Float32Array(N);
-    for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){
-      const k=j*iw+i,R=d[k*4],G=d[k*4+1],B=d[k*4+2];
-      const y=.299*R+.587*G+.114*B,cb=128-.168736*R-.331264*G+.5*B,cr=128+.5*R-.418688*G-.081312*B;
-      Y[k]=y;sk[k]=(cb>77&&cb<135&&cr>133&&cr<180&&y>35)?1:0;hr[k]=y<62?1:0;
-      const dx=(i/iw-.5)*2,dy=(j/ih-.42)*2;f[k]=Math.max(0,1-(dx*dx+dy*dy*.85));
-    }
-    const blur=m=>{const t=new Float32Array(N),o=new Float32Array(N);
-      for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){let s=0;for(let a=-1;a<=1;a++){const x=i+a;if(x>=0&&x<iw)s+=m[j*iw+x]}t[j*iw+i]=s/3}
-      for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){let s=0;for(let a=-1;a<=1;a++){const y=j+a;if(y>=0&&y<ih)s+=t[y*iw+i]}o[j*iw+i]=s/3}
-      return o};
-    const s=blur(sk),h2=blur(hr);
-    const idx=[];for(let k=0;k<N;k++)if(sk[k])idx.push(k);
-    idx.sort((a,b)=>Y[a]-Y[b]);
-    const rk=new Float32Array(N);if(idx.length>10)idx.forEach((k,n)=>rk[k]=n/(idx.length-1));
-    const sorted=Array.from(Y).sort((a,b)=>a-b),lo=sorted[(N*.05)|0]/255,hi=sorted[(N*.98)|0]/255;
-    const l=new Float32Array(N);for(let k=0;k<N;k++)l[k]=Math.max(0,Math.min(1,(Y[k]/255-lo)/((hi-lo)||1)));
-    const e=new Float32Array(N),ev=[];
-    for(let j=1;j<ih-1;j++)for(let i=1;i<iw-1;i++){const k=j*iw+i,gx=l[k+1]-l[k-1],gy=l[k+iw]-l[k-iw];e[k]=Math.hypot(gx,gy);if(f[k]>.2)ev.push(e[k])}
-    ev.sort((a,b)=>a-b);const ep=ev[(ev.length*.93)|0]||1;
-    const T=[];
-    for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){
-      const k=j*iw+i,ee=Math.min(1,e[k]/ep),inside=Math.min(1,s[k]+.9*h2[k]);
-      const p=f[k]*(s[k]*(.18+.82*rk[k])+h2[k]*.5*(1-s[k]))+f[k]*ee*1.1*(.25+.75*inside);
-      if(Math.random()<p*1.9)T.push([i/iw,j/ih,Math.min(1,p*1.2)]);
-    }
-    return T;
-  }
-  function useFallback(){            /* pixels can't be read (opened from a folder) -> dust forms an oval, then the dotted photo fades in */
-    const T=[];for(let i=0;i<4000;i++){const an=Math.random()*6.283,r=Math.sqrt(Math.random());T.push([.5+.5*r*Math.cos(an),.5+.5*r*Math.sin(an),.3+Math.random()*.4])}
-    fallback=true;P=rnd(3200);P.targets=T;P.ar=C.cw/C.ch;layout();
-  }
-  P=rnd(1400);size();addEventListener('resize',size);
-  function load(i){
-    if(i>=SRC.length)return;
-    const img=new Image();src=SRC[i];
-    img.onerror=()=>load(i+1);
-    img.onload=()=>{
-      const FACE={cx:.486,w:.24};   /* where his face is in mypic.jpg (fraction of image width) — change if you use another photo */
-      const iw0=img.naturalWidth,ih0=img.naturalHeight,cw=Math.min(iw0*FACE.w,ih0/1.25),ch=cw*1.25;
-      C={iw:iw0,ih:ih0,cw,ch,sx:Math.max(0,Math.min(iw0-cw,iw0*FACE.cx-cw/2)),sy:0};
-      try{
-        const iw=190,ih=Math.round(iw*1.25),o=document.createElement('canvas');o.width=iw;o.height=ih;
-        const q=o.getContext('2d');q.drawImage(img,C.sx,C.sy,C.cw,C.ch,0,0,iw,ih);
-        const T=targets(q.getImageData(0,0,iw,ih).data,iw,ih);
-        if(T.length<400)throw 0;
-        P=rnd(Math.min(T.length,6500));P.targets=T.sort(()=>Math.random()-.5);P.ar=.8;layout();
-      }catch(e){useFallback()}
-    };
-    img.src=SRC[i];
-  }
-  load(0);
+  P=dust(500);build();
+  const go=()=>build();
+  if(document.fonts&&document.fonts.load)document.fonts.load('700 100px "Space Grotesk"').then(go,go);
+  setTimeout(go,1800);
+  addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(build,150)});
   new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(hero);
-  hero.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();mouse.x=(e.clientX-r.left)*c.k;mouse.y=(e.clientY-r.top)*c.k});
+  hero.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();mouse.x=(e.clientX-r.left)*k;mouse.y=(e.clientY-r.top)*k});
   hero.addEventListener('pointerleave',()=>mouse.x=-999);
   (function loop(){
     requestAnimationFrame(loop);if(!vis)return;
     x.clearRect(0,0,W,H);
-    const t=window.dustStart?performance.now()-window.dustStart:-1,form=t>1200,R=70*c.k;
-    if(fallback&&!shown&&t>3000){shown=true;pf.classList.add('show')}
+    const t=window.dustStart?performance.now()-window.dustStart:-1,form=t>900,R=80*k,s=c.dotSize||2;
     for(const p of P){
-      if(form&&p.tx!=null){p.vx+=(p.tx-p.x)*.012;p.vy+=(p.ty-p.y)*.012}
+      if(form&&p.tx!=null){p.vx+=(p.tx-p.x)*.014;p.vy+=(p.ty-p.y)*.014}
       else{p.vx+=(Math.random()-.5)*.08;p.vy+=(Math.random()-.5)*.08}
       const dx=p.x-mouse.x,dy=p.y-mouse.y,dd=dx*dx+dy*dy;
-      if(dd<R*R){const f=(1-Math.sqrt(dd)/R)*3;p.vx+=dx/Math.sqrt(dd+1)*f;p.vy+=dy/Math.sqrt(dd+1)*f}
+      if(dd<R*R){const f=(1-Math.sqrt(dd)/R)*3.2;p.vx+=dx/Math.sqrt(dd+1)*f;p.vy+=dy/Math.sqrt(dd+1)*f}
       p.vx*=.9;p.vy*=.9;p.x+=p.vx;p.y+=p.vy;
-      x.fillStyle=`rgba(255,255,255,${shown?p.a*.35:p.a})`;x.fillRect(p.x,p.y,1.5*c.k,1.5*c.k);
+      x.fillStyle='rgba(255,255,255,'+p.a+')';x.fillRect(p.x,p.y,s,s);
     }
   })();
 })();
