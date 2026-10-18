@@ -280,12 +280,42 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   function rnd(n){const a=[];for(let i=0;i<n;i++)a.push({x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,tx:null,ty:null,a:.25+Math.random()*.6});return a}
   function layout(){
     if(!P.targets)return;
-    const ph=H*.52,pw=Math.min(ph*P.ar,W*.9),h2=pw/P.ar;box={l:(W-pw)/2,t:H*.44,w:pw,h:h2};
+    const ph=H*.55,pw=Math.min(ph*P.ar,W*.9),h2=pw/P.ar;box={l:(W-pw)/2,t:H*.43,w:pw,h:h2};
     P.forEach((p,i)=>{const t=P.targets[i%P.targets.length];p.tx=box.l+t[0]*box.w;p.ty=box.t+t[1]*box.h;p.a=.3+t[2]*.7});
     if(fallback&&C){
       const bw=box.w/c.k,k=bw/C.cw;
       pf.style.cssText+=`;left:${box.l/c.k}px;top:${box.t/c.k}px;width:${bw}px;height:${box.h/c.k}px;background-image:url("${src}");background-repeat:no-repeat;background-size:${C.iw*k}px ${C.ih*k}px;background-position:${-C.sx*k}px ${-C.sy*k}px`;
     }
+  }
+  /* Turns a face crop (RGBA pixels) into dust targets: skin-tone shading + hair + edges, centred on the head */
+  function targets(d,iw,ih){
+    const N=iw*ih,Y=new Float32Array(N),sk=new Float32Array(N),hr=new Float32Array(N),f=new Float32Array(N);
+    for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){
+      const k=j*iw+i,R=d[k*4],G=d[k*4+1],B=d[k*4+2];
+      const y=.299*R+.587*G+.114*B,cb=128-.168736*R-.331264*G+.5*B,cr=128+.5*R-.418688*G-.081312*B;
+      Y[k]=y;sk[k]=(cb>77&&cb<135&&cr>133&&cr<180&&y>35)?1:0;hr[k]=y<62?1:0;
+      const dx=(i/iw-.5)*2,dy=(j/ih-.42)*2;f[k]=Math.max(0,1-(dx*dx+dy*dy*.85));
+    }
+    const blur=m=>{const t=new Float32Array(N),o=new Float32Array(N);
+      for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){let s=0;for(let a=-1;a<=1;a++){const x=i+a;if(x>=0&&x<iw)s+=m[j*iw+x]}t[j*iw+i]=s/3}
+      for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){let s=0;for(let a=-1;a<=1;a++){const y=j+a;if(y>=0&&y<ih)s+=t[y*iw+i]}o[j*iw+i]=s/3}
+      return o};
+    const s=blur(sk),h2=blur(hr);
+    const idx=[];for(let k=0;k<N;k++)if(sk[k])idx.push(k);
+    idx.sort((a,b)=>Y[a]-Y[b]);
+    const rk=new Float32Array(N);if(idx.length>10)idx.forEach((k,n)=>rk[k]=n/(idx.length-1));
+    const sorted=Array.from(Y).sort((a,b)=>a-b),lo=sorted[(N*.05)|0]/255,hi=sorted[(N*.98)|0]/255;
+    const l=new Float32Array(N);for(let k=0;k<N;k++)l[k]=Math.max(0,Math.min(1,(Y[k]/255-lo)/((hi-lo)||1)));
+    const e=new Float32Array(N),ev=[];
+    for(let j=1;j<ih-1;j++)for(let i=1;i<iw-1;i++){const k=j*iw+i,gx=l[k+1]-l[k-1],gy=l[k+iw]-l[k-iw];e[k]=Math.hypot(gx,gy);if(f[k]>.2)ev.push(e[k])}
+    ev.sort((a,b)=>a-b);const ep=ev[(ev.length*.93)|0]||1;
+    const T=[];
+    for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){
+      const k=j*iw+i,ee=Math.min(1,e[k]/ep),inside=Math.min(1,s[k]+.9*h2[k]);
+      const p=f[k]*(s[k]*(.18+.82*rk[k])+h2[k]*.5*(1-s[k]))+f[k]*ee*1.1*(.25+.75*inside);
+      if(Math.random()<p*1.9)T.push([i/iw,j/ih,Math.min(1,p*1.2)]);
+    }
+    return T;
   }
   function useFallback(){            /* pixels can't be read (opened from a folder) -> dust forms an oval, then the dotted photo fades in */
     const T=[];for(let i=0;i<4000;i++){const an=Math.random()*6.283,r=Math.sqrt(Math.random());T.push([.5+.5*r*Math.cos(an),.5+.5*r*Math.sin(an),.3+Math.random()*.4])}
@@ -297,19 +327,15 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     const img=new Image();src=SRC[i];
     img.onerror=()=>load(i+1);
     img.onload=()=>{
-      const iw0=img.naturalWidth,ih0=img.naturalHeight,cw=Math.min(iw0*.5,ih0/1.25),ch=cw*1.25;   /* crop: head + shoulders, top-centre of the photo */
-      C={iw:iw0,ih:ih0,cw,ch,sx:Math.max(0,Math.min(iw0-cw,iw0*.49-cw/2)),sy:0};
+      const FACE={cx:.486,w:.24};   /* where his face is in mypic.jpg (fraction of image width) — change if you use another photo */
+      const iw0=img.naturalWidth,ih0=img.naturalHeight,cw=Math.min(iw0*FACE.w,ih0/1.25),ch=cw*1.25;
+      C={iw:iw0,ih:ih0,cw,ch,sx:Math.max(0,Math.min(iw0-cw,iw0*FACE.cx-cw/2)),sy:0};
       try{
-        const iw=130,ih=Math.round(iw*1.25),o=document.createElement('canvas');o.width=iw;o.height=ih;
-        const q=o.getContext('2d');q.drawImage(img,C.sx,C.sy,C.cw,C.ch,0,0,iw,ih);const d=q.getImageData(0,0,iw,ih).data,L=new Float32Array(iw*ih);
-        for(let k=0;k<L.length;k++)L[k]=(.3*d[k*4]+.59*d[k*4+1]+.11*d[k*4+2])/255;
-        const s=[...L].sort((a,b)=>a-b),lo=s[(L.length*.08)|0],hi=s[(L.length*.97)|0],T=[];
-        for(let j=0;j<ih;j++)for(let k=0;k<iw;k++){
-          const l=Math.max(0,Math.min(1,(L[j*iw+k]-lo)/((hi-lo)||1))),dx=(k/iw-.5)*2,dy=(j/ih-.5)*2,f=Math.max(0,1-(dx*dx*.9+dy*dy*.9));
-          if(Math.random()<Math.pow(l,1.3)*f*1.5)T.push([k/iw,j/ih,l]);
-        }
-        if(T.length<200)throw 0;
-        P=rnd(Math.min(T.length,4200));P.targets=T.sort(()=>Math.random()-.5);P.ar=.8;layout();
+        const iw=190,ih=Math.round(iw*1.25),o=document.createElement('canvas');o.width=iw;o.height=ih;
+        const q=o.getContext('2d');q.drawImage(img,C.sx,C.sy,C.cw,C.ch,0,0,iw,ih);
+        const T=targets(q.getImageData(0,0,iw,ih).data,iw,ih);
+        if(T.length<400)throw 0;
+        P=rnd(Math.min(T.length,6500));P.targets=T.sort(()=>Math.random()-.5);P.ar=.8;layout();
       }catch(e){useFallback()}
     };
     img.src=SRC[i];
