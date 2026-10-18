@@ -44,14 +44,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:
 nav b{letter-spacing:.14em;font-size:.85rem}
 nav div{display:flex;gap:16px;font-size:.72rem;color:#ddd}
 nav a:hover{text-decoration:underline}
+@media(max-width:480px){nav{padding:14px 14px}nav div{gap:10px;font-size:.62rem}}
 /* hero */
 #hero{position:relative;height:100svh;min-height:640px;text-align:center;overflow:hidden}
 #dust{position:absolute;inset:0;width:100%;height:100%}
-.hero-t{position:relative;z-index:2;padding-top:12vh;pointer-events:none}
-.hero-t h1{font-size:clamp(2.6rem,12vw,7.5rem);font-weight:700;line-height:1;letter-spacing:-.02em}
-.hero-t p{margin-top:12px;font-size:1rem}
-.hero-t p em{color:var(--m)}
-.hero-t a{pointer-events:auto;display:inline-block;margin-top:18px;padding:9px 22px;border:1px solid var(--l);border-radius:30px;font-size:.8rem;color:#ccc;background:#0008}
+.hero-t{position:relative;z-index:2;padding-top:11vh;pointer-events:none}
+.kick{display:inline-flex;align-items:center;gap:14px;font-size:.72rem;letter-spacing:.45em;color:var(--m);margin-bottom:16px}
+.kick:before,.kick:after{content:'';width:34px;height:1px;background:var(--l)}
+.hero-t h1{font-size:clamp(2rem,10vw,4rem);font-weight:700;line-height:1.05;letter-spacing:-.02em}
+.hero-t p{margin-top:14px;font-size:.95rem;color:#aaa;letter-spacing:.04em}
+.hb{display:flex;gap:10px;justify-content:center;margin-top:20px;pointer-events:auto}
+.hb a{padding:10px 24px;border:1px solid var(--l);border-radius:30px;font-size:.82rem;color:#ddd;background:#0009;transition:.3s}
+.hb a.fill{background:#ece8dc;color:#111;border-color:#ece8dc}
+.hb a:hover{transform:translateY(-2px)}
+@media(min-width:900px){.hero-t h1 br{display:none}.hero-t h1{font-size:3.9rem}}
 /* sections */
 section.s{max-width:980px;margin:0 auto;padding:64px 24px}
 .lab{font-size:.7rem;letter-spacing:.25em;color:var(--m);margin-bottom:8px}
@@ -61,21 +67,31 @@ h2{font-size:clamp(2.2rem,7vw,4rem);line-height:1.05;margin-bottom:24px}
 .box{border:1px solid var(--l);border-radius:18px;padding:26px;background:#0a0a0a;color:#bbb;line-height:1.85}
 .facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
 .facts span,.chips span{border:1px solid var(--l);border-radius:30px;padding:7px 16px;font-size:.82rem;color:#ddd}
-.chips{display:flex;flex-wrap:wrap;gap:10px}
-.prj{display:flex;gap:18px;align-items:baseline;padding:24px 0;border-top:1px solid var(--l)}
-.prj i{font-style:normal;color:var(--m);font-size:.8rem}
-.prj h3{font-size:1.3rem}
-.prj p{color:#999;margin:8px 0 10px;line-height:1.7;font-size:.92rem;max-width:560px}
-.prj a{font-size:.8rem;border-bottom:1px solid #666}
+.mq{overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.mq.drag{cursor:grabbing}
+.mqt{display:flex;gap:10px;width:max-content;will-change:transform;padding:4px 0}
+.mqt span{border:1px solid var(--l);border-radius:30px;padding:10px 20px;font-size:.88rem;color:#ddd;white-space:nowrap;background:#0a0a0a}
+.wd{display:grid;grid-template-columns:1fr;gap:16px;max-width:620px}
+.wdc{border:1px solid var(--l);border-radius:18px;padding:24px;background:#0a0a0a;transition:.35s}
+.wdc:hover{border-color:#555;transform:translateY(-4px)}
+.wdc i{font-style:normal;color:var(--m);font-size:.75rem}
+.wdc h3{font-size:1.25rem;margin:8px 0}
+.wdc p{color:#999;line-height:1.7;font-size:.92rem}
+.fv{display:inline-block;margin-top:22px;background:#ece8dc;color:#111;border-radius:40px;padding:14px 28px;font-size:.92rem;transition:.3s}
+.fv:hover{transform:translateY(-3px)}
+@media(max-width:700px){.wd{grid-template-columns:1fr}}
 .tl{border-left:1px solid var(--l);margin-left:6px}
-.st{padding:0 0 30px 26px;position:relative}
+.st{display:block;padding:0 0 34px 26px;position:relative}
 .st:before{content:'';position:absolute;left:-5px;top:6px;width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 14px #fff}
 .st small{color:var(--m);letter-spacing:.15em;font-size:.7rem}
 .st h3{font-size:1.4rem;margin:4px 0}
 .st b{font-weight:500;color:#ccc;font-size:.9rem}
 .st p{color:#999;line-height:1.75;margin:8px 0 14px;font-size:.92rem;max-width:560px}
-.st img{width:100%;max-width:420px;aspect-ratio:16/9;object-fit:cover;border-radius:12px;filter:grayscale(1);border:1px solid var(--l);transition:filter .5s}
-.st img:hover{filter:none}
+.st:before{transition:.3s}
+.st:hover:before{transform:scale(1.5);box-shadow:0 0 24px #fff}
+.st h3{transition:.3s}.st:hover h3{color:#fff;letter-spacing:.01em}
+.go{display:inline-block;font-size:.78rem;color:#999;border-bottom:1px solid #444;padding-bottom:2px;transition:.3s}
+.st:hover .go{color:#fff;border-color:#fff}
 .con{display:flex;flex-wrap:wrap;gap:12px}
 .con a{border:1px solid var(--l);border-radius:30px;padding:12px 24px;font-size:.9rem;transition:.3s}
 .con a:hover{background:#fff;color:#000}
@@ -113,15 +129,16 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 
 <div id="intro"><div id="stage"><i id="rip"></i><i id="dot"></i><i id="bar"></i><div id="word"></div></div><div id="skip">TAP TO SKIP</div></div>
 
-<nav><b>TOWASIN</b><div><a href="#about">About</a><a href="#projects">Projects</a><a href="#journey">Journey</a><a href="#play">Play</a><a href="#connect">Connect</a></div></nav>
+<nav><b>TOWASIN</b><div><a href="#about">About</a><a href="#whatido">What I Do</a><a href="#journey">Journey</a><a href="#play">Play</a><a href="#connect">Connect</a></div></nav>
 
 <header id="hero">
   <canvas id="dust"></canvas>
   <div id="pfall" aria-hidden="true"></div>
   <div class="hero-t">
-    <h1 class="chrome">PORTFOLIO</h1>
-    <p><b>Ashraf Siddiki Towasin</b> <em>Student · Programmer</em></p>
-    <a href="#connect">Contact</a>
+    <div class="kick">PORTFOLIO</div>
+    <h1 class="chrome">ASHRAF SIDDIKI<br> TOWASIN</h1>
+    <p>Student · Programmer · Aspiring Software Engineer</p>
+    <div class="hb"><a href="#about">About me</a><a class="fill" href="#connect">Get in touch</a></div>
   </div>
 </header>
 
@@ -130,28 +147,31 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
   <div class="box r">Hello! I am Towasin, a student from Bangladesh. I love math and programming — learning to build things for the web and beyond. Solving mathematical problems is one of my favourite ways to spend time, and I started learning web development back on 10th January, 2023. I believe it's never too late to start a journey. I enjoy working in a team, and I'm working toward becoming a software engineer, one step at a time.
     <div class="facts"><span>Bangladesh</span><span>EEE Undergrad</span><span>Learning since Jan 2023</span></div>
   </div>
-  <div class="lab r" style="margin-top:34px">THE STACK</div>
-  <div class="chips r"><span>C Programming</span><span>Python</span><span>HTML</span><span>Web Development</span><span>Mathematics</span><span>Competitive Programming</span><span>Team Collaboration</span></div>
+  <div class="lab r" style="margin-top:34px">MY SKILLS · DRAG TO MOVE</div>
+  <div class="mq r" id="mq"><div class="mqt" id="mqt"><span>C Programming</span><span>Python</span><span>HTML</span><span>Web Development</span><span>Mathematics</span><span>Competitive Programming</span><span>YouTube SEO</span><span>Team Collaboration</span></div></div>
 </section>
 
-<section class="s" id="projects">
-  <div class="lab r">WHAT I'VE BUILT</div><h2 class="chrome r">Projects</h2>
-  <div class="prj r"><i>01</i><div><h3>Personal Portfolio Website</h3><p>Designed and built from scratch — an animated intro, a particle-dust portrait, a scroll timeline and a playable game, all in one page.</p><a href="REPLACE_WITH_YOUR_GITHUB_REPO_LINK" target="_blank" rel="noopener">View Source ↗</a></div></div>
-  </section>
+<section class="s" id="whatido">
+  <h2 class="chrome r">What I Do</h2>
+  <div class="wd">
+    <div class="wdc r"><i>01</i><h3>YouTube SEO</h3><p>I help YouTube creators get found — keyword research, titles, descriptions and tags that help videos rank and reach the right audience.</p></div>
+  </div>
+  <a class="fv r" href="https://www.fiverr.com/s/7jjoqyL" target="_blank" rel="noopener">View my gig on Fiverr ↗</a>
+</section>
 
 <section class="s" id="journey">
   <div class="lab r">MY PATH</div><h2 class="chrome r">Journey</h2>
   <div class="tl">
-    <div class="st r"><small>2018 — 2023</small><h3>High School Life</h3><b>Gouripur SA High School</b><p>Where it all began — my first real exposure to coding, and school clubs that let me explore programming outside the classroom.</p><img src="Images/high.jpg" alt="Gouripur SA High School" loading="lazy"></div>
-    <div class="st r"><small>2023 — 2025</small><h3>College Life</h3><b>Dr. Mosharraf Foundation Degree College</b><p>I built my technical foundation — heavy C programming to sharpen my logic, and HTML as my first real step toward web development.</p><img src="Images/college.jpg" alt="Dr. Mosharraf Foundation Degree College" loading="lazy"></div>
-    <div class="st r"><small>2025 — PRESENT</small><h3>University Life</h3><b>Barishal Engineering College</b><p>Studying Electrical &amp; Electronic Engineering (EEE) and expanding into Python on the way to becoming a software engineer.</p><img src="Images/university.jpg" alt="Barishal Engineering College" loading="lazy"></div>
+    <a class="st r" href="https://www.gouripursahs.edu.bd/" target="_blank" rel="noopener"><small>2018 — 2023</small><h3>High School Life</h3><b>Gouripur SA High School</b><p>Where it all began — my first real exposure to coding, and school clubs that let me explore programming outside the classroom.</p><span class="go">Visit website ↗</span></a>
+    <a class="st r" href="https://dmfcollege.edu.bd/" target="_blank" rel="noopener"><small>2023 — 2025</small><h3>College Life</h3><b>Dr. Mosharraf Foundation Degree College</b><p>I built my technical foundation — heavy C programming to sharpen my logic, and HTML as my first real step toward web development.</p><span class="go">Visit website ↗</span></a>
+    <a class="st r" href="https://barisal-eng.portal.gov.bd/" target="_blank" rel="noopener"><small>2025 — PRESENT</small><h3>University Life</h3><b>Barishal Engineering College</b><p>Studying Electrical &amp; Electronic Engineering (EEE) and expanding into Python on the way to becoming a software engineer.</p><span class="go">Visit website ↗</span></a>
   </div>
 </section>
 
 <section class="gm" id="play">
   <div class="gh"><p id="cap">Break it if you can. I still ship.</p><div class="lv" id="lv"><i></i><i></i><i></i></div></div>
   <canvas id="g"></canvas>
-  <div id="gift"><b>🎁</b><h3>You broke it!</h3><p>Gift unlocked: a big high-five and my thanks for playing. Say hi if you liked it!</p><a href="#connect">Say hi 👋</a></div>
+  <div id="gift"><b id="gE">🎁</b><h3 id="gT">You broke it!</h3><p id="gP">Gift unlocked: a big high-five and my thanks for playing. Say hi if you liked it!</p><a id="gA" href="#connect">Say hi 👋</a></div>
   <div class="gb"><button id="pl">▶ Play</button><button id="sp">■ Stop</button></div>
 </section>
 
@@ -162,12 +182,12 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
       <h2 class="chrome">Get in touch</h2>
       <p>Open to team projects, internships and collaborations. Say hello — I'd love to hear from you.</p>
       <div class="bt">
-        <a class="b1" href="https://wa.me/+8801971124566" target="_blank" rel="noopener">Message on WhatsApp ↗</a>
+        <a class="b1" href="https://wa.me/8801971124566" target="_blank" rel="noopener">Message on WhatsApp ↗</a>
         <a class="b2" href="mailto:towasin344533@gmail.com?subject=Hello%20Ashraf">Send an email ✉</a>
       </div>
     </div>
     <div class="card r">
-      <div class="rw"><small>EMAIL</small><a class="v" href="mailto:towasin344533@gmail.com">REPLACE_WITH_YOUR_EMAIL@gmail.com</a></div>
+      <div class="rw"><small>EMAIL</small><a class="v" href="mailto:towasin344533@gmail.com">towasin344533@gmail.com</a></div>
       <div class="rw"><small>BASED IN</small><b>Bangladesh</b></div>
       <div class="rw"><small>ELSEWHERE</small><div class="ic">
         <a href="https://facebook.com/towasinn/" target="_blank" rel="noopener" aria-label="Facebook">f</a>
@@ -260,7 +280,7 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   function rnd(n){const a=[];for(let i=0;i<n;i++)a.push({x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,tx:null,ty:null,a:.25+Math.random()*.6});return a}
   function layout(){
     if(!P.targets)return;
-    const ph=H*.62,pw=Math.min(ph*P.ar,W*.9),h2=pw/P.ar;box={l:(W-pw)/2,t:H*.34,w:pw,h:h2};
+    const ph=H*.52,pw=Math.min(ph*P.ar,W*.9),h2=pw/P.ar;box={l:(W-pw)/2,t:H*.44,w:pw,h:h2};
     P.forEach((p,i)=>{const t=P.targets[i%P.targets.length];p.tx=box.l+t[0]*box.w;p.ty=box.t+t[1]*box.h;p.a=.3+t[2]*.7});
     if(fallback&&C){
       const bw=box.w/c.k,k=bw/C.cw;
@@ -314,6 +334,30 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   })();
 })();
 
+/* ===== SKILLS MARQUEE: slides sideways by itself; drag it to move forward / back ===== */
+(function(){
+  const mq=document.getElementById('mq'),t=document.getElementById('mqt');
+  if(!mq||!t)return;
+  t.innerHTML+=t.innerHTML;
+  let pos=0,half=0,drag=false,lx=0,vis=false,last=0;
+  const meas=()=>{half=t.scrollWidth/2};
+  meas();addEventListener('resize',meas);addEventListener('load',meas);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(meas);
+  mq.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;mq.classList.add('drag');try{mq.setPointerCapture(e.pointerId)}catch(_){}});
+  mq.addEventListener('pointermove',e=>{if(!drag)return;pos+=e.clientX-lx;lx=e.clientX});
+  const up=()=>{drag=false;mq.classList.remove('drag')};
+  mq.addEventListener('pointerup',up);mq.addEventListener('pointercancel',up);
+  new IntersectionObserver(e=>{vis=e[0].isIntersecting}).observe(mq);
+  requestAnimationFrame(function f(tm){
+    requestAnimationFrame(f);
+    const dt=Math.min(.05,(tm-last)/1000||0);last=tm;
+    if(!vis||!half)return;
+    if(!drag)pos-=45*dt;
+    while(pos<-half)pos+=half;while(pos>0)pos-=half;
+    t.style.transform='translate3d('+pos+'px,0,0)';
+  });
+})();
+
 /* ===== GAME: break the dot-matrix HELLO WORLD (Play / Stop) ===== */
 (function(){
   const F={H:['10001','10001','10001','11111','10001','10001','10001'],E:['11111','10000','10000','11110','10000','10000','11111'],L:['10000','10000','10000','10000','10000','10000','11111'],O:['01110','10001','10001','10001','10001','10001','01110'],W:['10001','10001','10001','10101','10101','11011','10001'],R:['11110','10001','10001','11110','10100','10010','10001'],D:['11110','10001','10001','10001','10001','10001','11110']};
@@ -327,8 +371,17 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     B=[];['HELLO','WORLD'].forEach((wd,li)=>{for(let k=0;k<5;k++)F[wd[k]].forEach((row,r)=>[...row].forEach((v,cc)=>{if(v==='1')B.push({x:s*(1+k*6+cc),y:s*(1+li*8+r),a:true})}))});
     padW=s*7.5;padX=tx=c.W/2;SP=s*17;playing=false;reset(true);
   }
-  function celebrate(){
+  const gE=document.getElementById('gE'),gT=document.getElementById('gT'),gP=document.getElementById('gP'),gA=document.getElementById('gA');
+  function overlay(win){
+    gE.textContent=win?'🎁':'🎮';
+    gT.textContent=win?'You broke it!':'Game over';
+    gP.textContent=win?'Gift unlocked: a big high-five and my thanks for playing. Say hi if you liked it!':'So close! Even a bug can\'t stop me from shipping. Want another go?';
+    gA.textContent=win?'Say hi 👋':'Try again ↻';gA.href=win?'#connect':'#';gA.dataset.retry=win?'':'1';
     gift.classList.add('show');
+  }
+  gA.addEventListener('click',e=>{if(gA.dataset.retry){e.preventDefault();pl.click()}});
+  function celebrate(){
+    overlay(true);
     const cv=document.getElementById('cf'),cx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;cv.style.display='block';
     const cols=['#ffffff','#ffd166','#ef476f','#06d6a0','#4cc9f0','#a78bfa'];
     const ps=Array.from({length:170},()=>({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.7,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,w:6+Math.random()*6,h:4+Math.random()*6,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[Math.random()*6|0]}));
@@ -380,7 +433,7 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     for(let i=0;i<n;i++)sub(dt/n);                    /* sub-steps = no tunnelling */
     if(ball.y>c.H+s){
       lives--;run=false;ball={x:padX,y:c.H-s*3,vx:0,vy:0};ui();
-      if(lives<=0){playing=false;over=true;cap.textContent='Game over — press Play to try again.';ui()}else launch();
+      if(lives<=0){playing=false;over=true;cap.textContent='Game over — press Play to try again.';ui();overlay(false)}else launch();
     }else if(!B.some(b=>b.a)){run=false;playing=false;over=true;cap.textContent='You broke it. I still ship. 🚀';ui();celebrate()}
   }
   function draw(){
