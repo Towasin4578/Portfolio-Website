@@ -40,12 +40,6 @@ a{color:inherit;text-decoration:none}
 #gift h3{font-size:1.3rem;margin:6px 0}
 #gift p{color:#bbb;font-size:.88rem;line-height:1.6;margin-bottom:16px}
 #gift a{display:inline-block;background:#ece8dc;color:#111;border-radius:30px;padding:10px 22px;font-size:.85rem}
-.ab{display:grid;grid-template-columns:300px 1fr;gap:26px;align-items:start}
-.phw{position:relative;aspect-ratio:4/5;border:1px solid var(--l);border-radius:18px;overflow:hidden;background:#050505}
-.phw canvas{width:100%;height:100%;display:block}
-.phw img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:49% 0;filter:blur(14px);transform:scale(1.08);opacity:0;transition:filter 1.8s,transform 1.8s,opacity 1.2s}
-.phw img.in{filter:none;transform:none;opacity:1}
-@media(max-width:760px){.ab{grid-template-columns:1fr}.phw{max-width:300px;margin:0 auto}}
 #skip{position:fixed;bottom:22px;left:0;right:0;text-align:center;font-size:.7rem;color:#555;letter-spacing:.2em}
 /* nav */
 nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:16px 22px;mix-blend-mode:difference}
@@ -73,10 +67,10 @@ nav a:hover{text-decoration:underline}
 /* sections */
 section.s{max-width:980px;margin:0 auto;padding:64px 24px}
 .lab{font-size:.7rem;letter-spacing:.25em;color:var(--m);margin-bottom:8px}
-h2{font-size:clamp(2.2rem,7vw,4rem);line-height:1.05;margin-bottom:24px}
+h2{font-size:clamp(3.4rem,12vw,8.5rem);line-height:.92;letter-spacing:-.045em;margin-bottom:28px}
 .r{opacity:0;transform:translateY(30px);transition:opacity .9s,transform .9s}
 .r.in{opacity:1;transform:none}
-.box{border:1px solid var(--l);border-radius:18px;padding:26px;background:#0a0a0a;color:#bbb;line-height:1.85}
+.box{border:1px solid var(--l);border-radius:28px;padding:clamp(24px,4vw,52px);background:#141414;color:#e8e8e8;line-height:1.75;font-size:clamp(1.05rem,1.6vw,1.4rem)}
 .facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
 .facts span,.chips span{border:1px solid var(--l);border-radius:30px;padding:7px 16px;font-size:.82rem;color:#ddd}
 .mq{overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
@@ -143,6 +137,13 @@ nav a:hover{text-decoration:none}
 nav a:after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:#fff;transform:scaleX(0);transition:transform .3s}
 nav a.on:after,nav a:hover:after{transform:scaleX(1)}
 @media(max-width:700px){nav{padding:16px 14px}nav b{display:none}nav div{width:100%;justify-content:space-between;gap:6px;font-size:.58rem;letter-spacing:.04em}}
+.ab2{display:grid;grid-template-columns:1fr 1.05fr;gap:56px;align-items:center}
+.abl h2{margin-bottom:0}
+.box b{color:#fff;font-weight:700}
+.box .w{opacity:.18;transition:opacity .2s}
+.box .facts{margin-top:26px}
+@media(max-width:860px){.ab2{grid-template-columns:1fr;gap:26px}}
+nav{background:rgba(0,0,0,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);mix-blend-mode:normal}
 </style>
 </head>
 <body class="lock">
@@ -158,17 +159,19 @@ nav a.on:after,nav a:hover:after{transform:scaleX(1)}
   <div id="pfall" aria-hidden="true"></div>
   <canvas id="dust"></canvas>
   <div class="hero-b">
-    <p><b>Ashraf Siddiki</b> Student · Programmer</p>
+    <p><b>Student</b> · Programmer · Aspiring Software Engineer</p>
     <div class="hb"><a href="#about">About me</a><a class="fill" href="#connect">Get in touch</a></div>
   </div>
 </header>
 
 <section class="s" id="about">
-  <div class="lab r">ABOUT ME</div><h2 class="chrome r">Intro</h2>
-  <div class="ab"><div class="phw r" id="phw"><canvas id="phc"></canvas></div>
-  <div class="box r">Hello! I am Towasin, a student from Bangladesh. I love math and programming — learning to build things for the web and beyond. Solving mathematical problems is one of my favourite ways to spend time, and I started learning web development back on 10th January, 2023. I believe it's never too late to start a journey. I enjoy working in a team, and I'm working toward becoming a software engineer, one step at a time.
-    <div class="facts"><span>Bangladesh</span><span>EEE Undergrad</span><span>Learning since Jan 2023</span></div>
-  </div></div>
+  <div class="ab2">
+    <div class="abl"><div class="lab r">ABOUT ME</div><h2 class="chrome r">Intro</h2></div>
+    <div class="box r">
+      <p id="abt">Hello! I am <b>Towasin</b>, a <b>student from Bangladesh</b>. I love <b>math and programming</b> — learning to build things for the web and beyond. Solving mathematical problems is one of my favourite ways to spend time, and I started learning <b>web development</b> back on <b>10th January, 2023</b>. I believe it's never too late to start a journey. I enjoy working in a team, and I'm working toward becoming a <b>software engineer</b>, one step at a time.</p>
+      <div class="facts"><span>Bangladesh</span><span>EEE Undergrad</span><span>Learning since Jan 2023</span></div>
+    </div>
+  </div>
   <div class="lab r" style="margin-top:34px">MY SKILLS · DRAG TO MOVE</div>
   <div class="mq r" id="mq"><div class="mqt" id="mqt"><span>C Programming</span><span>Python</span><span>HTML</span><span>Web Development</span><span>Mathematics</span><span>Competitive Programming</span><span>YouTube SEO</span><span>Team Collaboration</span></div></div>
 </section>
@@ -314,7 +317,8 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
 /* ===== HERO PORTRAIT MADE OF DUST: dust drifts, then gathers into the portrait; brush the cursor through it and it scatters and flies back ===== */
 (function(){
   const c=document.getElementById('dust'),x=c.getContext('2d'),hero=document.getElementById('hero'),pf=document.getElementById('pfall');
-  const SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg'],FACE={cx:.486,w:.24};   /* FACE = where the face sits in mypic.jpg (fraction of image width) */
+  const SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg'],FACE={cx:.49,cy:.544,w:.24};   /* where his head sits in mypic.jpg: cx/cy = head centre (fraction across / down), w = crop width */
+  {const q=new URLSearchParams(location.search).get('face');if(q){const v=q.split(',').map(Number);if(v.length>=2&&v.every(n=>n>0&&n<1)){FACE.cx=v[0];FACE.cy=v[1];if(v[2])FACE.w=v[2]}}}   /* try ?face=0.49,0.54 in the address bar */
   let W=1,H=1,k=1,P=[],PT=null,C=null,src='',fallback=false,shown=false,vis=true,mouse={x:-999,y:-999,sp:0,dx:0,dy:0},rt;
   /* Turns a face crop (RGBA pixels) into dust targets: skin-tone shading + hair + edges, centred on the head */
   function targets(d,iw,ih){
@@ -366,7 +370,7 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     const img=new Image();src=SRC[i];img.onerror=()=>load(i+1);
     img.onload=()=>{
       const iw0=img.naturalWidth,ih0=img.naturalHeight,cw=Math.min(iw0*FACE.w,ih0/1.25),ch=cw*1.25;
-      C={iw:iw0,ih:ih0,cw,ch,sx:Math.max(0,Math.min(iw0-cw,iw0*FACE.cx-cw/2)),sy:0};
+      C={iw:iw0,ih:ih0,cw,ch,sx:Math.max(0,Math.min(iw0-cw,iw0*FACE.cx-cw/2)),sy:Math.max(0,Math.min(ih0-ch,ih0*FACE.cy-ch*.3))};
       try{
         const iw=190,ih=238,o=document.createElement('canvas');o.width=iw;o.height=ih;
         const q=o.getContext('2d');q.drawImage(img,C.sx,C.sy,C.cw,C.ch,0,0,iw,ih);
@@ -413,55 +417,27 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   })();
 })();
 
-/* ===== PHOTO FROM DUST: scattered dots fly together and become the photo (each dot carries its real colour) ===== */
+/* ===== ABOUT TEXT: words light up one by one as you scroll ===== */
 (function(){
-  const wrap=document.getElementById('phw'),c=document.getElementById('phc');if(!c)return;
-  const x=c.getContext('2d'),SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg'],COLS=72,ROWS=90;
-  let W=1,H=1,k=1,P=[],ready=false,vis=false,t0=0,IMG=null,mouse={x:-999,y:-999,sp:0,dx:0,dy:0},rt;
-  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-  function size(){k=Math.min(devicePixelRatio||1,2);const r=wrap.getBoundingClientRect();W=c.width=Math.max(2,Math.round(r.width*k));H=c.height=Math.max(2,Math.round(r.height*k))}
-  function build(img){
-    size();
-    const iw=img.naturalWidth,ih=img.naturalHeight,cw=Math.min(iw*.42,ih/1.25),ch=cw*1.25,sx=clamp(iw*.486-cw/2,0,iw-cw);
-    const o=document.createElement('canvas');o.width=COLS;o.height=ROWS;const q=o.getContext('2d');
-    q.drawImage(img,sx,0,cw,ch,0,0,COLS,ROWS);
-    const d=q.getImageData(0,0,COLS,ROWS).data;            /* throws when the page is opened straight from a folder */
-    P=[];
-    for(let j=0;j<ROWS;j++)for(let i=0;i<COLS;i++){const n=(j*COLS+i)*4;
-      P.push({tx:(i+.5)*W/COLS,ty:(j+.5)*H/ROWS,x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,r:d[n],g:d[n+1],b:d[n+2],dl:Math.random()*1100})}
-    ready=true;
+  const p=document.getElementById('abt');if(!p)return;
+  const ws=[];
+  (function wrap(node){
+    [...node.childNodes].forEach(n=>{
+      if(n.nodeType===3){
+        const f=document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(t=>{if(!t)return;if(/^\s+$/.test(t))f.appendChild(document.createTextNode(t));else{const s=document.createElement('span');s.className='w';s.textContent=t;f.appendChild(s);ws.push(s)}});
+        node.replaceChild(f,n);
+      }else if(n.nodeType===1)wrap(n);
+    });
+  })(p);
+  let tick=false;
+  function upd(){
+    tick=false;
+    const r=p.getBoundingClientRect(),vh=innerHeight,prog=Math.min(1,Math.max(0,(vh*.88-r.top)/(vh*.6))),lit=prog*(ws.length+8);
+    ws.forEach((s,i)=>{s.style.opacity=Math.min(1,Math.max(.18,.18+(lit-i)*.5))});
   }
-  function fallback(img){                                  /* pixels can't be read -> the photo itself fades in from a blur */
-    const im=document.createElement('img');im.src=img.src;im.alt='Ashraf Siddiki Towasin';wrap.appendChild(im);c.style.display='none';
-    new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){setTimeout(()=>im.classList.add('in'),200);o.disconnect()}}).observe(wrap);
-  }
-  function load(i){
-    if(i>=SRC.length){wrap.style.display='none';return}
-    const img=new Image();img.onerror=()=>load(i+1);
-    img.onload=()=>{IMG=img;try{build(img)}catch(e){fallback(img)}};
-    img.src=SRC[i];
-  }
-  load(0);
-  addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(IMG&&ready){try{build(IMG)}catch(e){}}},200)});
-  new IntersectionObserver(e=>{vis=e[0].isIntersecting;if(vis&&!t0)t0=performance.now()},{threshold:.25}).observe(wrap);
-  wrap.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect(),nx=(e.clientX-r.left)*(W/r.width),ny=(e.clientY-r.top)*(H/r.height);
-    if(mouse.x>-900){const mx=nx-mouse.x,my=ny-mouse.y;mouse.sp=Math.min(70*k,mouse.sp+Math.hypot(mx,my));mouse.dx=mx;mouse.dy=my}mouse.x=nx;mouse.y=ny});
-  wrap.addEventListener('pointerleave',()=>mouse.x=-999);
-  (function loop(){
-    requestAnimationFrame(loop);if(!vis||!ready)return;
-    x.clearRect(0,0,W,H);
-    const now=performance.now(),el=now-t0,cell=W/COLS,R=70*k,push=Math.min(mouse.sp,45*k)/k;mouse.sp*=.9;
-    for(const p of P){
-      const t=el-p.dl;
-      if(t>0){p.vx+=(p.tx-p.x)*.04;p.vy+=(p.ty-p.y)*.04}else{p.vx+=(Math.random()-.5)*.1;p.vy+=(Math.random()-.5)*.1}
-      if(push>1){const dx=p.x-mouse.x,dy=p.y-mouse.y,dd=dx*dx+dy*dy;if(dd<R*R){const dn=Math.sqrt(dd)+1,f=(1-dn/R)*push*.14;p.vx+=dx/dn*f+mouse.dx*.04*(1-dn/R);p.vy+=dy/dn*f+mouse.dy*.04*(1-dn/R)}}
-      p.vx*=.85;p.vy*=.85;p.x+=p.vx;p.y+=p.vy;
-      const dist=Math.hypot(p.tx-p.x,p.ty-p.y),q=clamp(1-dist/(W*.18),0,1);   /* 0 = flying dust (pale), 1 = home (true colour) */
-      x.fillStyle=`rgb(${(210+(p.r-210)*q)|0},${(215+(p.g-215)*q)|0},${(225+(p.b-225)*q)|0})`;
-      x.globalAlpha=.45+.55*q;const s=cell*(.4+.62*q);x.fillRect(p.x-s/2,p.y-s/2,s,s);
-    }
-    x.globalAlpha=1;
-  })();
+  addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(upd)}},{passive:true});
+  addEventListener('resize',upd);upd();
 })();
 
 /* ===== NAV: underline follows the section you are in ===== */
