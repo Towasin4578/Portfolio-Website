@@ -45,11 +45,12 @@ a{color:inherit;text-decoration:none}
 nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:16px 22px;background:rgba(0,0,0,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 nav b{letter-spacing:.14em;font-size:.85rem}
 nav div{display:flex;gap:16px;font-size:.72rem;color:#ddd}
-nav a:hover{text-decoration:underline}
+nav a{position:relative;padding-bottom:5px}
+nav a:after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform .3s}
+nav a.on:after,nav a:hover:after{transform:scaleX(1)}
 @media(max-width:480px){nav{padding:14px 14px}nav div{gap:10px;font-size:.62rem}}
 /* hero */
-#hero{position:relative;background:radial-gradient(ellipse at 50% 48%,#090d10 0%,#000 64%);height:100svh;min-height:640px;text-align:center;overflow:hidden}
-#dust{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+#hero{position:relative;background:#000;height:100svh;min-height:640px;text-align:center;overflow:hidden}
 .ttl{position:absolute;z-index:1;left:50%;bottom:calc(var(--hbh,70px) + 4.5vh + 26px);transform:translateX(-50%);white-space:nowrap;font-weight:700;font-size:clamp(3rem,16.5vw,15rem);line-height:.95;letter-spacing:-.03em;opacity:0;pointer-events:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .hero-b{position:absolute;z-index:3;left:4vw;right:4vw;bottom:4.5vh;display:flex;justify-content:space-between;align-items:center;gap:16px;opacity:0;transition:opacity 1s}
@@ -61,11 +62,11 @@ nav a:hover{text-decoration:underline}
 .hb a.fill{background:#ece8dc;color:#111;border-color:#ece8dc}
 .hb a:hover{transform:translateY(-2px)}
 @media(max-width:700px){.hero-b{flex-direction:column;bottom:3.5vh;gap:12px}.hero-b p{text-align:center}}
-/* photo made of colourful small cubes */
-.pt{--s:min(40svh,86vw,440px);position:absolute;z-index:0;left:calc(50% - var(--s)*.4);top:84px;width:calc(var(--s)*.8);height:var(--s);opacity:0;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:opacity .8s,transform .35s ease,filter 2.2s;pointer-events:none;box-shadow:0 30px 80px rgba(0,0,0,.65)}
+/* photo made of colourful small cubes (the WHOLE photo, no zoom) */
+.pt{--s:min(46svh,80vw,520px);--ar:.75;position:absolute;z-index:0;left:calc(50% - var(--s)*var(--ar)/2);top:84px;width:calc(var(--s)*var(--ar));height:var(--s);opacity:0;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:opacity .8s,transform .35s ease,filter 2.2s;pointer-events:none}
 .pt.on{opacity:1}
 .pt canvas{width:100%;height:100%;display:block}
-.pt.bg{background-repeat:no-repeat;filter:blur(16px)}
+.pt.bg{background-repeat:no-repeat;background-size:100% 100%;filter:blur(16px)}
 .pt.bg.on{filter:none}
 .pt.bg canvas{display:none}
 /* sections */
@@ -141,7 +142,7 @@ canvas#g{width:100%;display:block;touch-action:pan-y;cursor:default;-webkit-tap-
 .soon span:nth-child(2){animation-delay:.2s}.soon span:nth-child(3){animation-delay:.4s}
 .soon em{font-style:normal;margin-left:6px;letter-spacing:.08em}
 @keyframes pdot{50%{opacity:1;transform:translateY(-3px)}}
-@media(max-width:480px){nav b{display:none}nav{justify-content:center}nav div{gap:11px}}
+@media(max-width:480px){nav b{display:none}nav{justify-content:center;padding:14px 8px}nav div{gap:8px;font-size:.58rem;width:100%;justify-content:space-between}}
 footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 </style>
 </head>
@@ -151,11 +152,10 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 
 <div id="intro"><div id="stage"><i id="rip"></i><i id="dot"></i><i id="bar"></i><div id="word"></div></div><div id="skip">TAP TO SKIP</div></div>
 
-<nav><b>TOWASIN</b><div><a href="#about">About</a><a href="#whatido">What I Do</a><a href="#projects">Projects</a><a href="#journey">Journey</a><a href="#play">Play</a><a href="#connect">Connect</a></div></nav>
+<nav><b>TOWASIN</b><div><a href="#hero">Home</a><a href="#about">About</a><a href="#whatido">What I Do</a><a href="#projects">Projects</a><a href="#journey">Journey</a><a href="#play">Play</a><a href="#connect">Connect</a></div></nav>
 
 <header id="hero">
   <h1 class="ttl chrome" id="ttl">TOWASIN<span class="sr"> — Ashraf Siddiki Towasin</span></h1>
-  <canvas id="dust"></canvas>
   <div class="pt" id="pt" aria-hidden="true"><canvas id="cubes"></canvas></div>
   <div class="hero-b">
     <p><b>Student</b> · Programmer · Aspiring Software Engineer</p>
@@ -235,47 +235,6 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 <footer>© 2022–present Ashraf Siddiki Towasin. All rights reserved.</footer>
 
 <script>
-/* ===== FACE FINDER: looks for the face in the photo (orange-ish skin tone, not the pink sweater) so the crop always shows it ===== */
-function findFace2(d,w,h){
-  const N=w*h,m=new Uint8Array(N);
-  for(let i=0;i<N;i++){
-    const R=d[i*4]/255,G=d[i*4+1]/255,B=d[i*4+2]/255,mx=Math.max(R,G,B),mn=Math.min(R,G,B),v=mx,s=mx?(mx-mn)/mx:0;
-    let hu=0;if(mx!==mn){const dl=mx-mn;hu=mx===R?((G-B)/dl)%6:mx===G?(B-R)/dl+2:(R-G)/dl+4;hu*=60;if(hu<0)hu+=360}
-    m[i]=(hu>=4&&hu<=34&&s>=.16&&s<=.68&&v>=.22&&v<=.97)?1:0;
-  }
-  const c2=new Uint8Array(N);
-  for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){let s=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)s+=m[(y+dy)*w+x+dx];c2[y*w+x]=s>=5?1:0}
-  const lab=new Int32Array(N),st=[];let id=0,best=null;
-  for(let s0=0;s0<N;s0++){
-    if(!c2[s0]||lab[s0])continue;
-    id++;let area=0,minx=w,maxx=0,miny=h,maxy=0;st.push(s0);lab[s0]=id;
-    while(st.length){const p=st.pop(),x=p%w,y=(p/w)|0;area++;
-      if(x<minx)minx=x;if(x>maxx)maxx=x;if(y<miny)miny=y;if(y>maxy)maxy=y;
-      for(const q of [p-1,p+1,p-w,p+w]){if(q>=0&&q<N&&c2[q]&&!lab[q]&&Math.abs((q%w)-x)<=1){lab[q]=id;st.push(q)}}}
-    const bw=maxx-minx+1,bh=maxy-miny+1,fill=area/(bw*bh),asp=bh/bw;
-    if(area<N*.0012||asp<.45||asp>2.6)continue;
-    let score=area*fill;
-    if(minx<=1||maxx>=w-2||maxy>=h-2)score*=.35;
-    if(!best||score>best.score)best={id,score,area,minx,maxx,miny,maxy};
-  }
-  if(!best)return null;
-  const lim=best.miny+(best.maxy-best.miny)*.45;let fw=0,cs=0,cn=0;
-  for(let y=best.miny;y<=lim;y++){let a=w,b=-1;for(let x=0;x<w;x++)if(lab[y*w+x]===best.id){if(x<a)a=x;if(x>b)b=x}
-    if(b>=a){fw=Math.max(fw,b-a);cs+=(a+b)/2;cn++}}
-  return {cx:(cn?cs/cn:(best.minx+best.maxx)/2)/w,top:best.miny/h,fw:fw/w,bw:(best.maxx-best.minx+1)/w,bh:(best.maxy-best.miny+1)/h,hOverW:h/w};
-}
-
-
-function locateFace(img){
-  try{
-    if(new URLSearchParams(location.search).get('face'))return null;      /* ?face=... overrides the finder */
-    const w=160,h=Math.round(w*img.naturalHeight/img.naturalWidth),c=document.createElement('canvas');c.width=w;c.height=h;
-    const q=c.getContext('2d');q.drawImage(img,0,0,w,h);
-    const r=findFace2(q.getImageData(0,0,w,h).data,w,h);
-    return r?{cx:r.cx,top:r.top,F:Math.max(.05,Math.min(.22,r.bw*1.2))}:null;
-  }catch(e){return null}
-}
-
 /* ===== INTRO: drop -> "!" -> the bar spins and throws the letters out of the "I" -> word morphs into PORTFOLIO ===== */
 (function(){
   const intro=document.getElementById('intro'),st=document.getElementById('stage'),word=document.getElementById('word'),dot=document.getElementById('dot'),bar=document.getElementById('bar'),rip=document.getElementById('rip');
@@ -367,74 +326,49 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   const hero=document.getElementById('hero'),hb=document.querySelector('.hero-b'),ttl=document.getElementById('ttl'),pt=document.getElementById('pt');
   function fit(){
     hero.style.setProperty('--hbh',hb.offsetHeight+'px');
-    const hr=hero.getBoundingClientRect(),tr=ttl.getBoundingClientRect(),top0=76,room=tr.top-hr.top-top0+tr.height*.4;
-    const s=Math.max(200,Math.min(room,hero.clientWidth*1.05,540));
+    const ar=parseFloat(getComputedStyle(pt).getPropertyValue('--ar'))||.75;
+    const hr=hero.getBoundingClientRect(),tr=ttl.getBoundingClientRect(),top0=70,room=tr.top-hr.top-top0+tr.height*.32;
+    const s=Math.max(200,Math.min(room,hero.clientWidth*.92/ar,600));
     pt.style.setProperty('--s',s+'px');pt.style.top=(top0+Math.max(0,(room-s)/2))+'px';
   }
   if('ResizeObserver' in window){new ResizeObserver(fit).observe(hb);new ResizeObserver(fit).observe(hero)}
   addEventListener('resize',fit);addEventListener('load',fit);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
-  fit();setTimeout(fit,600);
+  fit();setTimeout(fit,600);window.__fitHero=fit;
 })();
 
-/* ===== AMBIENT DUST: faint drifting dots; brush the cursor through them and they scatter ===== */
-(function(){
-  const c=document.getElementById('dust'),x=c.getContext('2d'),hero=document.getElementById('hero');
-  let W=1,H=1,k=1,P=[],vis=true,mouse={x:-999,y:-999,sp:0,dx:0,dy:0},rt;
-  function build(){
-    k=devicePixelRatio>1?1.5:1;W=c.width=Math.round(hero.clientWidth*k);H=c.height=Math.round(hero.clientHeight*k);
-    const n=Math.round(Math.min(380,W*H/(k*k*3200)));
-    while(P.length<n)P.push({x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,ph:Math.random()*6.28,a:.18+Math.random()*.4});
-    P.length=n;P.forEach(p=>{p.x=Math.min(p.x,W);p.y=Math.min(p.y,H)});
-  }
-  build();addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(build,150)});
-  new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(hero);
-  hero.addEventListener('pointermove',e=>{
-    const r=c.getBoundingClientRect(),nx=(e.clientX-r.left)*k,ny=(e.clientY-r.top)*k;
-    if(mouse.x>-900){const mx=nx-mouse.x,my=ny-mouse.y;mouse.sp=Math.min(70*k,mouse.sp+Math.hypot(mx,my));mouse.dx=mx;mouse.dy=my}
-    mouse.x=nx;mouse.y=ny;
-  });
-  hero.addEventListener('pointerleave',()=>mouse.x=-999);
-  (function loop(){
-    requestAnimationFrame(loop);if(!vis)return;
-    x.clearRect(0,0,W,H);
-    const now=performance.now(),R=105*k,s=Math.max(1.4*k,1.8),push=Math.min(mouse.sp,45*k)/k;mouse.sp*=.9;
-    x.fillStyle='#dfe7f7';
-    for(const p of P){
-      p.vx+=(Math.random()-.5)*.06;p.vy+=(Math.random()-.5)*.06-.004;
-      if(push>1){const dx=p.x-mouse.x,dy=p.y-mouse.y,dd=dx*dx+dy*dy;if(dd<R*R){const d=Math.sqrt(dd)+1,f=(1-d/R)*push*.16;p.vx+=dx/d*f+mouse.dx*.05*(1-d/R);p.vy+=dy/d*f+mouse.dy*.05*(1-d/R)}}
-      p.vx*=.93;p.vy*=.93;p.x+=p.vx;p.y+=p.vy;
-      if(p.x<0)p.x=W;else if(p.x>W)p.x=0;if(p.y<0)p.y=H;else if(p.y>H)p.y=0;
-      x.globalAlpha=p.a*(.7+.3*Math.sin(now*.002+p.ph));x.fillRect(p.x,p.y,s,s);
-    }
-    x.globalAlpha=1;
-  })();
-})();
-
-/* ===== PHOTO MADE OF COLOURFUL SMALL CUBES: they swirl in from all over, start pale, grow, take their real colour and land with a little flash ===== */
+/* ===== PHOTO MADE OF COLOURFUL SMALL CUBES: the whole picture. Cubes fly in from outside the screen, start pale, bloom outwards from the middle, take vivid colour and land with a flash. Click = burst, move = they scatter and return ===== */
 (function(){
   const pt=document.getElementById('pt'),cv=document.getElementById('cubes'),hero=document.getElementById('hero');
   if(!pt||!cv)return;
   const x=cv.getContext('2d'),st=document.createElement('canvas'),sx=st.getContext('2d');
-  const SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg'],COLS=64,ROWS=80,FACE={cx:.49,cy:.544,w:.3};   /* FACE = fallback numbers if the face finder can't read the photo */
-  {const q=new URLSearchParams(location.search).get('face');if(q){const v=q.split(',').map(Number);if(v.length>=2&&v.every(n=>n>0&&n<1)){FACE.cx=v[0];FACE.cy=v[1];if(v[2])FACE.w=v[2]}}}
-  let W=1,H=1,k=1,cx=1,cy=1,P=[],MV=[],FL=[],MD=null,vis=false,t0=0,finished=false,last=0,gradB=null,rt,b=1;
+  const SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg'],ROWS=112;
+  let COLS=84,AR=.75,W=1,H=1,k=1,cx=1,cy=1,P=[],MV=[],FL=[],MD=null,vis=false,t0=0,finished=false,last=0,gradB=null,b=1,IMG=null;
   const mouse={x:-999,y:-999,sp:0,dx:0,dy:0};
   const clamp=(v,a,c)=>Math.max(a,Math.min(c,v));
-  function cube(c2,i,j,col){                                   /* one tiny cube: colour + light top/left edge + dark bottom/right edge */
+  function vivid(r,g,bl){                                      /* more colourful: boost saturation, a touch of contrast */
+    r/=255;g/=255;bl/=255;const mx=Math.max(r,g,bl),mn=Math.min(r,g,bl),d=mx-mn;let l=(mx+mn)/2,s=d?d/(1-Math.abs(2*l-1)):0,hh=0;
+    if(d){hh=mx===r?((g-bl)/d)%6:mx===g?(bl-r)/d+2:(r-g)/d+4;hh*=60;if(hh<0)hh+=360}
+    s=clamp(s*1.55+.05,0,1);l=clamp((l-.5)*1.12+.51,0,1);
+    const c=(1-Math.abs(2*l-1))*s,xx=c*(1-Math.abs((hh/60)%2-1)),m=l-c/2;let R=0,G=0,B=0;
+    if(hh<60){R=c;G=xx}else if(hh<120){R=xx;G=c}else if(hh<180){G=c;B=xx}else if(hh<240){G=xx;B=c}else if(hh<300){R=xx;B=c}else{R=c;B=xx}
+    return [Math.round((R+m)*255),Math.round((G+m)*255),Math.round((B+m)*255)];
+  }
+  function cube(c2,i,j,col){                                   /* one tiny cube: colour + a light top/left edge + a dark bottom/right edge */
     const px=Math.round(i*cx),py=Math.round(j*cy),pw=Math.round((i+1)*cx)-px,ph=Math.round((j+1)*cy)-py;
     c2.fillStyle=col;c2.fillRect(px,py,pw,ph);
-    if(pw>3){c2.fillStyle='rgba(255,255,255,.24)';c2.fillRect(px,py,pw,b);c2.fillRect(px,py,b,ph);c2.fillStyle='rgba(0,0,0,.32)';c2.fillRect(px,py+ph-b,pw,b);c2.fillRect(px+pw-b,py,b,ph)}
+    if(pw>3){c2.fillStyle='rgba(255,255,255,.16)';c2.fillRect(px,py,pw,b);c2.fillRect(px,py,b,ph);c2.fillStyle='rgba(0,0,0,.24)';c2.fillRect(px,py+ph-b,pw,b);c2.fillRect(px+pw-b,py,b,ph)}
   }
   function build(instant){
     k=Math.min(devicePixelRatio||1,2);b=Math.max(1,Math.round(k*.8));
     W=cv.width=Math.max(2,Math.round(pt.offsetWidth*k));H=cv.height=Math.max(2,Math.round(pt.offsetHeight*k));st.width=W;st.height=H;
     cx=W/COLS;cy=H/ROWS;P=[];MV=[];FL=[];
-    gradB=x.createLinearGradient(0,H*.5,0,H);gradB.addColorStop(0,'rgba(0,0,0,0)');gradB.addColorStop(1,'rgba(0,0,0,.82)');
+    gradB=x.createLinearGradient(0,H*.72,0,H);gradB.addColorStop(0,'rgba(0,0,0,0)');gradB.addColorStop(1,'rgba(0,0,0,.6)');
     if(!MD)return;
     for(let j=0;j<ROWS;j++)for(let i=0;i<COLS;i++){
-      const n=(j*COLS+i)*4,r=MD[n],g=MD[n+1],bl=MD[n+2];
-      const p={i,j,tx:(i+.5)*cx,ty:(j+.5)*cy,r,g,b:bl,col:'rgb('+r+','+g+','+bl+')',x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,dl:j/ROWS*1000+Math.random()*700,ph:Math.random()*6.28,set:false};
+      const n=(j*COLS+i)*4,v=vivid(MD[n],MD[n+1],MD[n+2]);
+      const d=Math.hypot((i+.5)/COLS-.5,((j+.5)/ROWS-.5)*.9)/.7;
+      const p={i,j,tx:(i+.5)*cx,ty:(j+.5)*cy,r:v[0],g:v[1],b:v[2],col:'rgb('+v[0]+','+v[1]+','+v[2]+')',x:(Math.random()*1.7-.35)*W,y:(Math.random()*1.7-.35)*H,vx:0,vy:0,dl:d*1100+Math.random()*500,set:false};
       if(instant){p.set=true;p.x=p.tx;p.y=p.ty;cube(sx,i,j,p.col)}else MV.push(p);
       P.push(p);
     }
@@ -443,19 +377,15 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     if(i>=SRC.length)return;
     const img=new Image();img.onerror=()=>load(i+1);
     img.onload=()=>{
-      const iw=img.naturalWidth,ih=img.naturalHeight,fc=locateFace(img);let cw,ch,sx0,sy0;
-      if(fc){const F=fc.F*iw;cw=Math.min(F*3,ih/1.25,iw);ch=cw*1.25;sx0=clamp(fc.cx*iw-cw/2,0,iw-cw);sy0=clamp(fc.top*ih-.95*F,0,ih-ch)}
-      else{cw=Math.min(iw*FACE.w,ih/1.25);ch=cw*1.25;sx0=clamp(iw*FACE.cx-cw/2,0,iw-cw);sy0=clamp(ih*FACE.cy-ch*.36,0,ih-ch)}
+      IMG=img;AR=clamp(img.naturalWidth/img.naturalHeight,.5,1.8);COLS=Math.round(ROWS*AR);
+      pt.style.setProperty('--ar',AR);if(window.__fitHero)window.__fitHero();
       try{
         const o=document.createElement('canvas');o.width=COLS;o.height=ROWS;const q=o.getContext('2d');
-        q.drawImage(img,sx0,sy0,cw,ch,0,0,COLS,ROWS);
+        q.drawImage(img,0,0,COLS,ROWS);                         /* the WHOLE photo */
         MD=q.getImageData(0,0,COLS,ROWS).data;                  /* throws when the page is opened straight from a folder */
         build(false);
       }catch(e){                                                /* can't read pixels -> show the photo itself, sharpening in from a blur */
-        pt.style.backgroundImage='url("'+img.src+'")';
-        pt.style.backgroundSize=(iw/cw*100)+'% auto';
-        pt.style.backgroundPosition=(iw>cw?sx0/(iw-cw)*100:50)+'% '+(ih>ch?sy0/(ih-ch)*100:50)+'%';
-        pt.classList.add('bg');
+        pt.style.backgroundImage='url("'+img.src+'")';pt.classList.add('bg');
       }
     };
     img.src=SRC[i];
@@ -471,6 +401,14 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     mouse.x=nx;mouse.y=ny;
   });
   hero.addEventListener('pointerleave',()=>{mouse.x=-999;pt.style.setProperty('--rx','0deg');pt.style.setProperty('--ry','0deg')});
+  hero.addEventListener('pointerdown',e=>{                       /* click / tap on the photo: the cubes burst outwards and fly back */
+    if(!MD||!finished)return;const r=cv.getBoundingClientRect();
+    if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;
+    const bx=(e.clientX-r.left)*(W/r.width),by=(e.clientY-r.top)*(H/r.height);
+    sx.clearRect(0,0,W,H);MV=[];
+    for(const p of P){const dx=p.tx-bx,dy=p.ty-by,d=Math.hypot(dx,dy)+8;p.set=false;p.vx=dx/d*(40*k+Math.random()*24*k)*(120*k/(d+60*k));p.vy=dy/d*(40*k+Math.random()*24*k)*(120*k/(d+60*k));p.x=p.tx;p.y=p.ty;p.dl=-1e9+d*1.6;MV.push(p)}
+    t0=performance.now()-2000;finished=false;
+  });
   function loop(now){
     requestAnimationFrame(loop);
     if(!vis||!MD)return;
@@ -479,10 +417,10 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     if(!t0)t0=now;const t=now-t0;
     x.clearRect(0,0,W,H);x.drawImage(st,0,0);
     const R=70*k,push=Math.min(mouse.sp,45*k)/k;mouse.sp*=.9;
-    if(push>1&&mouse.x>-900&&finished!==undefined){                       /* brushing releases the cubes under the cursor */
+    if(push>1&&mouse.x>-900){                                              /* brushing releases the cubes under the cursor */
       const i0=Math.max(0,Math.floor((mouse.x-R)/cx)),i1=Math.min(COLS-1,Math.floor((mouse.x+R)/cx)),j0=Math.max(0,Math.floor((mouse.y-R)/cy)),j1=Math.min(ROWS-1,Math.floor((mouse.y+R)/cy));
       for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++){const p=P[j*COLS+i];if(!p||!p.set)continue;
-        const dx=p.tx-mouse.x,dy=p.ty-mouse.y;if(dx*dx+dy*dy<R*R){p.set=false;const px=Math.round(i*cx),py=Math.round(j*cy);sx.clearRect(px,py,Math.round((i+1)*cx)-px,Math.round((j+1)*cy)-py);MV.push(p)}}
+        const dx=p.tx-mouse.x,dy=p.ty-mouse.y;if(dx*dx+dy*dy<R*R){p.set=false;p.dl=-1e9;const px=Math.round(i*cx),py=Math.round(j*cy);sx.clearRect(px,py,Math.round((i+1)*cx)-px,Math.round((j+1)*cy)-py);MV.push(p)}}
     }
     for(let n=MV.length-1;n>=0;n--){
       const p=MV[n],go=t>300&&t-300>p.dl;
@@ -492,23 +430,34 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
       p.vx*=.86;p.vy*=.86;p.x+=p.vx;p.y+=p.vy;
       const dist=Math.hypot(p.tx-p.x,p.ty-p.y);
       if(go&&dist<.8&&p.vx*p.vx+p.vy*p.vy<.05){p.set=true;p.x=p.tx;p.y=p.ty;cube(sx,p.i,p.j,p.col);FL.push([p,1]);MV[n]=MV[MV.length-1];MV.pop();continue}
-      const q=clamp(1-dist/(W*.2),0,1),s=cx*(.3+.85*q);
-      x.fillStyle='rgb('+((220+(p.r-220)*q)|0)+','+((225+(p.g-225)*q)|0)+','+((235+(p.b-235)*q)|0)+')';
-      x.globalAlpha=.45+.55*q;x.fillRect(p.x-s/2,p.y-s/2,s,s);
+      const q=clamp(1-dist/(W*.2),0,1),s=cx*(.35+.85*q);
+      x.fillStyle='rgb('+((235+(p.r-235)*q)|0)+','+((238+(p.g-238)*q)|0)+','+((245+(p.b-245)*q)|0)+')';
+      x.globalAlpha=.5+.5*q;x.fillRect(p.x-s/2,p.y-s/2,s,s);
     }
     x.globalAlpha=1;
     for(let n=FL.length-1;n>=0;n--){                                       /* tiny white flash when a cube lands */
       const f=FL[n],p=f[0];if(!p.set){FL[n]=FL[FL.length-1];FL.pop();continue}
-      x.globalAlpha=Math.max(0,f[1])*.7;x.fillStyle='#fff';x.fillRect(Math.round(p.i*cx),Math.round(p.j*cy),Math.ceil(cx),Math.ceil(cy));
+      x.globalAlpha=Math.max(0,f[1])*.75;x.fillStyle='#fff';x.fillRect(Math.round(p.i*cx),Math.round(p.j*cy),Math.ceil(cx),Math.ceil(cy));
       f[1]-=dt*3.2;if(f[1]<=0){FL[n]=FL[FL.length-1];FL.pop()}
     }
     x.globalAlpha=1;
-    x.globalCompositeOperation='source-atop';                              /* effects only on the cubes: dark fade at the bottom + a light band sweeping across */
+    x.globalCompositeOperation='source-atop';                              /* effects only on the cubes */
     x.fillStyle=gradB;x.fillRect(0,0,W,H);
-    if(!MV.length&&t>1500){finished=true;const ph=((now%7000)/7000)*1.8-.4,gx=ph*W,g=x.createLinearGradient(gx-W*.3,0,gx+W*.3,H*.55);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.5,'rgba(255,255,255,.2)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,W,H)}
+    if(!MV.length&&t>1500){                                                /* finished: a rainbow band of light keeps rolling across the cubes */
+      finished=true;const ph=((now%6500)/6500)*2-.5,gx=ph*W,g=x.createLinearGradient(gx-W*.35,0,gx+W*.35,H*.5);
+      g.addColorStop(0,'rgba(255,60,160,0)');g.addColorStop(.3,'rgba(255,190,60,.20)');g.addColorStop(.55,'rgba(80,230,255,.26)');g.addColorStop(.8,'rgba(150,90,255,.20)');g.addColorStop(1,'rgba(150,90,255,0)');
+      x.fillStyle=g;x.fillRect(0,0,W,H);
+    }
     x.globalCompositeOperation='source-over';
   }
   requestAnimationFrame(loop);
+})();
+
+/* ===== NAV: an underline marks the section you are in ===== */
+(function(){
+  const links=[...document.querySelectorAll('nav a')],secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  function spy(){let cur=0;secs.forEach((s,i)=>{if(s&&s.getBoundingClientRect().top<innerHeight*.4)cur=i});links.forEach((a,i)=>a.classList.toggle('on',i===cur))}
+  addEventListener('scroll',spy,{passive:true});addEventListener('resize',spy);spy();
 })();
 
 /* ===== SKILLS MARQUEE: slides sideways by itself; drag it to move forward / back ===== */
