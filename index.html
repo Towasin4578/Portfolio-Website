@@ -50,7 +50,7 @@ nav a:hover{text-decoration:underline}
 /* hero */
 #hero{position:relative;background:radial-gradient(ellipse at 50% 48%,#090d10 0%,#000 64%);height:100svh;min-height:640px;text-align:center;overflow:hidden}
 #dust{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
-.ttl{position:absolute;z-index:1;left:50%;bottom:14vh;transform:translateX(-50%);white-space:nowrap;font-weight:700;font-size:clamp(3rem,16.5vw,15rem);line-height:.95;letter-spacing:-.03em;opacity:0;pointer-events:none}
+.ttl{position:absolute;z-index:1;left:50%;bottom:calc(var(--hbh,70px) + 4.5vh + 26px);transform:translateX(-50%);white-space:nowrap;font-weight:700;font-size:clamp(3rem,16.5vw,15rem);line-height:.95;letter-spacing:-.03em;opacity:0;pointer-events:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .hero-b{position:absolute;z-index:3;left:4vw;right:4vw;bottom:4.5vh;display:flex;justify-content:space-between;align-items:center;gap:16px;opacity:0;transition:opacity 1s}
 .hero-b.on{opacity:1}
@@ -60,9 +60,14 @@ nav a:hover{text-decoration:underline}
 .hb a{padding:11px 24px;border:1px solid var(--l);border-radius:30px;font-size:.82rem;color:#ddd;background:#0009;transition:.3s}
 .hb a.fill{background:#ece8dc;color:#111;border-color:#ece8dc}
 .hb a:hover{transform:translateY(-2px)}
-#pfall{position:absolute;z-index:1;opacity:0;transition:opacity 1.8s;pointer-events:none;-webkit-mask-image:radial-gradient(circle,#000 34%,transparent 40%),radial-gradient(ellipse at center,#000 45%,transparent 72%);mask-image:radial-gradient(circle,#000 34%,transparent 40%),radial-gradient(ellipse at center,#000 45%,transparent 72%);-webkit-mask-size:5px 5px,100% 100%;mask-size:5px 5px,100% 100%;-webkit-mask-composite:source-in;mask-composite:intersect;filter:grayscale(1) contrast(1.4) brightness(1.15)}
-#pfall.show{opacity:.9}
 @media(max-width:700px){.hero-b{flex-direction:column;bottom:3.5vh;gap:12px}.hero-b p{text-align:center}}
+/* photo made of colourful small cubes */
+.pt{--s:min(40svh,86vw,440px);position:absolute;z-index:0;left:calc(50% - var(--s)*.4);top:84px;width:calc(var(--s)*.8);height:var(--s);opacity:0;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:opacity .8s,transform .35s ease,filter 2.2s;pointer-events:none;box-shadow:0 30px 80px rgba(0,0,0,.65)}
+.pt.on{opacity:1}
+.pt canvas{width:100%;height:100%;display:block}
+.pt.bg{background-repeat:no-repeat;filter:blur(16px)}
+.pt.bg.on{filter:none}
+.pt.bg canvas{display:none}
 /* sections */
 section.s{max-width:980px;margin:0 auto;padding:64px 24px}
 .lab{font-size:.7rem;letter-spacing:.25em;color:var(--m);margin-bottom:8px}
@@ -150,8 +155,8 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 
 <header id="hero">
   <h1 class="ttl chrome" id="ttl">TOWASIN<span class="sr"> — Ashraf Siddiki Towasin</span></h1>
-  <div id="pfall" aria-hidden="true"></div>
   <canvas id="dust"></canvas>
+  <div class="pt" id="pt" aria-hidden="true"><canvas id="cubes"></canvas></div>
   <div class="hero-b">
     <p><b>Student</b> · Programmer · Aspiring Software Engineer</p>
     <div class="hb"><a href="#about">About me</a><a class="fill" href="#connect">Get in touch</a></div>
@@ -277,7 +282,7 @@ function locateFace(img){
   let done=false,timers=[];
   const T=(f,ms)=>timers.push(setTimeout(f,ms));
   const title=document.getElementById('ttl'),hb=document.querySelector('.hero-b');
-  function showHero(){title.style.opacity=1;hb.classList.add('on')}
+  function showHero(){title.style.opacity=1;hb.classList.add('on');document.getElementById('pt').classList.add('on')}
   function finish(skip){
     if(done)return;done=true;timers.forEach(clearTimeout);
     window.dustStart=performance.now();document.body.classList.remove('lock');
@@ -357,78 +362,32 @@ function locateFace(img){
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.15});
 document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*.08+'s';io.observe(el)});
 
-/* ===== HERO PORTRAIT MADE OF DUST: a cloud of dots swirls in and settles into his photo; brush the cursor through it and it scatters, then flies back ===== */
+/* ===== HERO LAYOUT: keeps the subtitle clear of the big title, and gives the photo all the room above it ===== */
 (function(){
-  const c=document.getElementById('dust'),x=c.getContext('2d'),hero=document.getElementById('hero'),pf=document.getElementById('pfall');
-  const SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg'],FACE={cx:.49,cy:.544,w:.24};   /* fallback numbers if the face finder can't read the photo */
-  {const q=new URLSearchParams(location.search).get('face');if(q){const v=q.split(',').map(Number);if(v.length>=2&&v.every(n=>n>0&&n<1)){FACE.cx=v[0];FACE.cy=v[1];if(v[2])FACE.w=v[2]}}}
-  let W=1,H=1,k=1,P=[],PT=null,C=null,src='',fallback=false,shown=false,vis=true,mouse={x:-999,y:-999,sp:0,dx:0,dy:0},rt;
-  /* Turns a face crop (RGBA pixels) into dust targets: skin-tone shading + hair + edges, centred on the head */
-  function targets(d,iw,ih){
-    const N=iw*ih,Y=new Float32Array(N),sk=new Float32Array(N),hr=new Float32Array(N),f=new Float32Array(N);
-    for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){
-      const k=j*iw+i,R=d[k*4],G=d[k*4+1],B=d[k*4+2];
-      const y=.299*R+.587*G+.114*B,cb=128-.168736*R-.331264*G+.5*B,cr=128+.5*R-.418688*G-.081312*B;
-      Y[k]=y;sk[k]=(cb>77&&cb<135&&cr>133&&cr<180&&y>35)?1:0;hr[k]=y<62?1:0;
-      const dx=(i/iw-.5)*2,dy=(j/ih-.42)*2;f[k]=Math.max(0,1-(dx*dx+dy*dy*.85));
-    }
-    const blur=m=>{const t=new Float32Array(N),o=new Float32Array(N);
-      for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){let s=0;for(let a=-1;a<=1;a++){const x=i+a;if(x>=0&&x<iw)s+=m[j*iw+x]}t[j*iw+i]=s/3}
-      for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){let s=0;for(let a=-1;a<=1;a++){const y=j+a;if(y>=0&&y<ih)s+=t[y*iw+i]}o[j*iw+i]=s/3}
-      return o};
-    const s=blur(sk),h2=blur(hr);
-    const idx=[];for(let k=0;k<N;k++)if(sk[k])idx.push(k);
-    idx.sort((a,b)=>Y[a]-Y[b]);
-    const rk=new Float32Array(N);if(idx.length>10)idx.forEach((k,n)=>rk[k]=n/(idx.length-1));
-    const sorted=Array.from(Y).sort((a,b)=>a-b),lo=sorted[(N*.05)|0]/255,hi=sorted[(N*.98)|0]/255;
-    const l=new Float32Array(N);for(let k=0;k<N;k++)l[k]=Math.max(0,Math.min(1,(Y[k]/255-lo)/((hi-lo)||1)));
-    const e=new Float32Array(N),ev=[];
-    for(let j=1;j<ih-1;j++)for(let i=1;i<iw-1;i++){const k=j*iw+i,gx=l[k+1]-l[k-1],gy=l[k+iw]-l[k-iw];e[k]=Math.hypot(gx,gy);if(f[k]>.2)ev.push(e[k])}
-    ev.sort((a,b)=>a-b);const ep=ev[(ev.length*.93)|0]||1;
-    const T=[];
-    for(let j=0;j<ih;j++)for(let i=0;i<iw;i++){
-      const k=j*iw+i,ee=Math.min(1,e[k]/ep),inside=Math.min(1,s[k]+.9*h2[k]);
-      const p=f[k]*(s[k]*(.18+.82*rk[k])+h2[k]*.5*(1-s[k]))+f[k]*ee*1.1*(.25+.75*inside);
-      if(Math.random()<p*3.8)T.push([i/iw,j/ih,Math.min(1,p*1.2)]);
-    }
-    return T;
+  const hero=document.getElementById('hero'),hb=document.querySelector('.hero-b'),ttl=document.getElementById('ttl'),pt=document.getElementById('pt');
+  function fit(){
+    hero.style.setProperty('--hbh',hb.offsetHeight+'px');
+    const hr=hero.getBoundingClientRect(),tr=ttl.getBoundingClientRect(),top0=76,room=tr.top-hr.top-top0+tr.height*.4;
+    const s=Math.max(200,Math.min(room,hero.clientWidth*1.05,540));
+    pt.style.setProperty('--s',s+'px');pt.style.top=(top0+Math.max(0,(room-s)/2))+'px';
   }
-  function dust(n){const a=[];for(let i=0;i<n;i++)a.push({x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,tx:null,ty:null,dl:0,ph:Math.random()*6.28,a:.15+Math.random()*.25});return a}
+  if('ResizeObserver' in window){new ResizeObserver(fit).observe(hb);new ResizeObserver(fit).observe(hero)}
+  addEventListener('resize',fit);addEventListener('load',fit);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+  fit();setTimeout(fit,600);
+})();
+
+/* ===== AMBIENT DUST: faint drifting dots; brush the cursor through them and they scatter ===== */
+(function(){
+  const c=document.getElementById('dust'),x=c.getContext('2d'),hero=document.getElementById('hero');
+  let W=1,H=1,k=1,P=[],vis=true,mouse={x:-999,y:-999,sp:0,dx:0,dy:0},rt;
   function build(){
     k=devicePixelRatio>1?1.5:1;W=c.width=Math.round(hero.clientWidth*k);H=c.height=Math.round(hero.clientHeight*k);
-    let ph=H*.8,pw=ph*.8;if(pw>W*.86){pw=W*.86;ph=pw/.8}
-    const box={l:(W-pw)/2,t:H*.11,w:pw,h:ph},T=PT||[],n=Math.min(T.length,15000);
-    while(P.length<n+300)P.push(dust(1)[0]);
-    P.forEach((p,i)=>{if(i<n){const t=T[i];p.tx=box.l+t[0]*box.w;p.ty=box.t+t[1]*box.h;p.a=.3+t[2]*.7;p.dl=t[1]*800+Math.random()*700}else{p.tx=null;p.a=.15+Math.random()*.25}});
-    c.dotSize=Math.max(1.3*k,Math.min(2.2*k,pw/230));
-    if(fallback&&C){const bw=box.w/k,kk=bw/C.cw;pf.style.cssText+=`;left:${box.l/k}px;top:${box.t/k}px;width:${bw}px;height:${box.h/k}px;background-image:url("${src}");background-repeat:no-repeat;background-size:${C.iw*kk}px ${C.ih*kk}px;background-position:${-C.sx*kk}px ${-C.sy*kk}px`}
+    const n=Math.round(Math.min(380,W*H/(k*k*3200)));
+    while(P.length<n)P.push({x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,ph:Math.random()*6.28,a:.18+Math.random()*.4});
+    P.length=n;P.forEach(p=>{p.x=Math.min(p.x,W);p.y=Math.min(p.y,H)});
   }
-  function useFallback(){            /* pixels can't be read (opened from a folder): dust forms an oval, then the dotted photo fades in */
-    const T=[];for(let i=0;i<5000;i++){const an=Math.random()*6.283,r=Math.sqrt(Math.random());T.push([.5+.5*r*Math.cos(an),.5+.5*r*Math.sin(an),.3+Math.random()*.4])}
-    fallback=true;PT=T;
-  }
-  P=dust(600);build();
-  function load(i){
-    if(i>=SRC.length)return;
-    const img=new Image();src=SRC[i];img.onerror=()=>load(i+1);
-    img.onload=()=>{
-      const iw0=img.naturalWidth,ih0=img.naturalHeight,fc=locateFace(img);let cw,ch,sx,sy;
-      if(fc){const F=fc.F*iw0;cw=Math.min(F*2.5,ih0/1.25,iw0);ch=cw*1.25;sx=Math.max(0,Math.min(iw0-cw,fc.cx*iw0-cw/2));sy=Math.max(0,Math.min(ih0-ch,fc.top*ih0-.75*F))}
-      else{cw=Math.min(iw0*FACE.w,ih0/1.25);ch=cw*1.25;sx=Math.max(0,Math.min(iw0-cw,iw0*FACE.cx-cw/2));sy=Math.max(0,Math.min(ih0-ch,ih0*FACE.cy-ch*.3))}
-      C={iw:iw0,ih:ih0,cw,ch,sx,sy};
-      try{
-        const iw=230,ih=288,o=document.createElement('canvas');o.width=iw;o.height=ih;
-        const q=o.getContext('2d');q.drawImage(img,C.sx,C.sy,C.cw,C.ch,0,0,iw,ih);
-        const T=targets(q.getImageData(0,0,iw,ih).data,iw,ih);
-        if(T.length<400)throw 0;
-        PT=T.sort(()=>Math.random()-.5);
-      }catch(e){useFallback()}
-      build();
-    };
-    img.src=SRC[i];
-  }
-  load(0);
-  addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(build,150)});
+  build();addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(build,150)});
   new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(hero);
   hero.addEventListener('pointermove',e=>{
     const r=c.getBoundingClientRect(),nx=(e.clientX-r.left)*k,ny=(e.clientY-r.top)*k;
@@ -439,27 +398,117 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   (function loop(){
     requestAnimationFrame(loop);if(!vis)return;
     x.clearRect(0,0,W,H);
-    const now=performance.now(),t=window.dustStart?now-window.dustStart:-1,R=105*k,s=c.dotSize||2,hot=[];
-    const push=Math.min(mouse.sp,45*k)/k;mouse.sp*=.9;
-    if(fallback&&!shown&&t>3200){shown=true;pf.classList.add('show')}
+    const now=performance.now(),R=105*k,s=Math.max(1.4*k,1.8),push=Math.min(mouse.sp,45*k)/k;mouse.sp*=.9;
     x.fillStyle='#dfe7f7';
     for(const p of P){
-      if(t>600&&p.tx!=null&&t-600>p.dl){                                           /* this dot's turn: swirl in towards its place in the portrait */
-        const ox=Math.sin(now*.0014+p.ph)*.7,oy=Math.cos(now*.0012+p.ph)*.7,dx=p.tx+ox-p.x,dy=p.ty+oy-p.y,sw=Math.min(1,Math.hypot(dx,dy)/(W*.2))*.018;
-        p.vx+=dx*.028-dy*sw;p.vy+=dy*.028+dx*sw;
-      }else{p.vx+=(Math.random()-.5)*.08;p.vy+=(Math.random()-.5)*.08;if(p.tx==null){if(p.x<0)p.x=W;else if(p.x>W)p.x=0;if(p.y<0)p.y=H;else if(p.y>H)p.y=0}}
-      if(push>1){
-        const dx=p.x-mouse.x,dy=p.y-mouse.y,dd=dx*dx+dy*dy;
-        if(dd<R*R){const d=Math.sqrt(dd)+1,f=(1-d/R)*push*.16;p.vx+=dx/d*f+mouse.dx*.05*(1-d/R);p.vy+=dy/d*f+mouse.dy*.05*(1-d/R)}
-      }
-      p.vx*=.86;p.vy*=.86;p.x+=p.vx;p.y+=p.vy;
-      const a=Math.min(1,p.a*(.86+.14*Math.sin(now*.0028+(p.x+p.y)*.012)))*(shown?.35:1);
-      if(p.vx*p.vx+p.vy*p.vy>1.6){hot.push(p)}else{x.globalAlpha=a;x.fillRect(p.x,p.y,s,s)}
+      p.vx+=(Math.random()-.5)*.06;p.vy+=(Math.random()-.5)*.06-.004;
+      if(push>1){const dx=p.x-mouse.x,dy=p.y-mouse.y,dd=dx*dx+dy*dy;if(dd<R*R){const d=Math.sqrt(dd)+1,f=(1-d/R)*push*.16;p.vx+=dx/d*f+mouse.dx*.05*(1-d/R);p.vy+=dy/d*f+mouse.dy*.05*(1-d/R)}}
+      p.vx*=.93;p.vy*=.93;p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=W;else if(p.x>W)p.x=0;if(p.y<0)p.y=H;else if(p.y>H)p.y=0;
+      x.globalAlpha=p.a*(.7+.3*Math.sin(now*.002+p.ph));x.fillRect(p.x,p.y,s,s);
     }
-    x.fillStyle='#ffffff';                                                           /* dots that are flying light up, then dim as they settle */
-    for(const p of hot){x.globalAlpha=Math.min(1,p.a+.25);x.fillRect(p.x,p.y,s*1.2,s*1.2)}
     x.globalAlpha=1;
   })();
+})();
+
+/* ===== PHOTO MADE OF COLOURFUL SMALL CUBES: they swirl in from all over, start pale, grow, take their real colour and land with a little flash ===== */
+(function(){
+  const pt=document.getElementById('pt'),cv=document.getElementById('cubes'),hero=document.getElementById('hero');
+  if(!pt||!cv)return;
+  const x=cv.getContext('2d'),st=document.createElement('canvas'),sx=st.getContext('2d');
+  const SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg'],COLS=64,ROWS=80,FACE={cx:.49,cy:.544,w:.3};   /* FACE = fallback numbers if the face finder can't read the photo */
+  {const q=new URLSearchParams(location.search).get('face');if(q){const v=q.split(',').map(Number);if(v.length>=2&&v.every(n=>n>0&&n<1)){FACE.cx=v[0];FACE.cy=v[1];if(v[2])FACE.w=v[2]}}}
+  let W=1,H=1,k=1,cx=1,cy=1,P=[],MV=[],FL=[],MD=null,vis=false,t0=0,finished=false,last=0,gradB=null,rt,b=1;
+  const mouse={x:-999,y:-999,sp:0,dx:0,dy:0};
+  const clamp=(v,a,c)=>Math.max(a,Math.min(c,v));
+  function cube(c2,i,j,col){                                   /* one tiny cube: colour + light top/left edge + dark bottom/right edge */
+    const px=Math.round(i*cx),py=Math.round(j*cy),pw=Math.round((i+1)*cx)-px,ph=Math.round((j+1)*cy)-py;
+    c2.fillStyle=col;c2.fillRect(px,py,pw,ph);
+    if(pw>3){c2.fillStyle='rgba(255,255,255,.24)';c2.fillRect(px,py,pw,b);c2.fillRect(px,py,b,ph);c2.fillStyle='rgba(0,0,0,.32)';c2.fillRect(px,py+ph-b,pw,b);c2.fillRect(px+pw-b,py,b,ph)}
+  }
+  function build(instant){
+    k=Math.min(devicePixelRatio||1,2);b=Math.max(1,Math.round(k*.8));
+    W=cv.width=Math.max(2,Math.round(pt.offsetWidth*k));H=cv.height=Math.max(2,Math.round(pt.offsetHeight*k));st.width=W;st.height=H;
+    cx=W/COLS;cy=H/ROWS;P=[];MV=[];FL=[];
+    gradB=x.createLinearGradient(0,H*.5,0,H);gradB.addColorStop(0,'rgba(0,0,0,0)');gradB.addColorStop(1,'rgba(0,0,0,.82)');
+    if(!MD)return;
+    for(let j=0;j<ROWS;j++)for(let i=0;i<COLS;i++){
+      const n=(j*COLS+i)*4,r=MD[n],g=MD[n+1],bl=MD[n+2];
+      const p={i,j,tx:(i+.5)*cx,ty:(j+.5)*cy,r,g,b:bl,col:'rgb('+r+','+g+','+bl+')',x:Math.random()*W,y:Math.random()*H,vx:0,vy:0,dl:j/ROWS*1000+Math.random()*700,ph:Math.random()*6.28,set:false};
+      if(instant){p.set=true;p.x=p.tx;p.y=p.ty;cube(sx,i,j,p.col)}else MV.push(p);
+      P.push(p);
+    }
+  }
+  function load(i){
+    if(i>=SRC.length)return;
+    const img=new Image();img.onerror=()=>load(i+1);
+    img.onload=()=>{
+      const iw=img.naturalWidth,ih=img.naturalHeight,fc=locateFace(img);let cw,ch,sx0,sy0;
+      if(fc){const F=fc.F*iw;cw=Math.min(F*3,ih/1.25,iw);ch=cw*1.25;sx0=clamp(fc.cx*iw-cw/2,0,iw-cw);sy0=clamp(fc.top*ih-.95*F,0,ih-ch)}
+      else{cw=Math.min(iw*FACE.w,ih/1.25);ch=cw*1.25;sx0=clamp(iw*FACE.cx-cw/2,0,iw-cw);sy0=clamp(ih*FACE.cy-ch*.36,0,ih-ch)}
+      try{
+        const o=document.createElement('canvas');o.width=COLS;o.height=ROWS;const q=o.getContext('2d');
+        q.drawImage(img,sx0,sy0,cw,ch,0,0,COLS,ROWS);
+        MD=q.getImageData(0,0,COLS,ROWS).data;                  /* throws when the page is opened straight from a folder */
+        build(false);
+      }catch(e){                                                /* can't read pixels -> show the photo itself, sharpening in from a blur */
+        pt.style.backgroundImage='url("'+img.src+'")';
+        pt.style.backgroundSize=(iw/cw*100)+'% auto';
+        pt.style.backgroundPosition=(iw>cw?sx0/(iw-cw)*100:50)+'% '+(ih>ch?sy0/(ih-ch)*100:50)+'%';
+        pt.classList.add('bg');
+      }
+    };
+    img.src=SRC[i];
+  }
+  build(false);load(0);
+  if('ResizeObserver' in window){new ResizeObserver(()=>{if(MD)build(finished)}).observe(pt)}
+  new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(pt);
+  hero.addEventListener('pointermove',e=>{
+    const hr=hero.getBoundingClientRect();
+    pt.style.setProperty('--ry',((e.clientX-hr.left)/hr.width-.5)*10+'deg');pt.style.setProperty('--rx',(-((e.clientY-hr.top)/hr.height-.5))*8+'deg');
+    const r=cv.getBoundingClientRect(),nx=(e.clientX-r.left)*(W/r.width),ny=(e.clientY-r.top)*(H/r.height);
+    if(mouse.x>-900){const mx=nx-mouse.x,my=ny-mouse.y;mouse.sp=Math.min(70*k,mouse.sp+Math.hypot(mx,my));mouse.dx=mx;mouse.dy=my}
+    mouse.x=nx;mouse.y=ny;
+  });
+  hero.addEventListener('pointerleave',()=>{mouse.x=-999;pt.style.setProperty('--rx','0deg');pt.style.setProperty('--ry','0deg')});
+  function loop(now){
+    requestAnimationFrame(loop);
+    if(!vis||!MD)return;
+    const dt=Math.min(.033,(now-last)/1000||0);last=now;
+    if(!pt.classList.contains('on'))return;
+    if(!t0)t0=now;const t=now-t0;
+    x.clearRect(0,0,W,H);x.drawImage(st,0,0);
+    const R=70*k,push=Math.min(mouse.sp,45*k)/k;mouse.sp*=.9;
+    if(push>1&&mouse.x>-900&&finished!==undefined){                       /* brushing releases the cubes under the cursor */
+      const i0=Math.max(0,Math.floor((mouse.x-R)/cx)),i1=Math.min(COLS-1,Math.floor((mouse.x+R)/cx)),j0=Math.max(0,Math.floor((mouse.y-R)/cy)),j1=Math.min(ROWS-1,Math.floor((mouse.y+R)/cy));
+      for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++){const p=P[j*COLS+i];if(!p||!p.set)continue;
+        const dx=p.tx-mouse.x,dy=p.ty-mouse.y;if(dx*dx+dy*dy<R*R){p.set=false;const px=Math.round(i*cx),py=Math.round(j*cy);sx.clearRect(px,py,Math.round((i+1)*cx)-px,Math.round((j+1)*cy)-py);MV.push(p)}}
+    }
+    for(let n=MV.length-1;n>=0;n--){
+      const p=MV[n],go=t>300&&t-300>p.dl;
+      if(go){const dx=p.tx-p.x,dy=p.ty-p.y,sw=Math.min(1,Math.hypot(dx,dy)/(W*.25))*.018;p.vx+=dx*.03-dy*sw;p.vy+=dy*.03+dx*sw}
+      else{p.vx+=(Math.random()-.5)*.1;p.vy+=(Math.random()-.5)*.1}
+      if(push>1){const dx=p.x-mouse.x,dy=p.y-mouse.y,dd=dx*dx+dy*dy;if(dd<R*R){const d=Math.sqrt(dd)+1,f=(1-d/R)*push*.16;p.vx+=dx/d*f+mouse.dx*.05*(1-d/R);p.vy+=dy/d*f+mouse.dy*.05*(1-d/R)}}
+      p.vx*=.86;p.vy*=.86;p.x+=p.vx;p.y+=p.vy;
+      const dist=Math.hypot(p.tx-p.x,p.ty-p.y);
+      if(go&&dist<.8&&p.vx*p.vx+p.vy*p.vy<.05){p.set=true;p.x=p.tx;p.y=p.ty;cube(sx,p.i,p.j,p.col);FL.push([p,1]);MV[n]=MV[MV.length-1];MV.pop();continue}
+      const q=clamp(1-dist/(W*.2),0,1),s=cx*(.3+.85*q);
+      x.fillStyle='rgb('+((220+(p.r-220)*q)|0)+','+((225+(p.g-225)*q)|0)+','+((235+(p.b-235)*q)|0)+')';
+      x.globalAlpha=.45+.55*q;x.fillRect(p.x-s/2,p.y-s/2,s,s);
+    }
+    x.globalAlpha=1;
+    for(let n=FL.length-1;n>=0;n--){                                       /* tiny white flash when a cube lands */
+      const f=FL[n],p=f[0];if(!p.set){FL[n]=FL[FL.length-1];FL.pop();continue}
+      x.globalAlpha=Math.max(0,f[1])*.7;x.fillStyle='#fff';x.fillRect(Math.round(p.i*cx),Math.round(p.j*cy),Math.ceil(cx),Math.ceil(cy));
+      f[1]-=dt*3.2;if(f[1]<=0){FL[n]=FL[FL.length-1];FL.pop()}
+    }
+    x.globalAlpha=1;
+    x.globalCompositeOperation='source-atop';                              /* effects only on the cubes: dark fade at the bottom + a light band sweeping across */
+    x.fillStyle=gradB;x.fillRect(0,0,W,H);
+    if(!MV.length&&t>1500){finished=true;const ph=((now%7000)/7000)*1.8-.4,gx=ph*W,g=x.createLinearGradient(gx-W*.3,0,gx+W*.3,H*.55);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.5,'rgba(255,255,255,.2)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,W,H)}
+    x.globalCompositeOperation='source-over';
+  }
+  requestAnimationFrame(loop);
 })();
 
 /* ===== SKILLS MARQUEE: slides sideways by itself; drag it to move forward / back ===== */
