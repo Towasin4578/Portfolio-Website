@@ -37,6 +37,8 @@ a{color:inherit;text-decoration:none}
 #word span.in{opacity:1;transform:none!important}
 #rip{position:absolute;width:12px;height:4px;border:1px solid #fffb;border-radius:50%;opacity:0;transform:translate(-50%,-50%);pointer-events:none}
 #cf{position:fixed;inset:0;z-index:90;pointer-events:none;display:none}
+/* interactive dynamic background canvas responding to cursor movements */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%}
 #gift{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) scale(.6);opacity:0;pointer-events:none;text-align:center;background:#0b0b0bf2;border:1px solid var(--l);border-radius:20px;padding:22px 24px;width:min(86%,320px);transition:opacity .4s,transform .6s cubic-bezier(.2,1.4,.4,1);z-index:5}
 #gift.show{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
 #gift b{font-size:2.8rem;display:block;line-height:1.1;animation:bob .8s ease-in-out infinite alternate}
@@ -78,7 +80,7 @@ nav a.on:after,nav a:hover:after{transform:scaleX(1)}
 .pt.assembled-all{border-color:var(--l);background:#080808;box-shadow:0 16px 40px rgba(0,0,0,.65)}
 .pt-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(24,1fr);grid-template-rows:repeat(32,1fr);gap:0;background:transparent;border-radius:inherit;overflow:visible;pointer-events:auto;transition:background .6s ease}
 .pt.assembled-all .pt-grid{background:#050505;overflow:hidden}
-.pt-block{position:relative;background-repeat:no-repeat;background-color:#141414;border-radius:50%;transform-style:preserve-3d;will-change:transform,opacity,border-radius;transform:translate3d(var(--sx,0px),var(--sy,0px),var(--sz,0px)) rotateZ(var(--rz,0deg)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(var(--sc,0.15));opacity:0;transition:transform 1.35s cubic-bezier(.16,1.18,.28,1),opacity 1s ease,border-radius .7s ease,filter .3s ease;box-shadow:none;cursor:default}
+.pt-block{position:relative;background-repeat:no-repeat;background-color:#141414;border-radius:50%;transform-style:preserve-3d;will-change:transform,opacity,border-radius;transform:translate3d(var(--sx,0px),var(--sy,0px),var(--sz,0px)) rotateZ(var(--rz,0deg)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(var(--sc,0.15));opacity:0;transition:transform 1.6s cubic-bezier(.22,1,.36,1),opacity 1.1s ease,border-radius .9s ease,filter .4s ease;box-shadow:none;cursor:default}
 .pt-block.assembled{transform:translate3d(0,0,0) rotateZ(0deg) rotateX(0deg) rotateY(0deg) scale(1);opacity:1;border-radius:0;box-shadow:none}
 .pt-block:hover{transform:translateZ(14px) scale(1.15);z-index:25;filter:brightness(1.2) contrast(1.1)}
 .pt-corner{position:absolute;width:10px;height:10px;pointer-events:none;z-index:15;border:2px solid rgba(255,255,255,.3);transition:border-color .3s}
@@ -94,7 +96,7 @@ nav a.on:after,nav a:hover:after{transform:scaleX(1)}
 .pt-fallback small{color:var(--m);font-size:.74rem;letter-spacing:.12em}
 
 /* sections — refined typography & comfortable line lengths on laptop */
-section.s{max-width:960px;margin:0 auto;padding:78px 28px}
+section.s{max-width:960px;margin:0 auto;padding:78px 28px;position:relative;z-index:1}
 .lab{font-size:.78rem;letter-spacing:.25em;color:#a5a5a5;font-weight:600;margin-bottom:12px}
 h2{font-size:clamp(2.2rem,3.4vw,3rem);line-height:1.18;letter-spacing:-.025em;margin-bottom:24px;font-weight:700}
 .r{opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s}
@@ -128,14 +130,14 @@ h2{font-size:clamp(2.2rem,3.4vw,3rem);line-height:1.18;letter-spacing:-.025em;ma
 .con{display:flex;flex-wrap:wrap;gap:10px}
 .con a{border:1px solid var(--l);border-radius:26px;padding:10px 20px;font-size:.84rem;transition:.3s}
 .con a:hover{background:#fff;color:#000}
-/* game arena: clean, thin perimeter border matching mobile look on laptop */
-.gm{position:relative;max-width:520px;margin:0 auto;padding:40px 18px 56px}
-.gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.gh p{font-size:.88rem;color:#ddd;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:2px}
-.lv{display:flex;gap:5px}.lv i{width:8px;height:8px;border-radius:50%;background:#fff}.lv i.x{background:#333}
-canvas#g{width:100%;display:block;touch-action:pan-y;cursor:default;-webkit-tap-highlight-color:transparent;border:1px solid rgba(255,255,255,.2);border-radius:16px;background:#060606;box-shadow:0 0 24px rgba(255,255,255,.02)}
-.gb{display:flex;gap:12px;justify-content:center;margin-top:16px}
-.gb button{font-family:inherit;font-size:.84rem;font-weight:500;padding:10px 24px;border-radius:24px;border:1px solid #555;background:transparent;color:#fff;cursor:pointer;transition:.3s}
+/* game arena: comfortably sized on laptop, perfectly responsive on mobile */
+.gm{position:relative;width:min(92vw,620px);max-width:620px;margin:0 auto;padding:46px 20px 60px}
+.gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.gh p{font-size:.92rem;color:#ddd;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:2px}
+.lv{display:flex;gap:6px}.lv i{width:8px;height:8px;border-radius:50%;background:#fff}.lv i.x{background:#333}
+canvas#g{width:100%;display:block;touch-action:pan-y;cursor:default;-webkit-tap-highlight-color:transparent;border:1px solid rgba(255,255,255,.24);border-radius:18px;background:#060606;box-shadow:0 0 28px rgba(255,255,255,.03),0 12px 32px rgba(0,0,0,.5)}
+.gb{display:flex;gap:12px;justify-content:center;margin-top:18px}
+.gb button{font-family:inherit;font-size:.86rem;font-weight:500;padding:11px 26px;border-radius:24px;border:1px solid #555;background:transparent;color:#fff;cursor:pointer;transition:.3s}
 .gb button:hover,.gb button.on{background:#fff;color:#000}
 
 .gt{position:relative;padding:78px 28px;border-top:1px solid var(--l);overflow:hidden}
@@ -215,6 +217,7 @@ footer{text-align:center;color:#888;font-size:.82rem;padding:0 0 42px}
 </style>
 </head>
 <body class="lock">
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="igg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#feda75"/><stop offset=".5" stop-color="#d62976"/><stop offset="1" stop-color="#4f5bd5"/></linearGradient></defs></svg>
 
 <div id="intro"><div id="stage"><i id="rip"></i><i id="dot"></i><i id="bar"></i><div id="word"></div></div><div id="skip" data-i18n="skip_intro">TAP TO SKIP</div></div>
@@ -622,7 +625,9 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   function ui(){pl.classList.toggle('on',playing);sp.classList.toggle('on',!playing);lv.forEach((e,i)=>e.className=i<lives?'':'x')}
   function build(){
     const maxW=c.parentElement.clientWidth-36;
-    const w=Math.max(240,Math.min(500,maxW,Math.floor((innerHeight-200)/1.25))),d=Math.min(devicePixelRatio||1,2);
+    const isMobile=window.innerWidth<=640;
+    const maxWCap=isMobile?420:580;
+    const w=Math.max(250,Math.min(maxWCap,maxW,Math.floor((innerHeight-190)/1.22))),d=Math.min(devicePixelRatio||1,2);
     s=w/31;c.style.width=w+'px';c.width=w*d;c.height=w*1.22*d;x.setTransform(d,0,0,d,0,0);c.W=w;c.H=w*1.22;
     B=[];['HELLO','WORLD'].forEach((wd,li)=>{for(let k=0;k<5;k++)F[wd[k]].forEach((row,r)=>[...row].forEach((v,cc)=>{if(v==='1')B.push({x:s*(1+k*6+cc),y:s*(1+li*8+r),a:true})}))});
     padW=s*7.5;padX=tx=c.W/2;SP=s*17;playing=false;reset(true);
@@ -1040,6 +1045,139 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
       window.burstConfetti(r.left + r.width/2, r.top + r.height/2, 20);
     }
   });
+/* ===== INTERACTIVE DYNAMIC BACKGROUND: Responds smoothly to cursor movement ===== */
+(function(){
+  const cv = document.getElementById('bg-canvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  let w = 0, h = 0;
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  function resize(){
+    w = window.innerWidth;
+    h = window.innerHeight;
+    cv.width = w * dpr;
+    cv.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener('resize', resize, {passive: true});
+  resize();
+
+  // Create subtle constellation particles
+  const count = Math.min(55, Math.floor((w * h) / 22000));
+  const particles = Array.from({length: Math.max(28, count)}, () => ({
+    x: Math.random() * w,
+    y: Math.random() * h,
+    vx: (Math.random() - 0.5) * 0.45,
+    vy: (Math.random() - 0.5) * 0.45,
+    baseRadius: 1 + Math.random() * 1.5,
+    alpha: 0.15 + Math.random() * 0.35
+  }));
+
+  // Cursor position with smooth lerp
+  let mouse = { x: -1000, y: -1000, active: false };
+  let targetMouse = { x: -1000, y: -1000 };
+
+  window.addEventListener('pointermove', e => {
+    targetMouse.x = e.clientX;
+    targetMouse.y = e.clientY;
+    mouse.active = true;
+  }, {passive: true});
+
+  window.addEventListener('pointerleave', () => {
+    mouse.active = false;
+  });
+
+  // Touch support for mobile tap ripple
+  window.addEventListener('touchmove', e => {
+    if(e.touches && e.touches[0]){
+      targetMouse.x = e.touches[0].clientX;
+      targetMouse.y = e.touches[0].clientY;
+      mouse.active = true;
+    }
+  }, {passive: true});
+
+  function draw(){
+    requestAnimationFrame(draw);
+
+    // Smoothly interpolate mouse position for organic fluid feel
+    if(mouse.active){
+      mouse.x += (targetMouse.x - mouse.x) * 0.12;
+      mouse.y += (targetMouse.y - mouse.y) * 0.12;
+    } else {
+      mouse.x += (-1000 - mouse.x) * 0.05;
+      mouse.y += (-1000 - mouse.y) * 0.05;
+    }
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Subtle soft ambient glow under cursor
+    if(mouse.active && mouse.x > 0 && mouse.y > 0){
+      const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 240);
+      grad.addColorStop(0, 'rgba(255, 255, 255, 0.045)');
+      grad.addColorStop(0.5, 'rgba(236, 232, 220, 0.015)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(mouse.x, mouse.y, 240, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Update and draw particles
+    const maxDist = 120;
+    for(let i = 0; i < particles.length; i++){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if(p.x < 0) p.x = w;
+      else if(p.x > w) p.x = 0;
+      if(p.y < 0) p.y = h;
+      else if(p.y > h) p.y = 0;
+
+      // Cursor magnetic repulsion & connection
+      let dx = mouse.x - p.x;
+      let dy = mouse.y - p.y;
+      let dist = Math.hypot(dx, dy);
+      if(mouse.active && dist < 160){
+        const force = (160 - dist) / 160;
+        p.x -= (dx / dist) * force * 1.8;
+        p.y -= (dy / dist) * force * 1.8;
+
+        // Draw dynamic interactive ray to cursor
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(255, 255, 255, ${0.16 * force})`;
+        ctx.lineWidth = 0.8;
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(mouse.x, mouse.y);
+        ctx.stroke();
+      }
+
+      // Draw particle dot
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.baseRadius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+      ctx.fill();
+
+      // Connect near neighbors
+      for(let j = i + 1; j < particles.length; j++){
+        const p2 = particles[j];
+        const ndx = p.x - p2.x;
+        const ndy = p.y - p2.y;
+        const ndist = Math.hypot(ndx, ndy);
+        if(ndist < maxDist){
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(255, 255, 255, ${0.07 * (1 - ndist / maxDist)})`;
+          ctx.lineWidth = 0.6;
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  draw();
 })();
 </script>
 
