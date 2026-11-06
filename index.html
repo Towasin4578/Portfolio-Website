@@ -78,9 +78,9 @@ nav a.on:after,nav a:hover:after{transform:scaleX(1)}
 .pt{--s:min(40svh,72vw,380px);--ar:.75;position:absolute;z-index:2;left:calc(50% - var(--s)*var(--ar)/2);top:76px;width:calc(var(--s)*var(--ar));height:var(--s);opacity:0;transform:perspective(1200px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:opacity .8s,transform .35s ease,border-color .6s ease,box-shadow .6s ease;pointer-events:auto;border:1px solid transparent;border-radius:20px;background:transparent;box-shadow:none;user-select:none;overflow:visible;perspective:1400px}
 .pt.on{opacity:1}
 .pt.assembled-all{border-color:var(--l);background:#080808;box-shadow:0 16px 40px rgba(0,0,0,.65)}
-.pt-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(24,1fr);grid-template-rows:repeat(32,1fr);gap:0;background:transparent;border-radius:inherit;overflow:visible;pointer-events:auto;transition:background .6s ease}
+.pt-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(16,1fr);grid-template-rows:repeat(20,1fr);gap:0;background:transparent;border-radius:inherit;overflow:visible;pointer-events:auto;transition:background .8s ease}
 .pt.assembled-all .pt-grid{background:#050505;overflow:hidden}
-.pt-block{position:relative;background-repeat:no-repeat;background-color:#141414;border-radius:50%;transform-style:preserve-3d;will-change:transform,opacity,border-radius;transform:translate3d(var(--sx,0px),var(--sy,0px),var(--sz,0px)) rotateZ(var(--rz,0deg)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(var(--sc,0.15));opacity:0;transition:transform 1.6s cubic-bezier(.22,1,.36,1),opacity 1.1s ease,border-radius .9s ease,filter .4s ease;box-shadow:none;cursor:default}
+.pt-block{position:relative;background-repeat:no-repeat;background-color:#141414;border-radius:50%;transform-style:preserve-3d;will-change:transform,opacity,border-radius;transform:translate3d(var(--sx,0px),var(--sy,0px),var(--sz,0px)) rotateZ(var(--rz,0deg)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(var(--sc,0.2));opacity:0;transition:transform 2.1s cubic-bezier(0.16, 1, 0.3, 1),opacity 1.4s ease-out,border-radius 1.1s ease-out,filter .5s ease;box-shadow:none;cursor:default;-webkit-backface-visibility:hidden;backface-visibility:hidden}
 .pt-block.assembled{transform:translate3d(0,0,0) rotateZ(0deg) rotateX(0deg) rotateY(0deg) scale(1);opacity:1;border-radius:0;box-shadow:none}
 .pt-block:hover{transform:translateZ(14px) scale(1.15);z-index:25;filter:brightness(1.2) contrast(1.1)}
 .pt-corner{position:absolute;width:10px;height:10px;pointer-events:none;z-index:15;border:2px solid rgba(255,255,255,.3);transition:border-color .3s}
@@ -460,8 +460,8 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
         hero=document.getElementById('hero');
   if(!pt||!img||!grid)return;
 
-  // 24 columns x 32 rows = 768 tiny micro-dots
-  const COLS=24, ROWS=32;
+  // 16 columns x 20 rows = 320 smooth micro-dots for 60fps silky convergence
+  const COLS=16, ROWS=20;
   const blocks=[];
   let loadedUrl='';
   let assembledTriggered=false;
@@ -481,20 +481,20 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
       const baseAngle = Math.atan2(ny, nx);
 
       // Tornado spiral twist: dots curl around center
-      const swirlTurns = 3.2;
+      const swirlTurns = 2.6;
       const vortexAngle = baseAngle + (distFromCenter * swirlTurns);
 
-      // Wide whirlwind coordinates reaching across the entire hero viewport (500px to 1400px away)
+      // Wide whirlwind coordinates reaching across the entire hero viewport
       const screenSpan = Math.max(window.innerWidth || 1200, window.innerHeight || 900);
-      const whirlwindDist = (screenSpan * 0.42) + (distFromCenter * screenSpan * 0.45) + (Math.random() - 0.5) * 120;
+      const whirlwindDist = (screenSpan * 0.38) + (distFromCenter * screenSpan * 0.42) + (Math.random() - 0.5) * 80;
 
       const sx = Math.round(Math.cos(vortexAngle) * whirlwindDist);
       const sy = Math.round(Math.sin(vortexAngle) * whirlwindDist);
-      const sz = Math.round((Math.random() - 0.5) * 600);
-      const rx = Math.round((Math.random() - 0.5) * 180);
-      const ry = Math.round((Math.random() - 0.5) * 180);
-      const rz = Math.round(vortexAngle * (180 / Math.PI) * 1.5);
-      const sc = (0.05 + Math.random() * 0.15).toFixed(2);
+      const sz = Math.round((Math.random() - 0.5) * 450);
+      const rx = Math.round((Math.random() - 0.5) * 120);
+      const ry = Math.round((Math.random() - 0.5) * 120);
+      const rz = Math.round(vortexAngle * (180 / Math.PI));
+      const sc = (0.08 + Math.random() * 0.16).toFixed(2);
 
       b.style.setProperty('--sx', `${sx}px`);
       b.style.setProperty('--sy', `${sy}px`);
@@ -528,11 +528,11 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     let maxDelay = 0;
     blocks.forEach(({el, distFromCenter, vortexAngle})=>{
       el.classList.remove('assembled');
-      // Cyclone spiral sequence: outer tornado dots swirl inwards progressively
-      const spiralPhase = ((vortexAngle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) / (Math.PI * 2);
-      const delay = Math.round(spiralPhase * 360 + (1.4 - Math.min(1.3, distFromCenter)) * 280 + Math.random() * 80);
+      // Smooth continuous spiral delay without sudden clusters
+      const angleNormalized = ((vortexAngle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) / (Math.PI * 2);
+      const delay = Math.round(angleNormalized * 450 + (1.3 - Math.min(1.2, distFromCenter)) * 320);
       if(delay > maxDelay) maxDelay = delay;
-      el.style.transitionDelay = `${Math.max(20, delay)}ms`;
+      el.style.transitionDelay = `${Math.max(30, delay)}ms`;
       setTimeout(()=>{
         el.classList.add('assembled');
       }, 50);
@@ -541,7 +541,7 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     // When the tornado coalescence finishes, activate .assembled-all for crisp photo frame & border
     setTimeout(()=>{
       pt.classList.add('assembled-all');
-    }, maxDelay + 1300);
+    }, maxDelay + 2200);
   }
 
   const SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg','/Images/mypic.jpg','/images/mypic.jpg','/mypic.jpg'];
@@ -1045,6 +1045,8 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
       window.burstConfetti(r.left + r.width/2, r.top + r.height/2, 20);
     }
   });
+})();
+
 /* ===== INTERACTIVE DYNAMIC BACKGROUND: Responds smoothly to cursor movement ===== */
 (function(){
   const cv = document.getElementById('bg-canvas');
