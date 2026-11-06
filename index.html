@@ -72,13 +72,13 @@ nav a.on:after,nav a:hover:after{transform:scaleX(1)}
 .hb a.fill{background:#ece8dc;color:#111;border-color:#ece8dc}
 .hb a:hover{transform:translateY(-2px)}
 @media(max-width:720px){.hero-b{flex-direction:column;bottom:2.5vh;gap:10px}.hero-b p{text-align:center;font-size:.88rem}.hb a{padding:9px 18px;font-size:.78rem}}
-/* hero photo with 3D micro-block matrix animation (converging from all 4 sides) */
-.pt{--s:min(40svh,72vw,380px);--ar:.75;position:absolute;z-index:2;left:calc(50% - var(--s)*var(--ar)/2);top:76px;width:calc(var(--s)*var(--ar));height:var(--s);opacity:0;transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:opacity .8s,transform .35s ease;pointer-events:auto;border:1px solid var(--l);border-radius:20px;background:#080808;box-shadow:0 16px 40px rgba(0,0,0,.65);user-select:none;overflow:hidden;perspective:1200px}
+/* hero photo with 3D tornado micro-dot convergence animation */
+.pt{--s:min(40svh,72vw,380px);--ar:.75;position:absolute;z-index:2;left:calc(50% - var(--s)*var(--ar)/2);top:76px;width:calc(var(--s)*var(--ar));height:var(--s);opacity:0;transform:perspective(1200px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:opacity .8s,transform .35s ease;pointer-events:auto;border:1px solid var(--l);border-radius:20px;background:#080808;box-shadow:0 16px 40px rgba(0,0,0,.65);user-select:none;overflow:hidden;perspective:1400px}
 .pt.on{opacity:1}
-.pt-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(16,1fr);grid-template-rows:repeat(20,1fr);gap:0;background:#050505;border-radius:inherit;overflow:hidden;pointer-events:auto}
-.pt-block{position:relative;background-repeat:no-repeat;background-color:#141414;border-radius:0;transform-style:preserve-3d;will-change:transform,opacity;transform:translate3d(var(--sx,0px),var(--sy,0px),var(--sz,0px)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) rotateZ(var(--rz,0deg)) scale(var(--sc,0.2));opacity:0;transition:transform .85s cubic-bezier(.16,1.25,.38,1),opacity .65s ease,filter .3s ease;box-shadow:none;cursor:default}
-.pt-block.assembled{transform:translate3d(0,0,0) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);opacity:1;box-shadow:none}
-.pt-block:hover{transform:translateZ(14px) scale(1.15);z-index:25;filter:brightness(1.25) contrast(1.1)}
+.pt-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(24,1fr);grid-template-rows:repeat(32,1fr);gap:0;background:#050505;border-radius:inherit;overflow:hidden;pointer-events:auto}
+.pt-block{position:relative;background-repeat:no-repeat;background-color:#141414;border-radius:50%;transform-style:preserve-3d;will-change:transform,opacity,border-radius;transform:translate3d(var(--sx,0px),var(--sy,0px),var(--sz,0px)) rotateZ(var(--rz,0deg)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(var(--sc,0.15));opacity:0;transition:transform 1.25s cubic-bezier(.16,1.15,.3,1),opacity .9s ease,border-radius .6s ease,filter .3s ease;box-shadow:none;cursor:default}
+.pt-block.assembled{transform:translate3d(0,0,0) rotateZ(0deg) rotateX(0deg) rotateY(0deg) scale(1);opacity:1;border-radius:0;box-shadow:none}
+.pt-block:hover{transform:translateZ(14px) scale(1.15);z-index:25;filter:brightness(1.2) contrast(1.1)}
 .pt-corner{position:absolute;width:10px;height:10px;pointer-events:none;z-index:15;border:2px solid rgba(255,255,255,.3);transition:border-color .3s}
 .pt:hover .pt-corner{border-color:rgba(255,255,255,.85)}
 .pt-corner.tl{top:6px;left:6px;border-right:0;border-bottom:0;border-top-left-radius:6px}
@@ -126,35 +126,15 @@ h2{font-size:clamp(2.2rem,3.4vw,3rem);line-height:1.18;letter-spacing:-.025em;ma
 .con{display:flex;flex-wrap:wrap;gap:10px}
 .con a{border:1px solid var(--l);border-radius:26px;padding:10px 20px;font-size:.84rem;transition:.3s}
 .con a:hover{background:#fff;color:#000}
-/* game arena with thin perimeter border */
-.gm{position:relative;max-width:520px;margin:0 auto;padding:40px 18px 56px}
-.gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.gh p{font-size:.88rem;color:#ddd;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:2px}
-.lv{display:flex;gap:5px}.lv i{width:8px;height:8px;border-radius:50%;background:#fff}.lv i.x{background:#333}
-canvas#g{width:100%;display:block;touch-action:pan-y;cursor:default;-webkit-tap-highlight-color:transparent;border:1px solid rgba(255,255,255,.2);border-radius:16px;background:#060606;box-shadow:0 0 24px rgba(255,255,255,.02)}
-.gb{display:flex;gap:12px;justify-content:center;margin-top:16px}
-.gb button{font-family:inherit;font-size:.84rem;font-weight:500;padding:10px 24px;border-radius:24px;border:1px solid #555;background:transparent;color:#fff;cursor:pointer;transition:.3s}
+/* game arena with crisp perimeter border on laptop and mobile */
+.gm{position:relative;max-width:720px;margin:0 auto;padding:48px 24px 64px}
+.gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.gh p{font-size:.92rem;color:#ddd;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:2px}
+.lv{display:flex;gap:6px}.lv i{width:9px;height:9px;border-radius:50%;background:#fff}.lv i.x{background:#333}
+canvas#g{width:100%;display:block;touch-action:pan-y;cursor:default;-webkit-tap-highlight-color:transparent;border:1.5px solid rgba(255,255,255,.32);border-radius:18px;background:#060606;box-shadow:0 0 32px rgba(255,255,255,.05),0 12px 36px rgba(0,0,0,.6)}
+.gb{display:flex;gap:12px;justify-content:center;margin-top:20px}
+.gb button{font-family:inherit;font-size:.88rem;font-weight:500;padding:11px 26px;border-radius:24px;border:1px solid #666;background:transparent;color:#fff;cursor:pointer;transition:.3s}
 .gb button:hover,.gb button.on{background:#fff;color:#000}
-/* testimonials carousel with smooth fade transitions */
-.test-wrap{position:relative;margin-top:20px}
-.test-viewport{position:relative;min-height:220px;overflow:hidden}
-.test-slide{opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .55s ease,transform .55s cubic-bezier(.16,1,.3,1);position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between}
-.test-slide.active{opacity:1;pointer-events:auto;transform:translateY(0);position:relative}
-.test-card{border:1px solid rgba(255,255,255,.14);border-radius:24px;background:#0c0c0c;padding:34px 38px;box-shadow:0 14px 34px rgba(0,0,0,.5);position:relative;overflow:hidden}
-.test-card:before{content:'“';position:absolute;top:10px;right:26px;font-size:7rem;line-height:1;font-family:serif;color:rgba(255,255,255,.05);pointer-events:none}
-.test-quote{color:#e8e8e8;font-size:1.15rem;line-height:1.85;margin-bottom:24px;font-style:italic;position:relative;z-index:1}
-.test-author{display:flex;align-items:center;gap:14px;position:relative;z-index:1}
-.test-avatar{width:48px;height:48px;border-radius:50%;background:#181818;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;color:#ece8dc;flex-shrink:0}
-.test-info h4{font-size:1.02rem;font-weight:600;color:#fff;margin:0 0 2px}
-.test-info p{font-size:.82rem;color:#8e8e8e;margin:0}
-.test-nav{display:flex;align-items:center;justify-content:space-between;margin-top:20px;gap:16px}
-.test-dots{display:flex;gap:8px}
-.test-dot{width:28px;height:5px;border-radius:4px;background:rgba(255,255,255,.2);cursor:pointer;transition:all .35s ease;border:0;padding:0}
-.test-dot.active{background:#fff;width:42px}
-.test-btns{display:flex;gap:10px}
-.test-btn{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:#121212;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s ease}
-.test-btn:hover{background:#fff;color:#000;border-color:#fff;transform:translateY(-2px)}
-.test-btn svg{width:18px;height:18px;display:block}
 
 .gt{position:relative;padding:78px 28px;border-top:1px solid var(--l);overflow:hidden}
 .gt:before{content:'';position:absolute;inset:-30%;background:repeating-radial-gradient(circle at 30% 40%,#fff0 0 22px,#ffffff09 24px 26px),repeating-radial-gradient(circle at 75% 65%,#fff0 0 30px,#ffffff07 32px 35px);animation:sw 50s linear infinite}
@@ -217,13 +197,7 @@ footer{text-align:center;color:#888;font-size:.82rem;padding:0 0 42px}
   .st b{font-size:.88rem}
   .st p{font-size:.9rem}
   .go{font-size:.75rem}
-  .test-card{padding:22px 20px;border-radius:20px}
-  .test-quote{font-size:.96rem;line-height:1.75;margin-bottom:18px}
-  .test-author{gap:12px}
-  .test-avatar{width:42px;height:42px;font-size:.92rem}
-  .test-info h4{font-size:.94rem}
-  .test-info p{font-size:.76rem}
-  .test-btn{width:36px;height:36px}
+  .gm{padding:36px 14px 48px}
   .empty{padding:30px 20px;border-radius:20px}
   .empty h3{font-size:1.35rem}
   .empty p{font-size:.92rem}
@@ -251,7 +225,6 @@ footer{text-align:center;color:#888;font-size:.82rem;padding:0 0 42px}
     <a href="#whatido" data-i18n="nav_whatido">What I Do</a>
     <a href="#projects" data-i18n="nav_projects">Projects</a>
     <a href="#journey" data-i18n="nav_journey">Journey</a>
-    <a href="#testimonials" data-i18n="nav_testimonials">Feedback</a>
     <a href="#play" data-i18n="nav_play">Play</a>
     <a href="#connect" data-i18n="nav_connect">Connect</a>
   </div>
@@ -318,71 +291,6 @@ footer{text-align:center;color:#888;font-size:.82rem;padding:0 0 42px}
     <a class="st r" href="https://www.gouripursahs.edu.bd/" target="_blank" rel="noopener"><small data-i18n="journey_sch_date">2018 — 2023</small><h3 data-i18n="journey_sch_title">High School Life</h3><b data-i18n="journey_sch_org">Gouripur SA High School</b><p data-i18n="journey_sch_p">Where it all began — my first real exposure to coding, and school clubs that let me explore programming outside the classroom.</p><span class="go" data-i18n="journey_visit">Visit website ↗</span></a>
     <a class="st r" href="https://dmfcollege.edu.bd/" target="_blank" rel="noopener"><small data-i18n="journey_col_date">2023 — 2025</small><h3 data-i18n="journey_col_title">College Life</h3><b data-i18n="journey_col_org">Dr. Mosharraf Foundation Degree College</b><p data-i18n="journey_col_p">I built my technical foundation — heavy C programming to sharpen my logic, and HTML as my first real step toward web development.</p><span class="go" data-i18n="journey_visit">Visit website ↗</span></a>
     <a class="st r" href="https://barisal-eng.portal.gov.bd/" target="_blank" rel="noopener"><small data-i18n="journey_uni_date">2025 — PRESENT</small><h3 data-i18n="journey_uni_title">University Life</h3><b data-i18n="journey_uni_org">Barishal Engineering College</b><p data-i18n="journey_uni_p">Studying Electrical &amp; Electronic Engineering (EEE) and expanding into Python on the way to becoming a software engineer.</p><span class="go" data-i18n="journey_visit">Visit website ↗</span></a>
-  </div>
-</section>
-
-<!-- Testimonials Carousel Section -->
-<section class="s" id="testimonials">
-  <div class="lab r" data-i18n="test_lab">COLLABORATION FEEDBACK</div>
-  <h2 class="chrome r" data-i18n="test_h2">What Teammates Say</h2>
-  <div class="test-wrap r">
-    <div class="test-viewport" id="test-viewport">
-      <!-- Slide 1 -->
-      <div class="test-slide active" data-slide="0">
-        <div class="test-card">
-          <p class="test-quote" data-i18n="test_quote_1">"Towasin is an exceptional collaborator with an incredible knack for breaking down complex mathematical logic into clean C code. His enthusiasm for learning and supporting peers during team sprints is truly motivating."</p>
-          <div class="test-author">
-            <div class="test-avatar">RH</div>
-            <div class="test-info">
-              <h4 data-i18n="test_author_1">Rifat Hossain</h4>
-              <p data-i18n="test_role_1">Competitive Programming Peer · Gouripur High School</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Slide 2 -->
-      <div class="test-slide" data-slide="1">
-        <div class="test-card">
-          <p class="test-quote" data-i18n="test_quote_2">"Working with Towasin on YouTube SEO strategies and digital content was seamless. He pays close attention to analytics, title optimization, and audience retention. Highly dependable teammate."</p>
-          <div class="test-author">
-            <div class="test-avatar">TI</div>
-            <div class="test-info">
-              <h4 data-i18n="test_author_2">Tanvir Islam</h4>
-              <p data-i18n="test_role_2">Content Creator &amp; Media Collaborator</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Slide 3 -->
-      <div class="test-slide" data-slide="2">
-        <div class="test-card">
-          <p class="test-quote" data-i18n="test_quote_3">"Towasin brings unmatched discipline to every group lab project at BEC. Whether solving circuit algorithms or discussing Python architectures, he is proactive, respectful, and always ready to help."</p>
-          <div class="test-author">
-            <div class="test-avatar">SA</div>
-            <div class="test-info">
-              <h4 data-i18n="test_author_3">Shakil Ahmed</h4>
-              <p data-i18n="test_role_3">EEE Classmate · Barishal Engineering College</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Carousel Controls -->
-    <div class="test-nav">
-      <div class="test-dots" id="test-dots">
-        <button class="test-dot active" type="button" aria-label="Slide 1" data-slide="0"></button>
-        <button class="test-dot" type="button" aria-label="Slide 2" data-slide="1"></button>
-        <button class="test-dot" type="button" aria-label="Slide 3" data-slide="2"></button>
-      </div>
-      <div class="test-btns">
-        <button class="test-btn" id="test-prev" type="button" aria-label="Previous testimonial">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-        <button class="test-btn" id="test-next" type="button" aria-label="Next testimonial">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
-        </button>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -538,7 +446,7 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   fit();setTimeout(fit,600);window.__fitHero=fit;
 })();
 
-/* ===== HERO PHOTO 3D BLOCK MATRIX & INTERACTIVE ANIMATION ===== */
+/* ===== HERO PHOTO 3D TORNADO MICRO-DOT MATRIX & CONVERGENCE ===== */
 (function(){
   const pt=document.getElementById('pt'),
         grid=document.getElementById('photo-grid'),
@@ -547,10 +455,11 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
         hero=document.getElementById('hero');
   if(!pt||!img||!grid)return;
 
-  // 16 columns x 20 rows = 320 ultra-fine micro blocks
-  const COLS=16, ROWS=20;
+  // 24 columns x 32 rows = 768 tiny micro-dots
+  const COLS=24, ROWS=32;
   const blocks=[];
   let loadedUrl='';
+  let assembledTriggered=false;
 
   // Build grid blocks
   for(let r=0; r<ROWS; r++){
@@ -560,22 +469,24 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
       b.dataset.r=r;
       b.dataset.c=c;
 
-      // Calculate directional explosion vectors pointing outwards from center to all 4 directions
-      const nx = COLS > 1 ? (c / (COLS - 1)) * 2 - 1 : 0; // -1 (left) to +1 (right)
-      const ny = ROWS > 1 ? (r / (ROWS - 1)) * 2 - 1 : 0; // -1 (top) to +1 (bottom)
-      const distFromCenter = Math.hypot(nx, ny) || 0.1;
+      // Coordinate from center (-1 to +1)
+      const nx = COLS > 1 ? (c / (COLS - 1)) * 2 - 1 : 0;
+      const ny = ROWS > 1 ? (r / (ROWS - 1)) * 2 - 1 : 0;
+      const distFromCenter = Math.hypot(nx, ny) || 0.05;
       const baseAngle = Math.atan2(ny, nx);
-      // Small jitter so each tiny block flies in organically
-      const jitterAngle = baseAngle + (Math.random() - 0.5) * 0.4;
-      const flyDistance = 280 + Math.random() * 240; // fly outwards past photo frame
 
-      const sx = Math.round(Math.cos(jitterAngle) * flyDistance);
-      const sy = Math.round(Math.sin(jitterAngle) * flyDistance);
-      const sz = Math.round((Math.random() - 0.5) * 260);
-      const rx = Math.round((Math.random() - 0.5) * 90);
-      const ry = Math.round((Math.random() - 0.5) * 90);
-      const rz = Math.round((Math.random() - 0.5) * 120);
-      const sc = (0.1 + Math.random() * 0.2).toFixed(2);
+      // Tornado vortex swirl angle: outer dots have high rotational twist
+      const vortexAngle = baseAngle + (distFromCenter * 3.8);
+      // Wild whirlwind distance so dots sweep in from all 4 boundaries like a cyclone
+      const whirlwindDist = 280 + distFromCenter * 280 + (Math.random() - 0.5) * 80;
+
+      const sx = Math.round(Math.cos(vortexAngle) * whirlwindDist);
+      const sy = Math.round(Math.sin(vortexAngle) * whirlwindDist);
+      const sz = Math.round((Math.random() - 0.5) * 400);
+      const rx = Math.round((Math.random() - 0.5) * 120);
+      const ry = Math.round((Math.random() - 0.5) * 120);
+      const rz = Math.round(vortexAngle * (180 / Math.PI) + (Math.random() - 0.5) * 180);
+      const sc = (0.08 + Math.random() * 0.14).toFixed(2);
 
       b.style.setProperty('--sx', `${sx}px`);
       b.style.setProperty('--sy', `${sy}px`);
@@ -586,7 +497,7 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
       b.style.setProperty('--sc', sc);
 
       grid.appendChild(b);
-      blocks.push({el:b, r, c, distFromCenter, sx, sy});
+      blocks.push({el:b, r, c, distFromCenter, vortexAngle});
     }
   }
 
@@ -599,18 +510,22 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
       const posY = ROWS>1 ? (r/(ROWS-1))*100 : 0;
       el.style.backgroundPosition=`${posX}% ${posY}%`;
     });
-    // Kick off entry assembly
-    setTimeout(assembleBlocks, 120);
   }
 
+  // Tornado convergence: dots spiral in from outer edges into the crisp photo
   function assembleBlocks(){
-    // Stagger blocks inward from outer edges to center for a magnetic fly-in effect
-    blocks.forEach(({el, distFromCenter})=>{
+    if(assembledTriggered) return;
+    assembledTriggered = true;
+
+    blocks.forEach(({el, distFromCenter, vortexAngle})=>{
       el.classList.remove('assembled');
-      // Outer blocks start converging first, locking into place
-      const delay = Math.round((1.5 - Math.min(1.4, distFromCenter)) * 360 + Math.random() * 140);
-      el.style.transitionDelay = `${Math.max(15, delay)}ms`;
-      setTimeout(()=>{ el.classList.add('assembled'); }, 30);
+      // Tornado spiral timing: outer particles whip in along the cyclone spiral
+      const spiralPhase = ((vortexAngle + Math.PI) / (Math.PI * 2)) % 1;
+      const delay = Math.round(spiralPhase * 380 + (1.4 - Math.min(1.3, distFromCenter)) * 260 + Math.random() * 90);
+      el.style.transitionDelay = `${Math.max(20, delay)}ms`;
+      setTimeout(()=>{
+        el.classList.add('assembled');
+      }, 40);
     });
   }
 
@@ -695,7 +610,10 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   function ui(){pl.classList.toggle('on',playing);sp.classList.toggle('on',!playing);lv.forEach((e,i)=>e.className=i<lives?'':'x')}
   function build(){
     const maxW=c.parentElement.clientWidth-36;
-    const w=Math.max(240,Math.min(500,maxW,Math.floor((innerHeight-200)/1.25))),d=Math.min(devicePixelRatio||1,2);
+    const isMobile=window.innerWidth<=640;
+    const maxCap=isMobile?440:640;
+    const w=Math.max(260,Math.min(maxCap,maxW,Math.floor((innerHeight-180)/1.2)));
+    const d=Math.min(devicePixelRatio||1,2);
     s=w/31;c.style.width=w+'px';c.width=w*d;c.height=w*1.22*d;x.setTransform(d,0,0,d,0,0);c.W=w;c.H=w*1.22;
     B=[];['HELLO','WORLD'].forEach((wd,li)=>{for(let k=0;k<5;k++)F[wd[k]].forEach((row,r)=>[...row].forEach((v,cc)=>{if(v==='1')B.push({x:s*(1+k*6+cc),y:s*(1+li*8+r),a:true})}))});
     padW=s*7.5;padX=tx=c.W/2;SP=s*17;playing=false;reset(true);
@@ -934,18 +852,6 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
       journey_uni_org: "Barishal Engineering College",
       journey_uni_p: "Studying Electrical & Electronic Engineering (EEE) and expanding into Python on the way to becoming a software engineer.",
       journey_visit: "Visit website ↗",
-      nav_testimonials: "Feedback",
-      test_lab: "COLLABORATION FEEDBACK",
-      test_h2: "What Teammates Say",
-      test_quote_1: "“Towasin is an exceptional collaborator with an incredible knack for breaking down complex mathematical logic into clean C code. His enthusiasm for learning and supporting peers during team sprints is truly motivating.”",
-      test_author_1: "Rifat Hossain",
-      test_role_1: "Competitive Programming Peer · Gouripur High School",
-      test_quote_2: "“Working with Towasin on YouTube SEO strategies and digital content was seamless. He pays close attention to analytics, title optimization, and audience retention. Highly dependable teammate.”",
-      test_author_2: "Tanvir Islam",
-      test_role_2: "Content Creator & Media Collaborator",
-      test_quote_3: "“Towasin brings unmatched discipline to every group lab project at BEC. Whether solving circuit algorithms or discussing Python architectures, he is proactive, respectful, and always ready to help.”",
-      test_author_3: "Shakil Ahmed",
-      test_role_3: "EEE Classmate · Barishal Engineering College",
       game_cap: "Break it if you can. I still ship.",
       game_play: "▶ Play",
       game_stop: "■ Stop",
@@ -974,7 +880,6 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
       nav_whatido: "যা করি",
       nav_projects: "প্রজেক্ট",
       nav_journey: "যাত্রা",
-      nav_testimonials: "মতামত",
       nav_play: "গেম",
       nav_connect: "যোগাযোগ",
       pt_tag: "",
@@ -1014,17 +919,6 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
       journey_uni_org: "বরিশাল ইঞ্জিনিয়ারিং কলেজ",
       journey_uni_p: "ইলেকট্রিক্যাল অ্যান্ড ইলেকট্রনিক ইঞ্জিনিয়ারিং (ইইই) নিয়ে পড়াশোনা এবং সফটওয়্যার ইঞ্জিনিয়ার হওয়ার লক্ষ্যে পাইথনে দক্ষতা অর্জন।",
       journey_visit: "ওয়েবসাইট দেখুন ↗",
-      test_lab: "দলগত কাজের মূল্যায়ন",
-      test_h2: "সহকর্মীদের মতামত",
-      test_quote_1: "“তোয়াসিন একজন চমৎকার সহকর্মী, জটিল গাণিতিক লজিককে সহজ সি কোডে রূপান্তর করতে তার দক্ষতা অবিশ্বাস্য। টিম স্প্রিন্টে শেখার তীব্র আগ্রহ ও সবাইকে উৎসাহ দেওয়া সত্যিই প্রশংসনীয়।”",
-      test_author_1: "রিফাত হোসেন",
-      test_role_1: "কম্পিটিটিভ প্রোগ্রামিং সহপাঠী · গৌরীপুর হাই স্কুল",
-      test_quote_2: "“ইউটিউব এসইও স্ট্র্যাটেজি এবং ডিজিটাল কনটেন্ট নিয়ে তোয়াসিনের সাথে কাজ করার অভিজ্ঞতা দারুণ ছিল। অ্যানালিটিক্স, টাইটেল অপটিমাইজেশন ও অডিয়েন্স রিটেনশনে সে খুব যত্নশীল ও বিশ্বস্ত।”",
-      test_author_2: "তানভীর ইসলাম",
-      test_role_2: "কনটেন্ট ক্রিয়েটর ও মিডিয়া সহযোগী",
-      test_quote_3: "“বিইসিতে যেকোনো গ্রুপ ল্যাব প্রজেক্টে তোয়াসিন শৃঙ্খলা ও নিষ্ঠা নিয়ে কাজ করে। সার্কিট অ্যালগরিদম সমাধান হোক বা পাইথন আর্কিটেকচার নিয়ে আলোচনা—সে সবসময় উদ্যোগী ও সহযোগিতাপূর্ণ।”",
-      test_author_3: "শাকিল আহমেদ",
-      test_role_3: "ইইই সহপাঠী · বরিশাল ইঞ্জিনিয়ারিং কলেজ",
       game_cap: "পারলে ভেঙে দেখান। আমি এগিয়ে যাই।",
       game_play: "▶ খেলুন",
       game_stop: "■ থামুন",
@@ -1107,86 +1001,6 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   }
 })();
 
-/* ===== TESTIMONIALS CAROUSEL CONTROLLER (Smooth Fade Transitions) ===== */
-(function(){
-  const viewport = document.getElementById('test-viewport');
-  const slides = Array.from(document.querySelectorAll('.test-slide'));
-  const dots = Array.from(document.querySelectorAll('.test-dot'));
-  const prevBtn = document.getElementById('test-prev');
-  const nextBtn = document.getElementById('test-next');
-  if(!viewport || slides.length === 0) return;
-
-  let current = 0;
-  let autoTimer = null;
-
-  function showSlide(index){
-    const nextIdx = (index + slides.length) % slides.length;
-    current = nextIdx;
-
-    slides.forEach((s, i) => {
-      s.classList.toggle('active', i === current);
-    });
-
-    dots.forEach((d, i) => {
-      d.classList.toggle('active', i === current);
-    });
-  }
-
-  function nextSlide(){
-    showSlide(current + 1);
-  }
-
-  function prevSlide(){
-    showSlide(current - 1);
-  }
-
-  if(prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetAuto(); });
-  if(nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetAuto(); });
-
-  dots.forEach((dot, idx) => {
-    dot.addEventListener('click', () => {
-      showSlide(idx);
-      resetAuto();
-    });
-  });
-
-  // Touch swipe support for smooth mobile carousel experience
-  let touchStartX = 0;
-  let touchEndX = 0;
-  viewport.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
-  }, {passive: true});
-
-  viewport.addEventListener('touchend', e => {
-    touchEndX = e.changedTouches[0].screenX;
-    const diff = touchEndX - touchStartX;
-    if(Math.abs(diff) > 40){
-      if(diff < 0) nextSlide();
-      else prevSlide();
-      resetAuto();
-    }
-  }, {passive: true});
-
-  function startAuto(){
-    stopAuto();
-    autoTimer = setInterval(nextSlide, 6500);
-  }
-
-  function stopAuto(){
-    if(autoTimer) clearInterval(autoTimer);
-  }
-
-  function resetAuto(){
-    stopAuto();
-    startAuto();
-  }
-
-  viewport.addEventListener('mouseenter', stopAuto);
-  viewport.addEventListener('mouseleave', startAuto);
-
-  startAuto();
-})();
-
 /* ===== SCROLL TO TOP: Fades in once user scrolls past hero section ===== */
 (function(){
   const sTop = document.getElementById('scroll-top');
@@ -1229,3 +1043,4 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
 
 </body>
 </html>
+
