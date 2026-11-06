@@ -10,15 +10,15 @@
 <meta name="twitter:card" content="summary_large_image">
 <title>Ashraf Siddiki Towasin</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0a0a'/%3E%3Crect x='1.5' y='1.5' width='61' height='61' rx='13' fill='none' stroke='%23ffffff' stroke-opacity='.3' stroke-width='2'/%3E%3Cpath d='M15 17h34v10H37.5v22h-11V27H15z' fill='%23ffffff'/%3E%3Ccircle cx='51' cy='49' r='4.5' fill='%237de8ff'/%3E%3C/svg%3E">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{--m:#8a8a8a;--l:rgba(255,255,255,.12)}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:#000;color:#fff;font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+body{background:#000;color:#fff;font-family:'Space Grotesk','Noto Sans Bengali',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
 body.lock{overflow:hidden}
 a{color:inherit;text-decoration:none}
-.chrome{background:linear-gradient(#fff 30%,#777);-webkit-background-clip:text;background-clip:text;color:transparent}
+.chrome{background:linear-gradient(180deg,#ffffff 18%,#e2e2e2 58%,#9a9a9a 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 /* intro */
 #intro{position:fixed;inset:0;isolation:isolate;z-index:100;display:flex;align-items:center;justify-content:center;transition:opacity .9s;cursor:pointer}
 #intro::before{content:'';position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 50% 50%,#0c0c0c,#000 60%);transition:opacity .95s}
@@ -33,7 +33,7 @@ a{color:inherit;text-decoration:none}
 #stage.merge #dot{transform:translate(-50%,var(--rise)) scale(.7);opacity:.2;transition:transform .55s ease,opacity .55s}
 #stage.gone #dot,#stage.gone #bar{opacity:0}
 #word{font-weight:700;font-size:clamp(2.4rem,10vw,5.5rem);line-height:1;letter-spacing:-.02em;white-space:nowrap}
-#word span{display:inline-block;opacity:0;background:linear-gradient(#fff 30%,#777);-webkit-background-clip:text;background-clip:text;color:transparent;transition:transform .85s cubic-bezier(.2,1.25,.35,1),opacity .3s}
+#word span{display:inline-block;opacity:0;background:linear-gradient(180deg,#fff 25%,#999 100%);-webkit-background-clip:text;background-clip:text;color:transparent;transition:transform .85s cubic-bezier(.2,1.25,.35,1),opacity .3s}
 #word span.in{opacity:1;transform:none!important}
 #rip{position:absolute;width:12px;height:4px;border:1px solid #fffb;border-radius:50%;opacity:0;transform:translate(-50%,-50%);pointer-events:none}
 #cf{position:fixed;inset:0;z-index:90;pointer-events:none;display:none}
@@ -46,71 +46,84 @@ a{color:inherit;text-decoration:none}
 #gift a{display:inline-block;background:#ece8dc;color:#111;border-radius:26px;padding:9px 20px;font-size:.82rem}
 #skip{position:fixed;bottom:20px;left:0;right:0;text-align:center;font-size:.68rem;color:#666;letter-spacing:.2em}
 /* nav */
-nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:14px 24px;background:rgba(0,0,0,.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
-nav b{letter-spacing:.14em;font-size:.84rem}
-nav div{display:flex;gap:18px;font-size:.74rem;color:#ddd}
-nav a{position:relative;padding-bottom:4px}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:12px 24px;background:rgba(0,0,0,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.07);gap:14px}
+nav b{letter-spacing:.14em;font-size:.84rem;white-space:nowrap}
+nav .nl{display:flex;gap:20px;font-size:.76rem;color:#ddd;align-items:center}
+nav a{position:relative;padding-bottom:4px;white-space:nowrap}
 nav a:after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform .3s}
 nav a.on:after,nav a:hover:after{transform:scaleX(1)}
-@media(max-width:640px){nav{padding:12px 14px}nav b{font-size:.78rem}nav div{gap:10px;font-size:.64rem}}
-@media(max-width:420px){nav b{display:none}nav{justify-content:center}nav div{width:100%;justify-content:space-between;gap:6px;font-size:.6rem}}
+.lang-btn{background:rgba(255,255,255,.08);border:1px solid var(--l);border-radius:22px;padding:4px 11px;color:#ddd;font-family:inherit;font-size:.72rem;display:inline-flex;align-items:center;gap:4px;cursor:pointer;transition:all .25s ease;user-select:none;flex-shrink:0}
+.lang-btn:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.3);transform:translateY(-1px)}
+.lang-opt{color:#777;font-weight:500;transition:color .2s ease,font-weight .2s ease}
+.lang-opt.active{color:#fff;font-weight:700}
+.lang-div{color:#555;font-size:.65rem}
+@media(max-width:768px){nav{padding:10px 14px;gap:8px}nav b{font-size:.76rem}nav .nl{gap:11px;font-size:.66rem}}
+@media(max-width:560px){nav b{display:none}nav{justify-content:space-between}nav .nl{gap:8px;font-size:.62rem;overflow-x:auto;-webkit-overflow-scrolling:touch}nav .nl::-webkit-scrollbar{display:none}}
 /* hero */
 #hero{position:relative;background:#000;height:100svh;min-height:580px;text-align:center;overflow:hidden}
-.ttl{position:absolute;z-index:1;left:50%;bottom:calc(var(--hbh,64px) + 3.5vh + 18px);transform:translateX(-50%);white-space:nowrap;font-weight:700;font-size:clamp(2.4rem,8.2vw,6.4rem);line-height:1;letter-spacing:-.03em;opacity:0;pointer-events:none}
+.ttl{position:absolute;z-index:1;left:50%;bottom:calc(var(--hbh,64px) + 3.5vh + 18px);transform:translateX(-50%);white-space:nowrap;font-weight:700;font-size:clamp(2.4rem,7.2vw,5.6rem);line-height:1;letter-spacing:-.025em;opacity:0;pointer-events:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.hero-b{position:absolute;z-index:3;left:4vw;right:4vw;bottom:3.5vh;display:flex;justify-content:space-between;align-items:center;gap:14px;opacity:0;transition:opacity 1s}
+.hero-b{position:absolute;z-index:3;left:4vw;right:4vw;bottom:3.5vh;display:flex;justify-content:space-between;align-items:center;gap:16px;opacity:0;transition:opacity 1s}
 .hero-b.on{opacity:1}
-.hero-b p{font-size:clamp(.88rem,1.35vw,1.15rem);color:#8a8a8a;text-align:left;font-style:italic;font-weight:300}
-.hero-b p b{color:#fff;font-style:normal;font-weight:700}
-.hb{display:flex;gap:10px}
-.hb a{padding:10px 22px;border:1px solid var(--l);border-radius:26px;font-size:.82rem;color:#ddd;background:#0009;transition:.3s;white-space:nowrap}
+.hero-b p{font-size:1.06rem;color:#b8b8b8;text-align:left;font-style:normal;font-weight:400;letter-spacing:.015em}
+.hero-b p b{color:#fff;font-style:normal;font-weight:600}
+.hb{display:flex;gap:12px}
+.hb a{padding:11px 24px;border:1px solid var(--l);border-radius:26px;font-size:.86rem;font-weight:500;color:#ddd;background:#0009;transition:.3s;white-space:nowrap}
 .hb a.fill{background:#ece8dc;color:#111;border-color:#ece8dc}
 .hb a:hover{transform:translateY(-2px)}
 @media(max-width:720px){.hero-b{flex-direction:column;bottom:2.5vh;gap:10px}.hero-b p{text-align:center;font-size:.88rem}.hb a{padding:9px 18px;font-size:.78rem}}
-/* hero photo with clear colors and subtle border */
-.pt{--s:min(40svh,72vw,380px);--ar:.75;position:absolute;z-index:2;left:calc(50% - var(--s)*var(--ar)/2);top:76px;width:calc(var(--s)*var(--ar));height:var(--s);opacity:0;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:opacity .8s,transform .35s ease;pointer-events:auto;border:1px solid var(--l);border-radius:20px;overflow:hidden;background:#0d0d0d;box-shadow:0 16px 40px rgba(0,0,0,.65)}
+/* hero photo with 3D block matrix animation */
+.pt{--s:min(40svh,72vw,380px);--ar:.75;position:absolute;z-index:2;left:calc(50% - var(--s)*var(--ar)/2);top:76px;width:calc(var(--s)*var(--ar));height:var(--s);opacity:0;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:opacity .8s,transform .35s ease;pointer-events:auto;border:1px solid var(--l);border-radius:20px;background:#0d0d0d;box-shadow:0 16px 40px rgba(0,0,0,.65);user-select:none;overflow:hidden;perspective:1000px}
 .pt.on{opacity:1}
-.pt img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
-.pt-fallback{display:none;width:100%;height:100%;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,#1c1c1c,#0a0a0a);border-radius:inherit;padding:18px;text-align:center}
+.pt-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(5,1fr);gap:1.5px;background:#000;border-radius:inherit;overflow:hidden;pointer-events:auto}
+.pt-block{position:relative;background-repeat:no-repeat;background-color:#121212;border-radius:2px;transform-style:preserve-3d;transform:rotateY(75deg) rotateX(20deg) translateZ(-50px) scale(.75);opacity:0;transition:transform .75s cubic-bezier(.2,1.35,.35,1),opacity .55s ease,filter .3s ease,box-shadow .3s ease;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);cursor:pointer;will-change:transform,opacity}
+.pt-block.assembled{transform:rotateY(0deg) rotateX(0deg) translateZ(0) scale(1);opacity:1;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03)}
+.pt-block:hover{transform:translateZ(18px) scale(1.06);z-index:10;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45),0 10px 24px rgba(0,0,0,.85);filter:brightness(1.15) contrast(1.05)}
+.pt-corner{position:absolute;width:10px;height:10px;pointer-events:none;z-index:15;border:2px solid rgba(255,255,255,.3);transition:border-color .3s}
+.pt:hover .pt-corner{border-color:rgba(255,255,255,.85)}
+.pt-corner.tl{top:6px;left:6px;border-right:0;border-bottom:0;border-top-left-radius:6px}
+.pt-corner.tr{top:6px;right:6px;border-left:0;border-bottom:0;border-top-right-radius:6px}
+.pt-corner.bl{bottom:6px;left:6px;border-right:0;border-top:0;border-bottom-left-radius:6px}
+.pt-corner.br{bottom:6px;right:6px;border-left:0;border-top:0;border-bottom-right-radius:6px}
+.pt-tag{position:absolute;bottom:8px;left:50%;transform:translateX(-50%) translateY(12px);background:rgba(10,10,10,.85);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:3px 10px;font-size:.62rem;letter-spacing:.12em;color:#bbb;z-index:20;opacity:0;transition:all .3s ease;pointer-events:none;white-space:nowrap}
+.pt:hover .pt-tag{opacity:1;transform:translateX(-50%) translateY(0)}
+.pt-fallback{display:none;width:100%;height:100%;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,#1c1c1c,#0a0a0a);border-radius:inherit;padding:18px;text-align:center;z-index:2}
 .pt-avatar{width:64px;height:64px;border-radius:50%;background:#141414;border:1px solid var(--l);display:flex;align-items:center;justify-content:center;margin-bottom:10px;color:#aaa}
 .pt-avatar svg{width:32px;height:32px}
 .pt-fallback b{font-size:1.05rem;letter-spacing:.08em;color:#fff;margin-bottom:2px}
 .pt-fallback small{color:var(--m);font-size:.74rem;letter-spacing:.12em}
-/* sections */
-section.s{max-width:920px;margin:0 auto;padding:68px 24px}
-@media(max-width:640px){section.s{padding:48px 18px}}
-.lab{font-size:.68rem;letter-spacing:.22em;color:var(--m);margin-bottom:8px}
-h2{font-size:clamp(1.75rem,3.8vw,2.65rem);line-height:1.15;letter-spacing:-.02em;margin-bottom:20px}
+
+/* sections — refined typography & comfortable line lengths on laptop */
+section.s{max-width:960px;margin:0 auto;padding:76px 28px}
+.lab{font-size:.74rem;letter-spacing:.24em;color:#9c9c9c;font-weight:600;margin-bottom:10px}
+h2{font-size:clamp(1.95rem,3.2vw,2.75rem);line-height:1.2;letter-spacing:-.02em;margin-bottom:22px;font-weight:700}
 .r{opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s}
 .r.in{opacity:1;transform:none}
-.box{border:1px solid var(--l);border-radius:18px;padding:24px 26px;background:#0a0a0a;color:#bbb;line-height:1.8;font-size:.95rem}
-@media(max-width:640px){.box{padding:20px 18px;font-size:.9rem;line-height:1.75}}
-.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
-.facts span,.chips span{border:1px solid var(--l);border-radius:24px;padding:6px 14px;font-size:.78rem;color:#ddd}
+.box{border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:28px 34px;background:#0c0c0c;color:#d6d6d6;line-height:1.85;font-size:1.05rem;font-weight:400;box-shadow:0 12px 32px rgba(0,0,0,.45)}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.facts span,.chips span{border:1px solid rgba(255,255,255,.16);border-radius:24px;padding:8px 18px;font-size:.84rem;color:#f0f0f0;font-weight:500;background:#141414}
 .mq{overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
 .mq.drag{cursor:grabbing}
-.mqt{display:flex;gap:10px;width:max-content;will-change:transform;padding:4px 0}
-.mqt span{border:1px solid var(--l);border-radius:26px;padding:8px 18px;font-size:.84rem;color:#ddd;white-space:nowrap;background:#0a0a0a}
-@media(max-width:640px){.mqt span{padding:7px 14px;font-size:.78rem}}
-.wd{display:grid;grid-template-columns:1fr;gap:16px;max-width:640px}
-.wdc{border:1px solid var(--l);border-radius:18px;padding:22px 24px;background:#0a0a0a;transition:.35s}
-.wdc:hover{border-color:#555;transform:translateY(-3px)}
-.wdc i{font-style:normal;color:var(--m);font-size:.72rem;letter-spacing:.1em}
-.wdc h3{font-size:1.2rem;margin:6px 0 10px}
-.wdc p{color:#999;line-height:1.7;font-size:.9rem}
-.fv{display:inline-block;margin-top:20px;background:#ece8dc;color:#111;border-radius:30px;padding:12px 24px;font-size:.88rem;transition:.3s}
+.mqt{display:flex;gap:10px;width:max-content;will-change:transform;padding:6px 0}
+.mqt span{border:1px solid rgba(255,255,255,.14);border-radius:26px;padding:9px 20px;font-size:.88rem;color:#eee;font-weight:500;white-space:nowrap;background:#0c0c0c}
+.wd{display:grid;grid-template-columns:1fr;gap:18px;max-width:100%}
+.wdc{border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:26px 30px;background:#0c0c0c;transition:.35s}
+.wdc:hover{border-color:#666;transform:translateY(-3px)}
+.wdc i{font-style:normal;color:#888;font-size:.76rem;letter-spacing:.12em;font-weight:600}
+.wdc h3{font-size:1.35rem;font-weight:600;margin:8px 0 12px;color:#fff}
+.wdc p{color:#b8b8b8;line-height:1.75;font-size:1rem;max-width:760px}
+.fv{display:inline-block;margin-top:22px;background:#ece8dc;color:#111;border-radius:30px;padding:12px 26px;font-size:.9rem;font-weight:600;transition:.3s}
 .fv:hover{transform:translateY(-2px)}
-@media(max-width:640px){.fv{padding:10px 20px;font-size:.82rem}}
-.tl{border-left:1px solid var(--l);margin-left:6px}
-.st{display:block;padding:0 0 30px 24px;position:relative}
-.st:before{content:'';position:absolute;left:-5px;top:5px;width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff;transition:.3s}
-.st small{color:var(--m);letter-spacing:.12em;font-size:.68rem}
-.st h3{font-size:1.25rem;margin:3px 0}
-.st b{font-weight:500;color:#ccc;font-size:.88rem}
-.st p{color:#999;line-height:1.7;margin:6px 0 12px;font-size:.9rem;max-width:560px}
+.tl{border-left:1px solid rgba(255,255,255,.16);margin-left:8px}
+.st{display:block;padding:0 0 36px 30px;position:relative}
+.st:before{content:'';position:absolute;left:-6px;top:5px;width:11px;height:11px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff;transition:.3s}
+.st small{color:#9c9c9c;letter-spacing:.14em;font-size:.74rem;font-weight:500}
+.st h3{font-size:1.35rem;font-weight:600;margin:4px 0 6px;color:#fff}
+.st b{font-weight:500;color:#e0e0e0;font-size:.96rem}
+.st p{color:#b5b5b5;line-height:1.75;margin:8px 0 14px;font-size:.98rem;max-width:680px}
 .st:hover:before{transform:scale(1.4);box-shadow:0 0 20px #fff}
 .st h3{transition:.3s}.st:hover h3{color:#fff;letter-spacing:.01em}
-.go{display:inline-block;font-size:.75rem;color:#999;border-bottom:1px solid #444;padding-bottom:2px;transition:.3s}
+.go{display:inline-block;font-size:.82rem;font-weight:500;color:#ccc;border-bottom:1px solid #555;padding-bottom:2px;transition:.3s}
 .st:hover .go{color:#fff;border-color:#fff}
 .con{display:flex;flex-wrap:wrap;gap:10px}
 .con a{border:1px solid var(--l);border-radius:26px;padding:10px 20px;font-size:.84rem;transition:.3s}
@@ -118,23 +131,23 @@ h2{font-size:clamp(1.75rem,3.8vw,2.65rem);line-height:1.15;letter-spacing:-.02em
 /* game arena with thin perimeter border */
 .gm{position:relative;max-width:520px;margin:0 auto;padding:40px 18px 56px}
 .gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.gh p{font-size:.82rem;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:2px}
+.gh p{font-size:.88rem;color:#ddd;border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:2px}
 .lv{display:flex;gap:5px}.lv i{width:8px;height:8px;border-radius:50%;background:#fff}.lv i.x{background:#333}
 canvas#g{width:100%;display:block;touch-action:pan-y;cursor:default;-webkit-tap-highlight-color:transparent;border:1px solid rgba(255,255,255,.2);border-radius:16px;background:#060606;box-shadow:0 0 24px rgba(255,255,255,.02)}
 .gb{display:flex;gap:12px;justify-content:center;margin-top:16px}
-.gb button{font-family:inherit;font-size:.82rem;padding:10px 24px;border-radius:24px;border:1px solid #555;background:transparent;color:#fff;cursor:pointer;transition:.3s}
+.gb button{font-family:inherit;font-size:.84rem;font-weight:500;padding:10px 24px;border-radius:24px;border:1px solid #555;background:transparent;color:#fff;cursor:pointer;transition:.3s}
 .gb button:hover,.gb button.on{background:#fff;color:#000}
-.gt{position:relative;padding:64px 20px;border-top:1px solid var(--l);overflow:hidden}
+.gt{position:relative;padding:76px 28px;border-top:1px solid var(--l);overflow:hidden}
 .gt:before{content:'';position:absolute;inset:-30%;background:repeating-radial-gradient(circle at 30% 40%,#fff0 0 22px,#ffffff09 24px 26px),repeating-radial-gradient(circle at 75% 65%,#fff0 0 30px,#ffffff07 32px 35px);animation:sw 50s linear infinite}
 @keyframes sw{to{transform:rotate(360deg)}}
-.gw{position:relative;max-width:980px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.gw{position:relative;max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
 @media(max-width:768px){.gw{grid-template-columns:1fr;gap:32px}}
-.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--l);border-radius:30px;padding:8px 16px;font-size:.65rem;letter-spacing:.2em;color:#ccc;background:#0b0b0b}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--l);border-radius:30px;padding:8px 16px;font-size:.68rem;letter-spacing:.2em;color:#ccc;background:#0b0b0b}
 .pill i{width:6px;height:6px;border-radius:50%;background:#2fd07d;box-shadow:0 0 8px #2fd07d}
-.gl h2{margin:18px 0 16px;font-size:clamp(2rem,5.5vw,3.2rem)}
-.gl p{color:#aaa;line-height:1.75;max-width:420px;font-size:.95rem}
-.bt{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
-.b1,.b2{padding:13px 24px;border-radius:30px;font-size:.88rem;transition:.3s;will-change:transform,box-shadow}
+.gl h2{margin:18px 0 16px;font-size:clamp(2.1rem,4vw,3.2rem);font-weight:700}
+.gl p{color:#b8b8b8;line-height:1.8;max-width:440px;font-size:1.02rem}
+.bt{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.b1,.b2{padding:13px 26px;border-radius:30px;font-size:.9rem;font-weight:600;transition:.3s;will-change:transform,box-shadow}
 .b1{background:#ece7de;color:#111;animation:ctaPulse 3s ease-in-out infinite}
 .b1:hover{background:#fff;transform:translateY(-2px);animation-play-state:paused}
 .b2{border:1px solid #444;color:#fff;animation:ctaPulseBorder 3s ease-in-out infinite 1.2s}
@@ -142,35 +155,88 @@ canvas#g{width:100%;display:block;touch-action:pan-y;cursor:default;-webkit-tap-
 @keyframes ctaPulse{0%,100%{box-shadow:0 0 0 0 rgba(236,231,222,.45);transform:scale(1)}50%{box-shadow:0 0 0 7px rgba(236,231,222,0);transform:scale(1.025)}}
 @keyframes ctaPulseBorder{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.2);border-color:#555}50%{box-shadow:0 0 0 6px rgba(255,255,255,0);border-color:#888}}
 @media(prefers-reduced-motion:reduce){.b1,.b2{animation:none}}
-@media(max-width:640px){.b1,.b2{padding:11px 20px;font-size:.82rem}}
-.card{border:1px solid var(--l);border-radius:22px;background:#0f0f0fd0;backdrop-filter:blur(6px);overflow:hidden}
-.rw{padding:18px 24px;border-bottom:1px solid var(--l)}.rw:last-child{border:0}
-.rw small{display:block;font-size:.65rem;letter-spacing:.22em;color:#777;margin-bottom:8px}
-.rw b,.rw a.v{font-weight:400;font-size:1rem;color:#e6e6e6;word-break:break-all}
-.ic{display:flex;gap:10px;flex-wrap:wrap}.ic a{width:46px;height:46px;border-radius:50%;border:1px solid var(--l);background:#1a1a1a;display:flex;align-items:center;justify-content:center;transition:.3s}.ic a svg{width:22px;height:22px;display:block}.ic a:hover{background:#242424;border-color:#777;transform:translateY(-3px) scale(1.05)}
-.empty{border:1px dashed #333;border-radius:20px;padding:30px 24px;max-width:640px;background:#0a0a0a}
+.card{border:1px solid rgba(255,255,255,.14);border-radius:22px;background:#0f0f0fd0;backdrop-filter:blur(6px);overflow:hidden}
+.rw{padding:20px 28px;border-bottom:1px solid var(--l)}.rw:last-child{border:0}
+.rw small{display:block;font-size:.68rem;letter-spacing:.2em;color:#888;font-weight:600;margin-bottom:8px}
+.rw b,.rw a.v{font-weight:500;font-size:1.05rem;color:#f0f0f0;word-break:break-all}
+.ic{display:flex;gap:12px;flex-wrap:wrap}.ic a{width:46px;height:46px;border-radius:50%;border:1px solid var(--l);background:#1a1a1a;display:flex;align-items:center;justify-content:center;transition:.3s}.ic a svg{width:22px;height:22px;display:block}.ic a:hover{background:#242424;border-color:#777;transform:translateY(-3px) scale(1.05)}
+.empty{border:1px dashed #383838;border-radius:22px;padding:36px 36px;max-width:100%;background:#0c0c0c}
 .eic{width:48px;height:48px;border-radius:14px;border:1px solid var(--l);background:#141414;display:flex;align-items:center;justify-content:center;font-weight:700;color:#bbb;margin-bottom:16px;font-size:.9rem}
-.empty h3{font-size:1.35rem;margin-bottom:8px}
-.empty p{color:#999;line-height:1.7;font-size:.92rem;max-width:480px}
-.soon{display:flex;align-items:center;gap:6px;margin:18px 0 20px;color:#777;font-size:.78rem}
+.empty h3{font-size:1.45rem;font-weight:600;color:#fff;margin-bottom:10px}
+.empty p{color:#b8b8b8;line-height:1.8;font-size:1rem;max-width:620px}
+.soon{display:flex;align-items:center;gap:6px;margin:18px 0 20px;color:#888;font-size:.82rem}
 .soon span{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.2;animation:pdot 1.3s ease-in-out infinite}
 .soon span:nth-child(2){animation-delay:.2s}.soon span:nth-child(3){animation-delay:.4s}
 .soon em{font-style:normal;margin-left:6px;letter-spacing:.08em}
 @keyframes pdot{50%{opacity:1;transform:translateY(-3px)}}
-footer{text-align:center;color:#666;font-size:.72rem;padding:0 0 32px}
+footer{text-align:center;color:#777;font-size:.78rem;padding:0 0 38px}
+
+/* MOBILE PRESERVATION (maintains exact mobile sizing user verified) */
+@media(max-width:640px){
+  section.s{padding:48px 18px}
+  .lab{font-size:.68rem;letter-spacing:.22em;margin-bottom:8px}
+  h2{font-size:clamp(1.75rem,3.8vw,2.65rem);margin-bottom:20px}
+  .box{padding:20px 18px;font-size:.9rem;line-height:1.75;border-radius:18px}
+  .facts span,.chips span{padding:6px 14px;font-size:.78rem}
+  .mqt span{padding:7px 14px;font-size:.78rem}
+  .wdc{padding:22px 24px;border-radius:18px}
+  .wdc h3{font-size:1.2rem}
+  .wdc p{font-size:.9rem}
+  .fv{padding:10px 20px;font-size:.82rem}
+  .st{padding:0 0 30px 24px}
+  .st:before{left:-5px;top:5px;width:9px;height:9px}
+  .st small{font-size:.68rem}
+  .st h3{font-size:1.25rem}
+  .st b{font-size:.88rem}
+  .st p{font-size:.9rem}
+  .go{font-size:.75rem}
+  .empty{padding:30px 20px;border-radius:20px}
+  .empty h3{font-size:1.35rem}
+  .empty p{font-size:.92rem}
+  .soon{font-size:.78rem}
+  .gt{padding:64px 20px}
+  .gl h2{font-size:clamp(2rem,5.5vw,3.2rem)}
+  .gl p{font-size:.95rem}
+  .b1,.b2{padding:11px 20px;font-size:.82rem}
+  .rw{padding:18px 20px}
+  .rw b,.rw a.v{font-size:1rem}
+  footer{font-size:.72rem;padding:0 0 32px}
+}
 </style>
 </head>
 <body class="lock">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="igg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#feda75"/><stop offset=".5" stop-color="#d62976"/><stop offset="1" stop-color="#4f5bd5"/></linearGradient></defs></svg>
 
-<div id="intro"><div id="stage"><i id="rip"></i><i id="dot"></i><i id="bar"></i><div id="word"></div></div><div id="skip">TAP TO SKIP</div></div>
+<div id="intro"><div id="stage"><i id="rip"></i><i id="dot"></i><i id="bar"></i><div id="word"></div></div><div id="skip" data-i18n="skip_intro">TAP TO SKIP</div></div>
 
-<nav><b>TOWASIN</b><div><a href="#hero">Home</a><a href="#about">About</a><a href="#whatido">What I Do</a><a href="#projects">Projects</a><a href="#journey">Journey</a><a href="#play">Play</a><a href="#connect">Connect</a></div></nav>
+<nav>
+  <b>TOWASIN</b>
+  <div class="nl">
+    <a href="#hero" data-i18n="nav_home">Home</a>
+    <a href="#about" data-i18n="nav_about">About</a>
+    <a href="#whatido" data-i18n="nav_whatido">What I Do</a>
+    <a href="#projects" data-i18n="nav_projects">Projects</a>
+    <a href="#journey" data-i18n="nav_journey">Journey</a>
+    <a href="#play" data-i18n="nav_play">Play</a>
+    <a href="#connect" data-i18n="nav_connect">Connect</a>
+  </div>
+  <button id="lang-btn" class="lang-btn" type="button" aria-label="Toggle language">
+    <span class="lang-opt active" data-lang="en">EN</span>
+    <span class="lang-div">/</span>
+    <span class="lang-opt" data-lang="bn">বাং</span>
+  </button>
+</nav>
 
 <header id="hero">
   <h1 class="ttl chrome" id="ttl">TOWASIN<span class="sr"> — Ashraf Siddiki Towasin</span></h1>
   <div class="pt" id="pt" aria-label="Photo of Ashraf Siddiki Towasin">
-    <img id="photo-img" src="Images/mypic.jpg" alt="Ashraf Siddiki Towasin">
+    <div class="pt-grid" id="photo-grid" aria-hidden="true"></div>
+    <span class="pt-corner tl"></span>
+    <span class="pt-corner tr"></span>
+    <span class="pt-corner bl"></span>
+    <span class="pt-corner br"></span>
+    <span class="pt-tag" id="pt-tag" data-i18n="pt_tag">3D BLOCKS · CLICK</span>
+    <img id="photo-img" src="Images/mypic.jpg" alt="Ashraf Siddiki Towasin" style="display:none">
     <div id="photo-fallback" class="pt-fallback">
       <div class="pt-avatar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -180,76 +246,75 @@ footer{text-align:center;color:#666;font-size:.72rem;padding:0 0 32px}
     </div>
   </div>
   <div class="hero-b">
-    <p><b>Student</b> · Programmer · Aspiring Software Engineer</p>
-    <div class="hb"><a href="#about">About me</a><a class="fill" href="#connect">Get in touch</a></div>
+    <p id="hero-quote" data-i18n-html="hero_quote"><b>Student</b> · Programmer · Aspiring Software Engineer</p>
+    <div class="hb"><a href="#about" data-i18n="hero_btn_about">About me</a><a class="fill" href="#connect" data-i18n="hero_btn_sayhi">Get in touch</a></div>
   </div>
 </header>
 
 <section class="s" id="about">
-  <div class="lab r">ABOUT ME</div><h2 class="chrome r">Intro</h2>
-  <div class="box r">Hello! I am Towasin, a student from Bangladesh. I love math and programming — learning to build things for the web and beyond. Solving mathematical problems is one of my favourite ways to spend time, and I started learning web development back on 10th January, 2023. I believe it's never too late to start a journey. I enjoy working in a team, and I'm working toward becoming a software engineer, one step at a time.
-    <div class="facts"><span>Bangladesh</span><span>EEE Undergrad</span><span>Learning since Jan 2023</span></div>
-  </div>
-  <div class="lab r" style="margin-top:30px">MY SKILLS · DRAG TO MOVE</div>
+  <div class="lab r" data-i18n="about_lab">ABOUT ME</div><h2 class="chrome r" data-i18n="about_h2">Intro</h2>
+  <div class="box r" id="about-body" data-i18n="about_body">Hello! I am Towasin, a student from Bangladesh. I love math and programming — learning to build things for the web and beyond. Solving mathematical problems is one of my favourite ways to spend time, and I started learning web development back on 10th January, 2023. I believe it's never too late to start a journey. I enjoy working in a team, and I'm working toward becoming a software engineer, one step at a time.</div>
+  <div class="facts" style="margin-top:14px"><span data-i18n="fact_bd">Bangladesh</span><span data-i18n="fact_eee">EEE Undergrad</span><span data-i18n="fact_learn">Learning since Jan 2023</span></div>
+  <div class="lab r" style="margin-top:30px" data-i18n="skills_lab">MY SKILLS · DRAG TO MOVE</div>
   <div class="mq r" id="mq"><div class="mqt" id="mqt"><span>C Programming</span><span>Python</span><span>HTML</span><span>Web Development</span><span>Mathematics</span><span>Competitive Programming</span><span>YouTube SEO</span><span>Team Collaboration</span></div></div>
 </section>
 
 <section class="s" id="whatido">
-  <h2 class="chrome r">What I Do</h2>
+  <h2 class="chrome r" data-i18n="what_h2">What I Do</h2>
   <div class="wd">
-    <div class="wdc r"><i>01</i><h3>YouTube SEO</h3><p>I help YouTube creators get found — keyword research, titles, descriptions and tags that help videos rank and reach the right audience.</p></div>
+    <div class="wdc r"><i>01</i><h3 data-i18n="what_service_01">YouTube SEO</h3><p data-i18n="what_desc_01">I help YouTube creators get found — keyword research, titles, descriptions and tags that help videos rank and reach the right audience.</p></div>
   </div>
-  <a class="fv r" href="https://www.fiverr.com/s/7jjoqyL" target="_blank" rel="noopener">View my gig on Fiverr ↗</a>
+  <a class="fv r" href="https://www.fiverr.com/s/7jjoqyL" target="_blank" rel="noopener" data-i18n="what_fiverr_btn">View my gig on Fiverr ↗</a>
 </section>
 
 <section class="s" id="projects">
-  <div class="lab r">WHAT I'M BUILDING</div><h2 class="chrome r">Projects</h2>
+  <div class="lab r" data-i18n="proj_lab">WHAT I'M BUILDING</div><h2 class="chrome r" data-i18n="proj_h2">Projects</h2>
   <div class="empty r">
     <div class="eic">&lt;/&gt;</div>
-    <h3>Coming soon</h3>
-    <p>I don't have a finished project to show yet — I'm still learning and practising every day. When I build my first real project, it will appear right here.</p>
-    <div class="soon"><span></span><span></span><span></span><em>building…</em></div>
-    <a class="fv" href="https://github.com/Towasin4578" target="_blank" rel="noopener">Follow my GitHub ↗</a>
+    <h3 data-i18n="proj_empty_h3">Coming soon</h3>
+    <p data-i18n="proj_empty_p">I don't have a finished project to show yet — I'm still learning and practising every day. When I build my first real project, it will appear right here.</p>
+    <div class="soon"><span></span><span></span><span></span><em data-i18n="proj_building">building…</em></div>
+    <a class="fv" href="https://github.com/Towasin4578" target="_blank" rel="noopener" data-i18n="proj_github_btn">Follow my GitHub ↗</a>
   </div>
 </section>
 
 <section class="s" id="journey">
-  <div class="lab r">MY PATH</div><h2 class="chrome r">Journey</h2>
+  <div class="lab r" data-i18n="journey_lab">MY PATH</div><h2 class="chrome r" data-i18n="journey_h2">Journey</h2>
   <div class="tl">
-    <a class="st r" href="https://www.gouripursahs.edu.bd/" target="_blank" rel="noopener"><small>2018 — 2023</small><h3>High School Life</h3><b>Gouripur SA High School</b><p>Where it all began — my first real exposure to coding, and school clubs that let me explore programming outside the classroom.</p><span class="go">Visit website ↗</span></a>
-    <a class="st r" href="https://dmfcollege.edu.bd/" target="_blank" rel="noopener"><small>2023 — 2025</small><h3>College Life</h3><b>Dr. Mosharraf Foundation Degree College</b><p>I built my technical foundation — heavy C programming to sharpen my logic, and HTML as my first real step toward web development.</p><span class="go">Visit website ↗</span></a>
-    <a class="st r" href="https://barisal-eng.portal.gov.bd/" target="_blank" rel="noopener"><small>2025 — PRESENT</small><h3>University Life</h3><b>Barishal Engineering College</b><p>Studying Electrical &amp; Electronic Engineering (EEE) and expanding into Python on the way to becoming a software engineer.</p><span class="go">Visit website ↗</span></a>
+    <a class="st r" href="https://www.gouripursahs.edu.bd/" target="_blank" rel="noopener"><small data-i18n="journey_sch_date">2018 — 2023</small><h3 data-i18n="journey_sch_title">High School Life</h3><b data-i18n="journey_sch_org">Gouripur SA High School</b><p data-i18n="journey_sch_p">Where it all began — my first real exposure to coding, and school clubs that let me explore programming outside the classroom.</p><span class="go" data-i18n="journey_visit">Visit website ↗</span></a>
+    <a class="st r" href="https://dmfcollege.edu.bd/" target="_blank" rel="noopener"><small data-i18n="journey_col_date">2023 — 2025</small><h3 data-i18n="journey_col_title">College Life</h3><b data-i18n="journey_col_org">Dr. Mosharraf Foundation Degree College</b><p data-i18n="journey_col_p">I built my technical foundation — heavy C programming to sharpen my logic, and HTML as my first real step toward web development.</p><span class="go" data-i18n="journey_visit">Visit website ↗</span></a>
+    <a class="st r" href="https://barisal-eng.portal.gov.bd/" target="_blank" rel="noopener"><small data-i18n="journey_uni_date">2025 — PRESENT</small><h3 data-i18n="journey_uni_title">University Life</h3><b data-i18n="journey_uni_org">Barishal Engineering College</b><p data-i18n="journey_uni_p">Studying Electrical &amp; Electronic Engineering (EEE) and expanding into Python on the way to becoming a software engineer.</p><span class="go" data-i18n="journey_visit">Visit website ↗</span></a>
   </div>
 </section>
 
 <section class="gm" id="play">
-  <div class="gh"><p id="cap">Break it if you can. I still ship.</p><div class="lv" id="lv"><i></i><i></i><i></i></div></div>
+  <div class="gh"><p id="cap" data-i18n="game_cap">Break it if you can. I still ship.</p><div class="lv" id="lv"><i></i><i></i><i></i></div></div>
   <canvas id="g"></canvas>
-  <div id="gift"><b id="gE">🎁</b><h3 id="gT">You broke it!</h3><p id="gP">Gift unlocked: a big high-five and my thanks for playing. Say hi if you liked it!</p><a id="gA" href="#connect">Say hi 👋</a></div>
-  <div class="gb"><button id="pl">▶ Play</button><button id="sp">■ Stop</button></div>
+  <div id="gift"><b id="gE">🎁</b><h3 id="gT" data-i18n="game_win_title">You broke it!</h3><p id="gP" data-i18n="game_win_msg">Gift unlocked: a big high-five and my thanks for playing. Say hi if you liked it!</p><a id="gA" href="#connect" data-i18n="game_win_cta">Say hi 👋</a></div>
+  <div class="gb"><button id="pl" data-i18n="game_play">▶ Play</button><button id="sp" data-i18n="game_stop">■ Stop</button></div>
 </section>
 
 <section class="gt" id="connect">
   <div class="gw">
     <div class="gl r">
-      <span class="pill"><i></i>OPEN TO COLLABORATE</span>
-      <h2 class="chrome">Get in touch</h2>
-      <p>Open to team projects, internships and collaborations. Say hello — I'd love to hear from you.</p>
+      <span class="pill"><i></i><span data-i18n="connect_pill">OPEN TO COLLABORATE</span></span>
+      <h2 class="chrome" data-i18n="connect_h2">Get in touch</h2>
+      <p data-i18n="connect_p">Open to team projects, internships and collaborations. Say hello — I'd love to hear from you.</p>
       <div class="bt">
-        <a class="b1" href="https://wa.me/8801971124566" target="_blank" rel="noopener">Message on WhatsApp ↗</a>
-        <a class="b2" href="mailto:towasin344533@gmail.com?subject=Hello%20Ashraf">Send an email ✉</a>
+        <a class="b1" href="https://wa.me/8801971124566" target="_blank" rel="noopener" data-i18n="connect_wa">Message on WhatsApp ↗</a>
+        <a class="b2" href="mailto:towasin344533@gmail.com?subject=Hello%20Ashraf" data-i18n="connect_email">Send an email ✉</a>
       </div>
     </div>
     <div class="card r">
       <div class="rw" id="email-box" style="cursor:pointer;position:relative" title="Click to copy email">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <small style="margin-bottom:0">EMAIL · CLICK TO COPY</small>
-          <span id="copy-badge" style="font-size:.65rem;letter-spacing:.14em;color:#2fd07d;opacity:0;transition:opacity .25s ease,transform .25s ease;transform:translateY(2px);font-weight:700">COPIED ✓</span>
+          <small style="margin-bottom:0" data-i18n="connect_email_lab">EMAIL · CLICK TO COPY</small>
+          <span id="copy-badge" data-i18n="connect_copied" style="font-size:.65rem;letter-spacing:.14em;color:#2fd07d;opacity:0;transition:opacity .25s ease,transform .25s ease;transform:translateY(2px);font-weight:700">COPIED ✓</span>
         </div>
         <a class="v" id="email-text" href="mailto:towasin344533@gmail.com" onclick="event.stopPropagation()">towasin344533@gmail.com</a>
       </div>
-      <div class="rw"><small>BASED IN</small><b>Bangladesh</b></div>
-      <div class="rw"><small>ELSEWHERE</small><div class="ic">
+      <div class="rw"><small data-i18n="connect_based_lab">BASED IN</small><b data-i18n="connect_based_val">Bangladesh</b></div>
+      <div class="rw"><small data-i18n="connect_elsewhere">ELSEWHERE</small><div class="ic">
         <a href="https://facebook.com/towasinn/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 512 512" fill="#1877F2" aria-hidden="true"><path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"/></svg></a>
         <a href="https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 448 512" fill="#0A66C2" aria-hidden="true"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg></a>
         <a href="https://instagram.com/towasinn/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 448 512" fill="url(#igg)" aria-hidden="true"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg></a>
@@ -260,7 +325,7 @@ footer{text-align:center;color:#666;font-size:.72rem;padding:0 0 32px}
   </div>
 </section>
 <canvas id="cf"></canvas>
-<footer>© 2022–present Ashraf Siddiki Towasin. All rights reserved.</footer>
+<footer data-i18n="footer_copy">© 2022–present Ashraf Siddiki Towasin. All rights reserved.</footer>
 
 <script>
 /* ===== INTRO: drop -> "!" -> the bar spins and throws the letters out of the "I" -> word morphs into PORTFOLIO ===== */
@@ -269,7 +334,7 @@ footer{text-align:center;color:#666;font-size:.72rem;padding:0 0 32px}
   let done=false,timers=[];
   const T=(f,ms)=>timers.push(setTimeout(f,ms));
   const title=document.getElementById('ttl'),hb=document.querySelector('.hero-b');
-  function showHero(){title.style.opacity=1;hb.classList.add('on');document.getElementById('pt').classList.add('on')}
+  function showHero(){title.style.opacity=1;hb.classList.add('on');document.getElementById('pt').classList.add('on');if(window.__assemblePhotoBlocks)window.__assemblePhotoBlocks()}
   function finish(skip){
     if(done)return;done=true;timers.forEach(clearTimeout);
     window.dustStart=performance.now();document.body.classList.remove('lock');
@@ -374,17 +439,97 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   fit();setTimeout(fit,600);window.__fitHero=fit;
 })();
 
-/* ===== HERO PHOTO LOADER & INTERACTION: displays the true, natural photo with full clarity and perspective tilt ===== */
+/* ===== HERO PHOTO 3D BLOCK MATRIX & INTERACTIVE ANIMATION ===== */
 (function(){
-  const pt=document.getElementById('pt'),img=document.getElementById('photo-img'),fb=document.getElementById('photo-fallback'),hero=document.getElementById('hero');
-  if(!pt||!img)return;
+  const pt=document.getElementById('pt'),
+        grid=document.getElementById('photo-grid'),
+        img=document.getElementById('photo-img'),
+        fb=document.getElementById('photo-fallback'),
+        hero=document.getElementById('hero');
+  if(!pt||!img||!grid)return;
+
+  const COLS=4, ROWS=5;
+  const blocks=[];
+  let loadedUrl='';
+
+  // Build grid blocks (4 columns x 5 rows = 20 blocks)
+  for(let r=0; r<ROWS; r++){
+    for(let c=0; c<COLS; c++){
+      const b=document.createElement('div');
+      b.className='pt-block';
+      b.dataset.r=r;
+      b.dataset.c=c;
+      grid.appendChild(b);
+      blocks.push({el:b, r, c});
+    }
+  }
+
+  function applyImage(url){
+    loadedUrl=url;
+    blocks.forEach(({el, r, c})=>{
+      el.style.backgroundImage=`url("${url}")`;
+      el.style.backgroundSize=`${COLS*100}% ${ROWS*100}%`;
+      const posX = COLS>1 ? (c/(COLS-1))*100 : 0;
+      const posY = ROWS>1 ? (r/(ROWS-1))*100 : 0;
+      el.style.backgroundPosition=`${posX}% ${posY}%`;
+    });
+    assembleBlocks();
+  }
+
+  function assembleBlocks(){
+    blocks.forEach(({el, r, c})=>{
+      el.classList.remove('assembled');
+      const delay = (r + c) * 45;
+      el.style.transitionDelay = `${delay}ms`;
+      setTimeout(()=>{ el.classList.add('assembled'); }, 20);
+    });
+  }
+
+  // Interactive 3D ripple wave across blocks when clicking or tapping photo
+  function rippleBlocks(originX, originY){
+    const rect = pt.getBoundingClientRect();
+    const ox = originX !== undefined ? (originX - rect.left) : (rect.width/2);
+    const oy = originY !== undefined ? (originY - rect.top) : (rect.height/2);
+
+    blocks.forEach(({el})=>{
+      const bRect = el.getBoundingClientRect();
+      const bx = bRect.left - rect.left + bRect.width/2;
+      const by = bRect.top - rect.top + bRect.height/2;
+      const dist = Math.hypot(bx - ox, by - oy);
+      const delay = Math.min(320, dist * 0.85);
+
+      setTimeout(()=>{
+        el.style.transitionDuration = '0.35s';
+        el.style.transform = 'translateZ(26px) rotateX(-8deg) rotateY(10deg) scale(1.08)';
+        el.style.filter = 'brightness(1.25) contrast(1.08)';
+        setTimeout(()=>{
+          el.style.transitionDuration = '0.65s';
+          el.style.transform = 'translateZ(0) scale(1)';
+          el.style.filter = 'none';
+        }, 320);
+      }, delay);
+    });
+
+    if(window.burstConfetti){
+      const cx = rect.left + ox;
+      const cy = rect.top + oy;
+      window.burstConfetti(cx, cy, 22);
+    }
+  }
+
+  pt.addEventListener('click', e=>{
+    rippleBlocks(e.clientX, e.clientY);
+  });
+
   const SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg','/Images/mypic.jpg','/images/mypic.jpg','/mypic.jpg'];
   let idx=0;
   function loadNext(){
     if(idx<SRC.length){
       img.src=SRC[idx++];
     }else{
+      // Fallback if local image not present
       img.style.display='none';
+      grid.style.display='none';
       if(fb)fb.style.display='flex';
       pt.style.setProperty('--ar',.75);
       if(window.__fitHero)window.__fitHero();
@@ -392,8 +537,9 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   }
   img.onerror=loadNext;
   img.onload=()=>{
-    img.style.display='block';
     if(fb)fb.style.display='none';
+    grid.style.display='grid';
+    applyImage(img.src);
     if(img.naturalWidth&&img.naturalHeight){
       const ar=Math.max(.55,Math.min(1.4,img.naturalWidth/img.naturalHeight));
       pt.style.setProperty('--ar',ar);
@@ -401,6 +547,7 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     }
   };
   loadNext();
+
   hero.addEventListener('pointermove',e=>{
     const hr=hero.getBoundingClientRect();
     pt.style.setProperty('--ry',((e.clientX-hr.left)/hr.width-.5)*10+'deg');
@@ -410,6 +557,9 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
     pt.style.setProperty('--rx','0deg');
     pt.style.setProperty('--ry','0deg');
   });
+
+  window.__assemblePhotoBlocks = assembleBlocks;
+  window.__ripplePhotoBlocks = rippleBlocks;
 })();
 
 /* ===== NAV: an underline marks the section you are in ===== */
@@ -426,6 +576,7 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   t.innerHTML+=t.innerHTML;
   let pos=0,half=0,drag=false,lx=0,vis=false,last=0;
   const meas=()=>{half=t.scrollWidth/2};
+  window.__measureMarquee=meas;
   meas();addEventListener('resize',meas);addEventListener('load',meas);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(meas);
   mq.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;mq.classList.add('drag');try{mq.setPointerCapture(e.pointerId)}catch(_){}});
@@ -640,6 +791,204 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   });
 
   window.burstConfetti=burstConfetti;
+})();
+
+/* ===== DYNAMIC LANGUAGE TOGGLE (ENGLISH / BENGALI) ===== */
+(function(){
+  const I18N = {
+    en: {
+      skip_intro: "TAP TO SKIP",
+      nav_home: "Home",
+      nav_about: "About",
+      nav_whatido: "What I Do",
+      nav_projects: "Projects",
+      nav_journey: "Journey",
+      nav_play: "Play",
+      nav_connect: "Connect",
+      pt_tag: "3D BLOCKS · CLICK",
+      hero_quote: "<b>Student</b> · Programmer · Aspiring Software Engineer",
+      hero_btn_about: "About me",
+      hero_btn_sayhi: "Get in touch",
+      about_lab: "ABOUT ME",
+      about_h2: "Intro",
+      about_body: "Hello! I am Towasin, a student from Bangladesh. I love math and programming — learning to build things for the web and beyond. Solving mathematical problems is one of my favourite ways to spend time, and I started learning web development back on 10th January, 2023. I believe it's never too late to start a journey. I enjoy working in a team, and I'm working toward becoming a software engineer, one step at a time.",
+      fact_bd: "Bangladesh",
+      fact_eee: "EEE Undergrad",
+      fact_learn: "Learning since Jan 2023",
+      skills_lab: "MY SKILLS · DRAG TO MOVE",
+      skills_items: ["C Programming", "Python", "HTML", "Web Development", "Mathematics", "Competitive Programming", "YouTube SEO", "Team Collaboration"],
+      what_h2: "What I Do",
+      what_service_01: "YouTube SEO",
+      what_desc_01: "I help YouTube creators get found — keyword research, titles, descriptions and tags that help videos rank and reach the right audience.",
+      what_fiverr_btn: "View my gig on Fiverr ↗",
+      proj_lab: "WHAT I'M BUILDING",
+      proj_h2: "Projects",
+      proj_empty_h3: "Coming soon",
+      proj_empty_p: "I don't have a finished project to show yet — I'm still learning and practising every day. When I build my first real project, it will appear right here.",
+      proj_building: "building…",
+      proj_github_btn: "Follow my GitHub ↗",
+      journey_lab: "MY PATH",
+      journey_h2: "Journey",
+      journey_sch_date: "2018 — 2023",
+      journey_sch_title: "High School Life",
+      journey_sch_org: "Gouripur SA High School",
+      journey_sch_p: "Where it all began — my first real exposure to coding, and school clubs that let me explore programming outside the classroom.",
+      journey_col_date: "2023 — 2025",
+      journey_col_title: "College Life",
+      journey_col_org: "Dr. Mosharraf Foundation Degree College",
+      journey_col_p: "I built my technical foundation — heavy C programming to sharpen my logic, and HTML as my first real step toward web development.",
+      journey_uni_date: "2025 — PRESENT",
+      journey_uni_title: "University Life",
+      journey_uni_org: "Barishal Engineering College",
+      journey_uni_p: "Studying Electrical & Electronic Engineering (EEE) and expanding into Python on the way to becoming a software engineer.",
+      journey_visit: "Visit website ↗",
+      game_cap: "Break it if you can. I still ship.",
+      game_play: "▶ Play",
+      game_stop: "■ Stop",
+      game_win_title: "You broke it!",
+      game_win_msg: "Gift unlocked: a big high-five and my thanks for playing. Say hi if you liked it!",
+      game_win_cta: "Say hi 👋",
+      game_loss_title: "Game over",
+      game_loss_msg: "So close! Even a bug can't stop me from shipping. Want another go?",
+      game_loss_cta: "Try again ↻",
+      connect_pill: "OPEN TO COLLABORATE",
+      connect_h2: "Get in touch",
+      connect_p: "Open to team projects, internships and collaborations. Say hello — I'd love to hear from you.",
+      connect_wa: "Message on WhatsApp ↗",
+      connect_email: "Send an email ✉",
+      connect_email_lab: "EMAIL · CLICK TO COPY",
+      connect_copied: "COPIED ✓",
+      connect_based_lab: "BASED IN",
+      connect_based_val: "Bangladesh",
+      connect_elsewhere: "ELSEWHERE",
+      footer_copy: "© 2022–present Ashraf Siddiki Towasin. All rights reserved."
+    },
+    bn: {
+      skip_intro: "এগিয়ে যেতে ট্যাপ করুন",
+      nav_home: "হোম",
+      nav_about: "আমার সম্পর্কে",
+      nav_whatido: "যা করি",
+      nav_projects: "প্রজেক্ট",
+      nav_journey: "যাত্রা",
+      nav_play: "গেম",
+      nav_connect: "যোগাযোগ",
+      pt_tag: "3D ব্লক · ক্লিক করুন",
+      hero_quote: "<b>শিক্ষার্থী</b> · প্রোগ্রামার · সফটওয়্যার ইঞ্জিনিয়ার প্রত্যাশী",
+      hero_btn_about: "আমার সম্পর্কে",
+      hero_btn_sayhi: "যোগাযোগ করুন",
+      about_lab: "আমার সম্পর্কে",
+      about_h2: "ভূমিকা",
+      about_body: "হ্যালো! আমি তোয়াসিন, বাংলাদেশ থেকে একজন শিক্ষার্থী। আমি গণিত এবং প্রোগ্রামিং ভালোবাসি — ওয়েব ও সফটওয়্যারের নতুন নতুন জিনিস শিখছি। গণিতের সমস্যা সমাধান করা আমার অন্যতম প্রিয় কাজ, এবং আমি ২০২৩ সালের ১০ই জানুয়ারি থেকে ওয়েব ডেভেলপমেন্ট শেখা শুরু করি। আমি বিশ্বাস করি কোনো যাত্রা শুরু করার জন্য কখনোই দেরি হয় না। আমি দলগতভাবে কাজ করতে পছন্দ করি এবং ধাপে ধাপে একজন দক্ষ সফটওয়্যার ইঞ্জিনিয়ার হওয়ার পথে এগিয়ে যাচ্ছি।",
+      fact_bd: "বাংলাদেশ",
+      fact_eee: "ইইই আন্ডারগ্র্যাড",
+      fact_learn: "১০ জানুয়ারি ২০২৩ থেকে শিখছি",
+      skills_lab: "আমার দক্ষতাসমূহ · ড্র্যাগ করে দেখুন",
+      skills_items: ["সি প্রোগ্রামিং", "পাইথন", "এইচটিএমএল", "ওয়েব ডেভেলপমেন্ট", "গণিত", "কম্পিটিটিভ প্রোগ্রামিং", "ইউটিউব এসইও", "টিম কলাবোরেশন"],
+      what_h2: "আমি যা করি",
+      what_service_01: "ইউটিউব এসইও",
+      what_desc_01: "আমি ইউটিউব কনটেন্ট ক্রিয়েটরদের ভিডিও রিচ বাড়াতে সাহায্য করি — কিওয়ার্ড রিসার্চ, টাইটেল, ডেসক্রিপশন এবং সঠিক ট্যাগিংয়ের মাধ্যমে সঠিক দর্শকদের কাছে পৌঁছাতে।",
+      what_fiverr_btn: "ফাইভারে আমার গিগ দেখুন ↗",
+      proj_lab: "যা তৈরি করছি",
+      proj_h2: "প্রজেক্ট",
+      proj_empty_h3: "শীঘ্রই আসছে",
+      proj_empty_p: "এখনও কোনো পূর্ণাঙ্গ প্রজেক্ট প্রকাশের জন্য প্রস্তুত নয় — আমি প্রতিদিন শিখছি এবং অনুশীলন করছি। আমার প্রথম রিয়েল প্রজেক্ট তৈরি হলে তা ঠিক এখানেই দেখতে পাবেন।",
+      proj_building: "তৈরি হচ্ছে…",
+      proj_github_btn: "আমার গিটহাব ফলো করুন ↗",
+      journey_lab: "আমার পথ",
+      journey_h2: "যাত্রা",
+      journey_sch_date: "২০১৮ — ২০২৩",
+      journey_sch_title: "স্কুল জীবন",
+      journey_sch_org: "গৌরীপুর এস.এ. হাই স্কুল",
+      journey_sch_p: "যেখান থেকে সবকিছুর সূচনা — প্রথম কোডিংয়ের অভিজ্ঞতা এবং স্কুলের ক্লাবের মাধ্যমে ক্লাসরুমের বাইরে প্রোগ্রামিং শেখা।",
+      journey_col_date: "২০২৩ — ২০২৫",
+      journey_col_title: "কলেজ জীবন",
+      journey_col_org: "ড. মোশাররফ ফাউন্ডেশন ডিগ্রি কলেজ",
+      journey_col_p: "এখানে আমার টেকনিক্যাল ভিত্তি গড়ে ওঠে — লজিক শাণিত করতে গভীর সি প্রোগ্রামিং এবং ওয়েব ডেভেলপমেন্টের প্রথম ধাপ হিসেবে এইচটিএমএল শেখা।",
+      journey_uni_date: "২০২৫ — বর্তমান",
+      journey_uni_title: "বিশ্ববিদ্যালয় জীবন",
+      journey_uni_org: "বরিশাল ইঞ্জিনিয়ারিং কলেজ",
+      journey_uni_p: "ইলেকট্রিক্যাল অ্যান্ড ইলেকট্রনিক ইঞ্জিনিয়ারিং (ইইই) নিয়ে পড়াশোনা এবং সফটওয়্যার ইঞ্জিনিয়ার হওয়ার লক্ষ্যে পাইথনে দক্ষতা অর্জন।",
+      journey_visit: "ওয়েবসাইট দেখুন ↗",
+      game_cap: "পারলে ভেঙে দেখান। আমি এগিয়ে যাই।",
+      game_play: "▶ খেলুন",
+      game_stop: "■ থামুন",
+      game_win_title: "আপনি জিতেছেন!",
+      game_win_msg: "উপহার আনলক হয়েছে: খেলার জন্য ধন্যবাদ! ভালো লাগলে যোগাযোগ করুন।",
+      game_win_cta: "হাই বলুন 👋",
+      game_loss_title: "খেলা শেষ",
+      game_loss_msg: "খুব কাছে ছিলেন! আরেকবার চেষ্টা করবেন?",
+      game_loss_cta: "আবার চেষ্টা করুন ↻",
+      connect_pill: "একসাথে কাজ করতে প্রস্তুত",
+      connect_h2: "যোগাযোগ করুন",
+      connect_p: "দলগত প্রজেক্ট, ইন্টার্নশিপ ও যৌথ কাজের জন্য প্রস্তুত। একটি বার্তা পাঠান — আপনার সাথে কথা বলতে পারলে আনন্দিত হব।",
+      connect_wa: "হোয়াটসঅ্যাপে মেসেজ পাঠান ↗",
+      connect_email: "ইমেইল পাঠান ✉",
+      connect_email_lab: "ইমেইল · কপি করতে ক্লিক করুন",
+      connect_copied: "কপি হয়েছে ✓",
+      connect_based_lab: "অবস্থান",
+      connect_based_val: "বাংলাদেশ",
+      connect_elsewhere: "সামাজিক যোগাযোগ",
+      footer_copy: "© ২০২২–বর্তমান আশরাফ সিদ্দিকী তোয়াসিন। সর্বস্বত্ব সংরক্ষিত।"
+    }
+  };
+
+  let curLang = localStorage.getItem('towasin_lang') || 'en';
+
+  function applyLanguage(lang){
+    curLang = lang;
+    try{ localStorage.setItem('towasin_lang', lang); }catch(_){}
+
+    const dict = I18N[lang] || I18N.en;
+
+    // Update textContent for data-i18n
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const k = el.getAttribute('data-i18n');
+      if(dict[k] !== undefined){
+        el.textContent = dict[k];
+      }
+    });
+
+    // Update innerHTML for data-i18n-html
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const k = el.getAttribute('data-i18n-html');
+      if(dict[k] !== undefined){
+        el.innerHTML = dict[k];
+      }
+    });
+
+    // Update skills marquee
+    const mqt = document.getElementById('mqt');
+    if(mqt && dict.skills_items){
+      const items = dict.skills_items.map(s => `<span>${s}</span>`).join('');
+      mqt.innerHTML = items + items;
+      if(window.__measureMarquee) window.__measureMarquee();
+    }
+
+    // Update language toggle button states
+    document.querySelectorAll('.lang-opt').forEach(opt => {
+      opt.classList.toggle('active', opt.dataset.lang === lang);
+    });
+
+    // Set document lang attribute
+    document.documentElement.lang = lang;
+  }
+
+  const btn = document.getElementById('lang-btn');
+  if(btn){
+    btn.addEventListener('click', () => {
+      const next = curLang === 'en' ? 'bn' : 'en';
+      applyLanguage(next);
+      if(window.burstConfetti){
+        const r = btn.getBoundingClientRect();
+        window.burstConfetti(r.left + r.width/2, r.top + r.height/2, 25);
+      }
+    });
+  }
+
+  // Initialize language on load if saved
+  if(curLang !== 'en'){
+    applyLanguage(curLang);
+  }
 })();
 </script>
 </body>
