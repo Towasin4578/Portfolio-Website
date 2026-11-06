@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Portfolio of Ashraf Siddiki Towasin — student, programmer, aspiring software engineer from Bangladesh.">
+<meta property="og:title" content="Ashraf Siddiki Towasin">
+<meta property="og:description" content="Portfolio of Ashraf Siddiki Towasin — student, programmer, aspiring software engineer from Bangladesh.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <title>Ashraf Siddiki Towasin</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0a0a'/%3E%3Crect x='1.5' y='1.5' width='61' height='61' rx='13' fill='none' stroke='%23ffffff' stroke-opacity='.3' stroke-width='2'/%3E%3Cpath d='M15 17h34v10H37.5v22h-11V27H15z' fill='%23ffffff'/%3E%3Ccircle cx='51' cy='49' r='4.5' fill='%237de8ff'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
@@ -62,13 +66,15 @@ nav a.on:after,nav a:hover:after{transform:scaleX(1)}
 .hb a.fill{background:#ece8dc;color:#111;border-color:#ece8dc}
 .hb a:hover{transform:translateY(-2px)}
 @media(max-width:700px){.hero-b{flex-direction:column;bottom:3.5vh;gap:12px}.hero-b p{text-align:center}}
-/* photo made of colourful small cubes (the WHOLE photo, no zoom) */
-.pt{--s:min(46svh,80vw,520px);--ar:.75;position:absolute;z-index:0;left:calc(50% - var(--s)*var(--ar)/2);top:84px;width:calc(var(--s)*var(--ar));height:var(--s);opacity:0;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:opacity .8s,transform .35s ease,filter 2.2s;pointer-events:none}
+/* hero photo with clear colors and subtle border */
+.pt{--s:min(44svh,76vw,480px);--ar:.75;position:absolute;z-index:2;left:calc(50% - var(--s)*var(--ar)/2);top:84px;width:calc(var(--s)*var(--ar));height:var(--s);opacity:0;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:opacity .8s,transform .35s ease;pointer-events:auto;border:1px solid var(--l);border-radius:22px;overflow:hidden;background:#0d0d0d;box-shadow:0 18px 45px rgba(0,0,0,.7)}
 .pt.on{opacity:1}
-.pt canvas{width:100%;height:100%;display:block}
-.pt.bg{background-repeat:no-repeat;background-size:100% 100%;filter:blur(16px)}
-.pt.bg.on{filter:none}
-.pt.bg canvas{display:none}
+.pt img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
+.pt-fallback{display:none;width:100%;height:100%;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,#1c1c1c,#0a0a0a);border-radius:inherit;padding:20px;text-align:center}
+.pt-avatar{width:72px;height:72px;border-radius:50%;background:#141414;border:1px solid var(--l);display:flex;align-items:center;justify-content:center;margin-bottom:12px;color:#aaa}
+.pt-avatar svg{width:36px;height:36px}
+.pt-fallback b{font-size:1.15rem;letter-spacing:.08em;color:#fff;margin-bottom:2px}
+.pt-fallback small{color:var(--m);font-size:.78rem;letter-spacing:.12em}
 /* sections */
 section.s{max-width:980px;margin:0 auto;padding:64px 24px}
 .lab{font-size:.7rem;letter-spacing:.25em;color:var(--m);margin-bottom:8px}
@@ -106,12 +112,12 @@ h2{font-size:clamp(2.2rem,7vw,4rem);line-height:1.05;margin-bottom:24px}
 .con{display:flex;flex-wrap:wrap;gap:12px}
 .con a{border:1px solid var(--l);border-radius:30px;padding:12px 24px;font-size:.9rem;transition:.3s}
 .con a:hover{background:#fff;color:#000}
-/* game */
+/* game arena with thin perimeter border */
 .gm{position:relative;max-width:560px;margin:0 auto;padding:36px 18px 56px}
 .gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .gh p{font-size:.85rem;border-bottom:1px solid #fff;padding-bottom:3px}
 .lv{display:flex;gap:6px}.lv i{width:9px;height:9px;border-radius:50%;background:#fff}.lv i.x{background:#333}
-canvas#g{width:100%;display:block;touch-action:pan-y;cursor:default;-webkit-tap-highlight-color:transparent}
+canvas#g{width:100%;display:block;touch-action:pan-y;cursor:default;-webkit-tap-highlight-color:transparent;border:1px solid rgba(255,255,255,.2);border-radius:18px;background:#060606;box-shadow:0 0 24px rgba(255,255,255,.02)}
 .gb{display:flex;gap:12px;justify-content:center;margin-top:18px}
 .gb button{font-family:inherit;font-size:.85rem;padding:11px 26px;border-radius:30px;border:1px solid #555;background:transparent;color:#fff;cursor:pointer;transition:.3s}
 .gb button:hover,.gb button.on{background:#fff;color:#000}
@@ -149,14 +155,22 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 <body class="lock">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="igg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#feda75"/><stop offset=".5" stop-color="#d62976"/><stop offset="1" stop-color="#4f5bd5"/></linearGradient></defs></svg>
 
-
 <div id="intro"><div id="stage"><i id="rip"></i><i id="dot"></i><i id="bar"></i><div id="word"></div></div><div id="skip">TAP TO SKIP</div></div>
 
 <nav><b>TOWASIN</b><div><a href="#hero">Home</a><a href="#about">About</a><a href="#whatido">What I Do</a><a href="#projects">Projects</a><a href="#journey">Journey</a><a href="#play">Play</a><a href="#connect">Connect</a></div></nav>
 
 <header id="hero">
   <h1 class="ttl chrome" id="ttl">TOWASIN<span class="sr"> — Ashraf Siddiki Towasin</span></h1>
-  <div class="pt" id="pt" aria-hidden="true"><canvas id="cubes"></canvas></div>
+  <div class="pt" id="pt" aria-label="Photo of Ashraf Siddiki Towasin">
+    <img id="photo-img" src="Images/mypic.jpg" alt="Ashraf Siddiki Towasin">
+    <div id="photo-fallback" class="pt-fallback">
+      <div class="pt-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <b>TOWASIN</b>
+      <small>Ashraf Siddiki</small>
+    </div>
+  </div>
   <div class="hero-b">
     <p><b>Student</b> · Programmer · Aspiring Software Engineer</p>
     <div class="hb"><a href="#about">About me</a><a class="fill" href="#connect">Get in touch</a></div>
@@ -248,13 +262,13 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
     if(skip===true||!word.textContent.trim()){intro.classList.add('out');showHero();setTimeout(()=>intro.remove(),1000);return}
     const wr=word.getBoundingClientRect(),tr=title.getBoundingClientRect();
     const dx=(tr.left+tr.width/2)-(wr.left+wr.width/2),dy=(tr.top+tr.height/2)-(wr.top+wr.height/2),sc=tr.width/wr.width;
-    intro.classList.add('fly');                                   /* black screen fades away while the word flies up */
+    intro.classList.add('fly');
     word.animate([{transform:'none'},{transform:`translate(${dx}px,${dy}px) scale(${sc})`}],{duration:950,easing:'cubic-bezier(.65,0,.25,1)',fill:'forwards'});
     setTimeout(()=>{showHero();intro.classList.add('out')},960);
     setTimeout(()=>intro.remove(),1500);
   }
   intro.addEventListener('click',()=>finish(true));
-  const WORD='PORTFOLIO',II=7;                     /* the I is letter number 7 */
+  const WORD='PORTFOLIO',II=7;
   word.innerHTML=WORD.split('').map(c=>`<span>${c}</span>`).join('');
   const sp=[...word.children];
   let g;
@@ -272,7 +286,6 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
     bar.style.cssText=`width:${sw}px;height:0;left:${cx}px;top:${base-d-gap}px`;
     rip.style.cssText=`left:${cx}px;top:${base}px`;
     st.style.setProperty('--rise',-(d+gap)+'px');
-    /* every other letter starts tiny, spinning, hidden inside the I — and will fly out to its own place */
     sp.forEach((s,i)=>{if(i===II)return;const r=s.getBoundingClientRect(),dx=(ir.left+ir.width/2)-(r.left+r.width/2);
       s.style.transform=`translate(${dx}px,${-ch*.2}px) rotate(${(Math.random()<.5?-1:1)*(140+Math.random()*160)}deg) scale(.12)`});
   }
@@ -289,19 +302,19 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
   }
   function run(){
     if(done)return;measure();
-    T(drop,250);                                                                                        /* 1. a drop falls and lands */
-    T(()=>{bar.style.top=(g.base-g.d-g.gap-g.bh)+'px';bar.style.height=g.bh+'px'},1350);               /* 2. "!" grows out of it */
-    T(()=>{                                                                                             /* 3. the I leans LEFT and throws T-O-W-A-S out that side */
+    T(drop,250);
+    T(()=>{bar.style.top=(g.base-g.d-g.gap-g.bh)+'px';bar.style.height=g.bh+'px'},1350);
+    T(()=>{
       bar.style.transform='translateX(-50%) rotate(-58deg)';
       [6,5,4,3,2,1,0].forEach((i,n)=>setTimeout(()=>{sp[i].classList.add('in')},n*110));
     },2100);
-    T(()=>{                                                                                             /* 3b. then it swings to the OTHER side and brings the last O */
+    T(()=>{
       bar.style.transform='translateX(-50%) rotate(58deg)';
       sp[8].classList.add('in');
     },3000);
-    T(()=>{bar.style.transform='translateX(-50%) rotate(0deg)';bar.style.top=(g.base-g.ch)+'px';bar.style.height=g.ch+'px';st.classList.add('merge')},3950); /* 4. bar straightens into the I */
-    T(()=>{sp[II].style.transition='none';sp[II].classList.add('in');st.classList.add('gone')},4550);  /* 5. real "I" takes over */
-    T(()=>{                                                                                             /* 6. fast scramble: PORTFOLIO -> TOWASIN */
+    T(()=>{bar.style.transform='translateX(-50%) rotate(0deg)';bar.style.top=(g.base-g.ch)+'px';bar.style.height=g.ch+'px';st.classList.add('merge')},3950);
+    T(()=>{sp[II].style.transition='none';sp[II].classList.add('in');st.classList.add('gone')},4550);
+    T(()=>{
       word.className='chrome';
       const target='TOWASIN',pool='ABCDEFGHIJKLMNOPQRSTUVWXYZ',t0=performance.now(),dur=900;
       (function tick(){
@@ -321,15 +334,19 @@ footer{text-align:center;color:#555;font-size:.72rem;padding:0 0 34px}
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.15});
 document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*.08+'s';io.observe(el)});
 
-/* ===== HERO LAYOUT: keeps the subtitle clear of the big title, and gives the photo all the room above it ===== */
+/* ===== HERO LAYOUT: keeps the subtitle and photo clear of the big title with guaranteed breathing room ===== */
 (function(){
   const hero=document.getElementById('hero'),hb=document.querySelector('.hero-b'),ttl=document.getElementById('ttl'),pt=document.getElementById('pt');
   function fit(){
     hero.style.setProperty('--hbh',hb.offsetHeight+'px');
     const ar=parseFloat(getComputedStyle(pt).getPropertyValue('--ar'))||.75;
-    const hr=hero.getBoundingClientRect(),tr=ttl.getBoundingClientRect(),top0=70,room=tr.top-hr.top-top0+tr.height*.32;
-    const s=Math.max(200,Math.min(room,hero.clientWidth*.92/ar,600));
-    pt.style.setProperty('--s',s+'px');pt.style.top=(top0+Math.max(0,(room-s)/2))+'px';
+    const hr=hero.getBoundingClientRect(),tr=ttl.getBoundingClientRect(),top0=74;
+    const gap=26;
+    const room=Math.max(140, tr.top - hr.top - top0 - gap);
+    const s=Math.max(160, Math.min(room, hero.clientWidth*.86/ar, 480));
+    pt.style.setProperty('--s',s+'px');
+    const ptTop=top0 + Math.max(0, (room - s)/2);
+    pt.style.top=ptTop+'px';
   }
   if('ResizeObserver' in window){new ResizeObserver(fit).observe(hb);new ResizeObserver(fit).observe(hero)}
   addEventListener('resize',fit);addEventListener('load',fit);
@@ -337,120 +354,42 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   fit();setTimeout(fit,600);window.__fitHero=fit;
 })();
 
-/* ===== PHOTO MADE OF COLOURFUL SMALL CUBES: the whole picture. Cubes fly in from outside the screen, start pale, bloom outwards from the middle, take vivid colour and land with a flash. Click = burst, move = they scatter and return ===== */
+/* ===== HERO PHOTO LOADER & INTERACTION: displays the true, natural photo with full clarity and perspective tilt ===== */
 (function(){
-  const pt=document.getElementById('pt'),cv=document.getElementById('cubes'),hero=document.getElementById('hero');
-  if(!pt||!cv)return;
-  const x=cv.getContext('2d'),st=document.createElement('canvas'),sx=st.getContext('2d');
-  const SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg'],ROWS=112;
-  let COLS=84,AR=.75,W=1,H=1,k=1,cx=1,cy=1,P=[],MV=[],FL=[],MD=null,vis=false,t0=0,finished=false,last=0,gradB=null,b=1,IMG=null;
-  const mouse={x:-999,y:-999,sp:0,dx:0,dy:0};
-  const clamp=(v,a,c)=>Math.max(a,Math.min(c,v));
-  function vivid(r,g,bl){                                      /* more colourful: boost saturation, a touch of contrast */
-    r/=255;g/=255;bl/=255;const mx=Math.max(r,g,bl),mn=Math.min(r,g,bl),d=mx-mn;let l=(mx+mn)/2,s=d?d/(1-Math.abs(2*l-1)):0,hh=0;
-    if(d){hh=mx===r?((g-bl)/d)%6:mx===g?(bl-r)/d+2:(r-g)/d+4;hh*=60;if(hh<0)hh+=360}
-    s=clamp(s*1.55+.05,0,1);l=clamp((l-.5)*1.12+.51,0,1);
-    const c=(1-Math.abs(2*l-1))*s,xx=c*(1-Math.abs((hh/60)%2-1)),m=l-c/2;let R=0,G=0,B=0;
-    if(hh<60){R=c;G=xx}else if(hh<120){R=xx;G=c}else if(hh<180){G=c;B=xx}else if(hh<240){G=xx;B=c}else if(hh<300){R=xx;B=c}else{R=c;B=xx}
-    return [Math.round((R+m)*255),Math.round((G+m)*255),Math.round((B+m)*255)];
-  }
-  function cube(c2,i,j,col){                                   /* one tiny cube: colour + a light top/left edge + a dark bottom/right edge */
-    const px=Math.round(i*cx),py=Math.round(j*cy),pw=Math.round((i+1)*cx)-px,ph=Math.round((j+1)*cy)-py;
-    c2.fillStyle=col;c2.fillRect(px,py,pw,ph);
-    if(pw>3){c2.fillStyle='rgba(255,255,255,.16)';c2.fillRect(px,py,pw,b);c2.fillRect(px,py,b,ph);c2.fillStyle='rgba(0,0,0,.24)';c2.fillRect(px,py+ph-b,pw,b);c2.fillRect(px+pw-b,py,b,ph)}
-  }
-  function build(instant){
-    k=Math.min(devicePixelRatio||1,2);b=Math.max(1,Math.round(k*.8));
-    W=cv.width=Math.max(2,Math.round(pt.offsetWidth*k));H=cv.height=Math.max(2,Math.round(pt.offsetHeight*k));st.width=W;st.height=H;
-    cx=W/COLS;cy=H/ROWS;P=[];MV=[];FL=[];
-    gradB=x.createLinearGradient(0,H*.72,0,H);gradB.addColorStop(0,'rgba(0,0,0,0)');gradB.addColorStop(1,'rgba(0,0,0,.6)');
-    if(!MD)return;
-    for(let j=0;j<ROWS;j++)for(let i=0;i<COLS;i++){
-      const n=(j*COLS+i)*4,v=vivid(MD[n],MD[n+1],MD[n+2]);
-      const d=Math.hypot((i+.5)/COLS-.5,((j+.5)/ROWS-.5)*.9)/.7;
-      const p={i,j,tx:(i+.5)*cx,ty:(j+.5)*cy,r:v[0],g:v[1],b:v[2],col:'rgb('+v[0]+','+v[1]+','+v[2]+')',x:(Math.random()*1.7-.35)*W,y:(Math.random()*1.7-.35)*H,vx:0,vy:0,dl:d*1100+Math.random()*500,set:false};
-      if(instant){p.set=true;p.x=p.tx;p.y=p.ty;cube(sx,i,j,p.col)}else MV.push(p);
-      P.push(p);
+  const pt=document.getElementById('pt'),img=document.getElementById('photo-img'),fb=document.getElementById('photo-fallback'),hero=document.getElementById('hero');
+  if(!pt||!img)return;
+  const SRC=['Images/mypic.jpg','images/mypic.jpg','mypic.jpg','/Images/mypic.jpg','/images/mypic.jpg','/mypic.jpg'];
+  let idx=0;
+  function loadNext(){
+    if(idx<SRC.length){
+      img.src=SRC[idx++];
+    }else{
+      img.style.display='none';
+      if(fb)fb.style.display='flex';
+      pt.style.setProperty('--ar',.75);
+      if(window.__fitHero)window.__fitHero();
     }
   }
-  function load(i){
-    if(i>=SRC.length)return;
-    const img=new Image();img.onerror=()=>load(i+1);
-    img.onload=()=>{
-      IMG=img;AR=clamp(img.naturalWidth/img.naturalHeight,.5,1.8);COLS=Math.round(ROWS*AR);
-      pt.style.setProperty('--ar',AR);if(window.__fitHero)window.__fitHero();
-      try{
-        const o=document.createElement('canvas');o.width=COLS;o.height=ROWS;const q=o.getContext('2d');
-        q.drawImage(img,0,0,COLS,ROWS);                         /* the WHOLE photo */
-        MD=q.getImageData(0,0,COLS,ROWS).data;                  /* throws when the page is opened straight from a folder */
-        build(false);
-      }catch(e){                                                /* can't read pixels -> show the photo itself, sharpening in from a blur */
-        pt.style.backgroundImage='url("'+img.src+'")';pt.classList.add('bg');
-      }
-    };
-    img.src=SRC[i];
-  }
-  build(false);load(0);
-  if('ResizeObserver' in window){new ResizeObserver(()=>{if(MD)build(finished)}).observe(pt)}
-  new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(pt);
+  img.onerror=loadNext;
+  img.onload=()=>{
+    img.style.display='block';
+    if(fb)fb.style.display='none';
+    if(img.naturalWidth&&img.naturalHeight){
+      const ar=Math.max(.55,Math.min(1.4,img.naturalWidth/img.naturalHeight));
+      pt.style.setProperty('--ar',ar);
+      if(window.__fitHero)window.__fitHero();
+    }
+  };
+  loadNext();
   hero.addEventListener('pointermove',e=>{
     const hr=hero.getBoundingClientRect();
-    pt.style.setProperty('--ry',((e.clientX-hr.left)/hr.width-.5)*10+'deg');pt.style.setProperty('--rx',(-((e.clientY-hr.top)/hr.height-.5))*8+'deg');
-    const r=cv.getBoundingClientRect(),nx=(e.clientX-r.left)*(W/r.width),ny=(e.clientY-r.top)*(H/r.height);
-    if(mouse.x>-900){const mx=nx-mouse.x,my=ny-mouse.y;mouse.sp=Math.min(70*k,mouse.sp+Math.hypot(mx,my));mouse.dx=mx;mouse.dy=my}
-    mouse.x=nx;mouse.y=ny;
+    pt.style.setProperty('--ry',((e.clientX-hr.left)/hr.width-.5)*10+'deg');
+    pt.style.setProperty('--rx',(-((e.clientY-hr.top)/hr.height-.5))*8+'deg');
   });
-  hero.addEventListener('pointerleave',()=>{mouse.x=-999;pt.style.setProperty('--rx','0deg');pt.style.setProperty('--ry','0deg')});
-  hero.addEventListener('pointerdown',e=>{                       /* click / tap on the photo: the cubes burst outwards and fly back */
-    if(!MD||!finished)return;const r=cv.getBoundingClientRect();
-    if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;
-    const bx=(e.clientX-r.left)*(W/r.width),by=(e.clientY-r.top)*(H/r.height);
-    sx.clearRect(0,0,W,H);MV=[];
-    for(const p of P){const dx=p.tx-bx,dy=p.ty-by,d=Math.hypot(dx,dy)+8;p.set=false;p.vx=dx/d*(40*k+Math.random()*24*k)*(120*k/(d+60*k));p.vy=dy/d*(40*k+Math.random()*24*k)*(120*k/(d+60*k));p.x=p.tx;p.y=p.ty;p.dl=-1e9+d*1.6;MV.push(p)}
-    t0=performance.now()-2000;finished=false;
+  hero.addEventListener('pointerleave',()=>{
+    pt.style.setProperty('--rx','0deg');
+    pt.style.setProperty('--ry','0deg');
   });
-  function loop(now){
-    requestAnimationFrame(loop);
-    if(!vis||!MD)return;
-    const dt=Math.min(.033,(now-last)/1000||0);last=now;
-    if(!pt.classList.contains('on'))return;
-    if(!t0)t0=now;const t=now-t0;
-    x.clearRect(0,0,W,H);x.drawImage(st,0,0);
-    const R=70*k,push=Math.min(mouse.sp,45*k)/k;mouse.sp*=.9;
-    if(push>1&&mouse.x>-900){                                              /* brushing releases the cubes under the cursor */
-      const i0=Math.max(0,Math.floor((mouse.x-R)/cx)),i1=Math.min(COLS-1,Math.floor((mouse.x+R)/cx)),j0=Math.max(0,Math.floor((mouse.y-R)/cy)),j1=Math.min(ROWS-1,Math.floor((mouse.y+R)/cy));
-      for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++){const p=P[j*COLS+i];if(!p||!p.set)continue;
-        const dx=p.tx-mouse.x,dy=p.ty-mouse.y;if(dx*dx+dy*dy<R*R){p.set=false;p.dl=-1e9;const px=Math.round(i*cx),py=Math.round(j*cy);sx.clearRect(px,py,Math.round((i+1)*cx)-px,Math.round((j+1)*cy)-py);MV.push(p)}}
-    }
-    for(let n=MV.length-1;n>=0;n--){
-      const p=MV[n],go=t>300&&t-300>p.dl;
-      if(go){const dx=p.tx-p.x,dy=p.ty-p.y,sw=Math.min(1,Math.hypot(dx,dy)/(W*.25))*.018;p.vx+=dx*.03-dy*sw;p.vy+=dy*.03+dx*sw}
-      else{p.vx+=(Math.random()-.5)*.1;p.vy+=(Math.random()-.5)*.1}
-      if(push>1){const dx=p.x-mouse.x,dy=p.y-mouse.y,dd=dx*dx+dy*dy;if(dd<R*R){const d=Math.sqrt(dd)+1,f=(1-d/R)*push*.16;p.vx+=dx/d*f+mouse.dx*.05*(1-d/R);p.vy+=dy/d*f+mouse.dy*.05*(1-d/R)}}
-      p.vx*=.86;p.vy*=.86;p.x+=p.vx;p.y+=p.vy;
-      const dist=Math.hypot(p.tx-p.x,p.ty-p.y);
-      if(go&&dist<.8&&p.vx*p.vx+p.vy*p.vy<.05){p.set=true;p.x=p.tx;p.y=p.ty;cube(sx,p.i,p.j,p.col);FL.push([p,1]);MV[n]=MV[MV.length-1];MV.pop();continue}
-      const q=clamp(1-dist/(W*.2),0,1),s=cx*(.35+.85*q);
-      x.fillStyle='rgb('+((235+(p.r-235)*q)|0)+','+((238+(p.g-238)*q)|0)+','+((245+(p.b-245)*q)|0)+')';
-      x.globalAlpha=.5+.5*q;x.fillRect(p.x-s/2,p.y-s/2,s,s);
-    }
-    x.globalAlpha=1;
-    for(let n=FL.length-1;n>=0;n--){                                       /* tiny white flash when a cube lands */
-      const f=FL[n],p=f[0];if(!p.set){FL[n]=FL[FL.length-1];FL.pop();continue}
-      x.globalAlpha=Math.max(0,f[1])*.75;x.fillStyle='#fff';x.fillRect(Math.round(p.i*cx),Math.round(p.j*cy),Math.ceil(cx),Math.ceil(cy));
-      f[1]-=dt*3.2;if(f[1]<=0){FL[n]=FL[FL.length-1];FL.pop()}
-    }
-    x.globalAlpha=1;
-    x.globalCompositeOperation='source-atop';                              /* effects only on the cubes */
-    x.fillStyle=gradB;x.fillRect(0,0,W,H);
-    if(!MV.length&&t>1500){                                                /* finished: a rainbow band of light keeps rolling across the cubes */
-      finished=true;const ph=((now%6500)/6500)*2-.5,gx=ph*W,g=x.createLinearGradient(gx-W*.35,0,gx+W*.35,H*.5);
-      g.addColorStop(0,'rgba(255,60,160,0)');g.addColorStop(.3,'rgba(255,190,60,.20)');g.addColorStop(.55,'rgba(80,230,255,.26)');g.addColorStop(.8,'rgba(150,90,255,.20)');g.addColorStop(1,'rgba(150,90,255,0)');
-      x.fillStyle=g;x.fillRect(0,0,W,H);
-    }
-    x.globalCompositeOperation='source-over';
-  }
-  requestAnimationFrame(loop);
 })();
 
 /* ===== NAV: an underline marks the section you are in ===== */
@@ -527,7 +466,6 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   pl.onclick=()=>{if(playing)return;c.scrollIntoView({behavior:'smooth',block:'center'});if(over)reset(true);playing=true;cap.textContent='Break it if you can. I still ship.';ui();if(!run)launch()};
   sp.onclick=()=>{if(!playing)return;playing=false;cap.textContent='Paused — press Play to continue.';ui()};
 
-  /* controls: mouse hover / finger drag move the paddle; vertical swipes still scroll the page */
   function aim(e){const r=c.getBoundingClientRect();tx=clamp((e.clientX-r.left)*(c.W/r.width),padW/2,c.W-padW/2)}
   c.addEventListener('pointermove',aim);
   c.addEventListener('pointerdown',e=>{aim(e);try{c.setPointerCapture(e.pointerId)}catch(_){}});
@@ -552,11 +490,11 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   }
   function update(dt){
     tx=clamp(tx+(key.r-key.l)*s*24*dt,padW/2,c.W-padW/2);
-    padX+=(tx-padX)*Math.min(1,dt*22);               /* eased paddle = no jerks */
+    padX+=(tx-padX)*Math.min(1,dt*22);
     if(!run){ball.x=padX;return}
     if(!playing)return;
     const n=Math.max(1,Math.ceil(Math.hypot(ball.vx,ball.vy)*dt/(s*.3)));
-    for(let i=0;i<n;i++)sub(dt/n);                    /* sub-steps = no tunnelling */
+    for(let i=0;i<n;i++)sub(dt/n);
     if(ball.y>c.H+s){
       lives--;run=false;ball={x:padX,y:c.H-s*3,vx:0,vy:0};ui();
       if(lives<=0){playing=false;over=true;cap.textContent='Game over — press Play to try again.';ui();overlay(false)}else launch();
@@ -571,7 +509,7 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
   function loop(t){
     requestAnimationFrame(loop);
     if(!vis){last=t;return}
-    const dt=Math.min(.033,(t-last)/1000||0);last=t;   /* same speed on 60Hz and 120Hz screens */
+    const dt=Math.min(.033,(t-last)/1000||0);last=t;
     update(dt);draw();
   }
   requestAnimationFrame(loop);
