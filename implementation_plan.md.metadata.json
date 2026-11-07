@@ -1,0 +1,6 @@
+{
+  "summary":  "Implementation plan to address user feedback: remove photo corner brackets and extra bottom reveal artifact on hero image, revert skills to smooth moving marquee with colorful tech logos and draggable back-and-forth movement, remove the blast/burst particle effect from link clicks, and replace the noisy circuit laser timeline with an ultra-minimalist clean hairline border and subtle accent dot.",
+  "updatedAt":  "2026-11-07T09:11:31.828322194Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}
