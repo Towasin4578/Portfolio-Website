@@ -1,20 +1,12 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Ashraf Siddiki Towasin — Portfolio
 
-# Run and deploy your AI Studio app
+Personal portfolio website of **Ashraf Siddiki Towasin** — Undergraduate student in Electrical & Electronic Engineering (EEE) at Barishal Engineering College, programmer, and aspiring software engineer from Bangladesh.
 
-This contains everything you need to run your app locally.
+## Structure
+- `index.html` — Complete self-contained portfolio website (HTML5, CSS3, interactive 3D Skills Orbit, bilingual EN/BN switcher, mini-game, and Towasin AI assistant).
+- `Images/mypic.jpg` — Profile portrait photo.
 
-View your app in AI Studio: https://ai.studio/apps/9523ebdb-b5a4-4e7c-9f02-db731b92a459
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Deployment (Cloudflare Pages / GitHub Pages)
+This repository is 100% static and requires **no build command**:
+- **Build command:** *(leave empty)*
+- **Build output directory:** `/` *(root)*
