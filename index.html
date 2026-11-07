@@ -2656,17 +2656,25 @@ function setupGeminiChatbot() {
     return null;
   }
 
-  // strictOnly = true returns null if no specific rule matches (so Cloud AI / Wikipedia can be queried first before general conversational reply)
+  let variantCounter = 0;
+  function pickVariant(arr) {
+    const item = arr[variantCounter % arr.length];
+    variantCounter++;
+    return item;
+  }
+
+  // Dynamic Natural Language Composer — writes natural, human-like prose ("নিজের ভাষায় গুছিয়ে")
+  // and NEVER outputs any pre-set "Here is what you can ask me" bullet menu!
   function generateSmartPortfolioReply(userText, strictOnly) {
     const q = userText.toLowerCase().trim();
     const uiIsBn = (document.documentElement.lang || 'en') === 'bn';
     const useBn = detectUseBn(userText);
 
-    // 1. Live Math Solver first!
+    // 1. Live Math Solver
     const mathAnswer = trySolveMath(userText, useBn || uiIsBn);
     if (mathAnswer) return mathAnswer;
 
-    // 2. Real-time Time / Date / Day / Year queries (including "aske koy tarik", "ajke ki bar", "koyta baje", etc.)
+    // 2. Real-time Time / Date / Day / Year queries
     const dateTimeAnswer = tryAnswerDateTime(userText, useBn || uiIsBn);
     if (dateTimeAnswer) return dateTimeAnswer;
 
@@ -2674,33 +2682,111 @@ function setupGeminiChatbot() {
     const codeAnswer = tryGenerateCode(userText, useBn || uiIsBn);
     if (codeAnswer) return codeAnswer;
 
+    // Detect if the question is about Ashraf Siddiki Towasin (including typos like "towsin", "toasin", "tuasin", "asraf", pronouns "or", "tar", "his", "him", or "sob details")
+    const mentionsTowasin =
+      /\b(towasin|towsin|toasin|tuasin|tousin|twasin|ashraf|asraf|siddiki|siddiqui|his|him|he|or|tar|uni|se|o|biodata|bio|details|sob|shob|everything|portfolio|owner|creator)\b/i.test(q) ||
+      /(তোয়াসিন|তোয়াসিন|তুয়াসিন|আশরাফ|সিদ্দিকী|ওর|তার|উনি|সে|বিস্তারিত|সব কিছু|সবকিছু|বায়োডাটা|পরিচয়|সম্পর্কে)/.test(userText);
+
+    const asksEducation = /\b(education|study|studies|student|school|college|university|varsity|barishal|barisal|eee|department|subject|journey|degree|gouripur|mosharraf|hsc|ssc|kothay pore|kothay poro|kon college|kon varsity|ki নিয়ে pore|ki niye pore|porashona|siksha|shiksha)\b/i.test(q) ||
+      /(শিক্ষা|পড়াশোনা|পড়াশোনা|স্কুল|কলেজ|বিশ্ববিদ্যালয়|ভার্সিটি|বরিশাল|ইঞ্জিনিয়ারিং|বিভাগ|সাবজেক্ট|যাত্রা|পড়ো|পড়ে|কোথায় পড়)/.test(userText);
+
+    const asksSkills = /\b(skill|skills|language|languages|programming|code|coding|tech|stack|know|expertise|expert|ki ki jane|ki ki paro|ki pare|ki kaj kore|freelancing|fiverr|seo|youtube)\b/i.test(q) ||
+      /(দক্ষতা|স্কিল|প্রোগ্রামিং|কোডিং|ভাষা|কি কি জানে|কি কি জানো|কি পারে|কি পারো|ফ্রিল্যান্সিং|ফাইভার|এসইও)/.test(userText);
+
+    const asksContact = /\b(contact|hire|collaborate|collaboration|reach|email|mail|whatsapp|phone|number|mobile|connect|social|facebook|fb|linkedin|telegram|instagram|insta|link|jogajog|kotha bolbo|knock)\b/i.test(q) ||
+      /(যোগাযোগ|হোয়াটসঅ্যাপ|ইমেইল|মেইল|নাম্বার|ফোন|মোবাইল|ফেসবুক|লিংকডইন|কাজ দিতে|হায়ার|কথা বলব|নক)/.test(userText);
+
+    const asksHome = /\b(bari|basha|basa|home|hometown|village|district|jela|cumilla|comilla|daudkandi|where from|kon jela|desh|country)\b/i.test(q) ||
+      /(বাড়ি|বাড়ি|বাসা|গ্রাম|জেলা|কুমিল্লা|দাউদকান্দি|গৌরীপুর|কোথায় থাকে|দেশের বাড়ি)/.test(userText);
+
+    const asksFullDetails = /\b(sob|shob|all|details|detail|everything|full|biodata|bio|complete|somporke|shomporke|about|porichoy|who is|ke|k|describe|summary|overview)\b/i.test(q) ||
+      /(সব|বিস্তারিত|ডিটেইলস|বায়োডাটা|সম্পর্কে|পরিচয়|কে এই|কে সে|কে ও|পুরোটা|গুছিয়ে বলো|গুছিয়ে বলো)/.test(userText);
+
+    // Specific Skill from Orbit click or direct skill question
+    for (const s of SKILLS_LIST) {
+      const matchEn = s.name_en.toLowerCase();
+      const matchBn = s.name_bn;
+      if (q.includes(matchEn) || userText.includes(matchBn)) {
+        if (useBn || (uiIsBn && userText.includes(matchBn))) {
+          return `তোয়াসিনের অন্যতম প্রধান একটি দক্ষতা হলো **${s.name_bn}** (${s.cat_bn})। ${s.desc_bn} বর্তমানে এটি তার **${s.status_bn}** পর্যায়ে রয়েছে এবং এর মূল দিকগুলো হলো ${s.tags_bn.join(', ')}।`;
+        }
+        return `**${s.name_en}** (${s.cat_en}) is one of Ashraf's core strengths. ${s.desc_en} His focus area here is **${s.status_en}**, covering ${s.tags_en.join(', ')}.`;
+      }
+    }
+
+    // Dynamic Multi-Part Biography & Profile Composer for Towasin
+    if (mentionsTowasin || asksEducation || asksSkills || asksContact || asksHome) {
+      // If user asks for "sob details" / "everything" / general "about towasin" (or multiple aspects at once)
+      if (asksFullDetails || (!asksEducation && !asksSkills && !asksContact && !asksHome)) {
+        if (useBn || uiIsBn) {
+          return pickVariant([
+            `অবশ্যই! **আশরাফ সিদ্দিকী তোয়াসিন (Ashraf Siddiki Towasin)** সম্পর্কে সব বিস্তারিত গুছিয়ে বলছি:\n\nতোয়াসিন হলেন বাংলাদেশের একজন তরুণ প্রোগ্রামার এবং প্রকৌশল শিক্ষার্থী। তার দেশের বাড়ি কুমিল্লার গৌরীপুর/দাউদকান্দি অঞ্চলে। তিনি **গৌরীপুর এস.এ. হাই স্কুল** থেকে এসএসসি (২০১৮–২০২৩) এবং **ড. মোশাররফ ফাউন্ডেশন ডিগ্রি কলেজ** থেকে এইচএসসি (২০২৩–২০২৫) সম্পন্ন করে বর্তমানে **বরিশাল ইঞ্জিনিয়ারিং কলেজে (Barishal Engineering College)** ইলেকট্রিক্যাল অ্যান্ড ইলেকট্রনিক ইঞ্জিনিয়ারিং (**EEE**) বিভাগে স্নাতক (B.Sc.) অধ্যয়ন করছেন।\n\nপ্রযুক্তি ও কোডিংয়ের ক্ষেত্রে তিনি **C Programming, Python, Competitive Programming** এবং গণিতে দক্ষ। পাশাপাশি ১০ জানুয়ারি ২০২৩ থেকে তিনি নিয়মিত **Web Development (HTML5, CSS3 ও আধুনিক রেসপন্সিভ UI)** নিয়ে কাজ করছেন এবং [Fiverr-এ YouTube SEO](https://www.fiverr.com/s/7jjoqyL) স্পেশালিস্ট হিসেবেও সক্রিয় আছেন।\n\nতার সাথে সরাসরি যোগাযোগ করতে পারেন [WhatsApp (+8801971124566)](https://wa.me/8801971124566) বা ইমেইলে ([towasin344533@gmail.com](mailto:towasin344533@gmail.com)), আর তার প্রজেক্টগুলো দেখতে পারেন [GitHub (@Towasin4578)](https://github.com/Towasin4578) ও [LinkedIn](https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350)-এ!`,
+            `**আশরাফ সিদ্দিকী তোয়াসিন (Towasin)** একজন স্বপ্নবাজ সফটওয়্যার ও হার্ডওয়্যার ইঞ্জিনিয়ারিং শিক্ষার্থী। বর্তমানে তিনি **বরিশাল ইঞ্জিনিয়ারিং কলেজের EEE বিভাগে** (২০২৫–বর্তমান) পড়াশোনা করছেন। এর আগে তিনি ড. মোশাররফ ফাউন্ডেশন ডিগ্রি কলেজ এবং গৌরীপুর এস.এ. হাই স্কুলে পড়াশোনা করেছেন।\n\nস্কুল জীবন থেকেই প্রোগ্রামিংয়ে তার হাতেখড়ি। তিনি **C, Python, অ্যালগরিদম (Competitive Programming)** এবং আধুনিক **ওয়েব ডেভেলপমেন্টে (HTML5, CSS3)** পারদর্শী। এছাড়া ফ্রিল্যান্স মার্কেটপ্লেস [Fiverr-এ তার YouTube SEO সার্ভিস](https://www.fiverr.com/s/7jjoqyL) রয়েছে।\n\nযেকোনো প্রজেক্ট বা প্রয়োজনে তাকে [WhatsApp (+8801971124566)](https://wa.me/8801971124566), [Facebook](https://facebook.com/towasinn/) কিংবা [GitHub](https://github.com/Towasin4578)-এ সহজেই পাবেন!`
+          ]);
+        }
+        return pickVariant([
+          `Here is the complete profile of **Ashraf Siddiki Towasin**:\n\nAshraf (nicknamed Towasin) is an undergraduate engineering student and programmer from Bangladesh. Originally from the Gouripur/Cumilla region, he completed his high school at **Gouripur SA High School (2018–2023)** and college at **Dr. Mosharraf Foundation Degree College (2023–2025)**, and is currently pursuing his B.Sc. in **Electrical & Electronic Engineering (EEE)** at **Barishal Engineering College (2025–Present)**.\n\nOn the technical side, he is skilled in **C Programming, Python, Competitive Programming, and Mathematics**, and has been actively building modern web interfaces with **HTML5 & CSS3** since January 10, 2023. He also provides freelance **YouTube SEO** services on [Fiverr](https://www.fiverr.com/s/7jjoqyL).\n\nYou can reach him directly via [WhatsApp (+8801971124566)](https://wa.me/8801971124566) or email ([towasin344533@gmail.com](mailto:towasin344533@gmail.com)), and explore his work on [GitHub (@Towasin4578)](https://github.com/Towasin4578) and [LinkedIn](https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350)!`,
+          `**Ashraf Siddiki Towasin** is a passionate programmer and EEE undergraduate at **Barishal Engineering College** from Bangladesh. After building a strong foundation in science and C programming at Gouripur SA High School and Dr. Mosharraf Foundation Degree College, he now combines hardware engineering (EEE) with software development in **C, Python, and Web Development**.\n\nFeel free to connect with him on [WhatsApp (+8801971124566)](https://wa.me/8801971124566), [GitHub](https://github.com/Towasin4578), or [Fiverr](https://www.fiverr.com/s/7jjoqyL)!`
+        ]);
+      }
+
+      // Compose custom answer combining whichever specific facets were asked
+      const partsBn = [];
+      const partsEn = [];
+
+      if (asksEducation) {
+        partsBn.push(`আশরাফ সিদ্দিকী তোয়াসিন বর্তমানে **বরিশাল ইঞ্জিনিয়ারিং কলেজে (Barishal Engineering College)** ইলেকট্রিক্যাল অ্যান্ড ইলেকট্রনিক ইঞ্জিনিয়ারিং (**EEE**) বিভাগে স্নাতক (B.Sc.) পর্যায়ে পড়াশোনা করছেন (২০২৫ থেকে বর্তমান)। এর আগে তিনি **ড. মোশাররফ ফাউন্ডেশন ডিগ্রি কলেজ** থেকে এইচএসসি (২০২৩–২০২৫) এবং কুমিল্লার **গৌরীপুর এস.এ. হাই স্কুল** থেকে এসএসসি (২০১৮–২০২৩) সম্পন্ন করেছেন।`);
+        partsEn.push(`Ashraf Siddiki Towasin is currently pursuing his B.Sc. in **Electrical & Electronic Engineering (EEE)** at **Barishal Engineering College** (2025–Present). Previously, he completed his college studies at **Dr. Mosharraf Foundation Degree College** (2023–2025) and high school at **Gouripur SA High School** (2018–2023).`);
+      }
+      if (asksSkills) {
+        partsBn.push(`প্রোগ্রামিং ও টেকনোলজিতে তোয়াসিনের মূল দক্ষতা হলো **C Programming, Python, Competitive Programming (অ্যালগরিদম ও ডেটা স্ট্রাকচার)** এবং **Web Development (HTML5, CSS3 ও আধুনিক রেসপন্সিভ ডিজাইন)**, যা তিনি ১০ জানুয়ারি ২০২৩ থেকে নিয়মিত চর্চা করছেন। এছাড়া তিনি [Fiverr-এ YouTube SEO](https://www.fiverr.com/s/7jjoqyL) নিয়েও কাজ করেন।`);
+        partsEn.push(`His core technical skills include **C Programming, Python, Competitive Programming, Mathematics**, and **Modern Web Development (HTML5, CSS3, Responsive UI)**, which he has been practicing since January 10, 2023. He also offers **YouTube SEO** services on [Fiverr](https://www.fiverr.com/s/7jjoqyL).`);
+      }
+      if (asksHome) {
+        partsBn.push(`তোয়াসিনের দেশের বাড়ি বাংলাদেশের **কুমিল্লা জেলার গৌরীপুর / দাউদকান্দি** অঞ্চলে, এবং বর্তমানে তিনি ইঞ্জিনিয়ারিং পড়াশোনার জন্য **বরিশালে** অবস্থান করছেন।`);
+        partsEn.push(`Ashraf is from the **Gouripur / Cumilla** region of Bangladesh and is currently based in **Barishal** for his engineering degree.`);
+      }
+      if (asksContact) {
+        partsBn.push(`তোয়াসিনের সাথে সরাসরি কথা বলতে বা যোগাযোগ করতে পারেন [WhatsApp (+8801971124566)](https://wa.me/8801971124566)-এ অথবা ইমেইল করতে পারেন [towasin344533@gmail.com](mailto:towasin344533@gmail.com) ঠিকানায়। এছাড়া তাকে [Facebook](https://facebook.com/towasinn/), [LinkedIn](https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350) ও [GitHub](https://github.com/Towasin4578)-এও পাবেন।`);
+        partsEn.push(`You can reach Ashraf directly on [WhatsApp (+8801971124566)](https://wa.me/8801971124566) or via email at [towasin344533@gmail.com](mailto:towasin344533@gmail.com), as well as on [GitHub](https://github.com/Towasin4578), [LinkedIn](https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350), and [Facebook](https://facebook.com/towasinn/).`);
+      }
+
+      if (partsBn.length > 0) {
+        return (useBn || uiIsBn) ? partsBn.join('\n\n') : partsEn.join('\n\n');
+      }
+    }
+
     // 4. Casual Social Conversation: "How are you / কেমন আছো / ki khobor"
     if (/\b(how are you|how r u|how's it going|what's up|wassup|kemon acho|kemon achen|kmn acho|kmn aso|kemon aso|ki khobor|khobor ki|কেমন আছো|কেমন আছেন|কী খবর|কি খবর|ভালো আছো)\b/i.test(userText)) {
-      if (useBn) {
-        return `আলহামদুলিল্লাহ, আমি বেশ ভালো আছি এবং পুরোপুরি অ্যাক্টিভ আছি! 😊✨\nআপনি কেমন আছেন? আপনার দিনকাল কেমন যাচ্ছে বলুন!`;
-      }
-      return `I'm doing great and running at 100% energy! 😊✨\nHow are you doing today? Feel free to ask me anything or just chat!`;
+      return (useBn || uiIsBn)
+        ? pickVariant([
+            `আলহামদুলিল্লাহ, আমি বেশ ভালো আছি! 😊 আপনার কী খবর? দিনকাল কেমন যাচ্ছে আপনার?`,
+            `আমি একদম ফিট আর ফুল এনার্জিতে আছি! ⚡😊 আপনি কেমন আছেন বলুন?`
+          ])
+        : pickVariant([
+            `I'm doing great, thanks for asking! 😊 How is your day going?`,
+            `Running at 100% energy! ⚡😊 How are you doing today?`
+          ]);
     }
 
     // 5. Casual: "What are you doing / ki koro / খাইছো"
     if (/\b(what are you doing|whatcha doing|ki koro|ki korcho|ki korteso|ki koren|khabar khaicho|bhat khaicho|khaiso|কী করছো|কি করো|কি করছ|ভাত খাইছো|খাবার খেয়েছো)\b/i.test(userText)) {
-      if (useBn) {
-        return `আমি তো এআই, তাই আমার খাবার হলো **ডেটা আর ইলেকট্রিসিটি**! ⚡😄\nএই মুহূর্তে আপনার সাথে আড্ডা দিচ্ছি এবং তোয়াসিনের পোর্টফোলিওতে ভিজিটরদের সাহায্য করছি। আপনি কী করছেন এখন?`;
-      }
-      return `Since I'm an AI, I run on clean code and electricity! ⚡😄\nRight now I'm hanging out here chatting with you. What are you up to?`;
+      return (useBn || uiIsBn)
+        ? `আমি তো এআই, তাই আমার খাবার হলো ডেটা আর ইলেকট্রিসিটি! ⚡😄 এই মুহূর্তে আপনার সাথে গল্প করছি। আপনি কী করছেন এখন? খাওয়া-দাওয়া করেছেন?`
+        : `Since I'm an AI, I run on clean code and electricity! ⚡😄 Right now I'm chatting with you. What are you up to?`;
     }
 
-    // 6. Jokes / Fun ("joke", "কৌতুক", "মজার কিছু বলো", "হাসাও")
+    // 6. Jokes / Fun
     if (/\b(joke|jokes|funny|make me laugh|koutuk|moja|mojar|hashao|কৌতুক|জোকস|মজার কিছু|হাসাও)\b/i.test(userText)) {
       const jokesBn = [
-        `😄 **প্রোগ্রামারদের জোকস #১:**\nএকজন প্রোগ্রামারকে তার স্ত্রী বলল: "বাজার থেকে ১ প্যাকেট দুধ আনবে, আর যদি ডিম দেখো তবে ৬টা আনবে।"\nপ্রোগ্রামার ৬ প্যাকেট দুধ নিয়ে ফিরে এলো!\nস্ত্রী: "৬ প্যাকেট দুধ আনলে কেন?!"\nপ্রোগ্রামার: "কারণ বাজারে ডিম ছিল!" 😂 (If-condition লজিক!)`,
-        `😂 **টেক জোকস #২:**\nপৃথিবীতে ১০ ধরনের মানুষ আছে:\nযারা **বাইনারি (Binary)** বোঝে, আর যারা বোঝে না! 💻`,
-        `😄 **বাগ ফিক্স জোকস #৩:**\nকোডে ৯৯টা বাগ ছিল...\n১টা বাগ ফিক্স করলাম, কম্পাইল দিলাম—এখন কোডে ১২৭টা বাগ! 🐛😅`
+        `একজন প্রোগ্রামারকে তার স্ত্রী বলল: "বাজার থেকে ১ প্যাকেট দুধ আনবে, আর যদি ডিম দেখো তবে ৬টা আনবে।"\nপ্রোগ্রামার ৬ প্যাকেট দুধ নিয়ে ফিরে এলো!\nস্ত্রী: "৬ প্যাকেট দুধ আনলে কেন?!"\nপ্রোগ্রামার: "কারণ বাজারে ডিম ছিল!" 😂`,
+        `পৃথিবীতে ১০ ধরনের মানুষ আছে—যারা বাইনারি (Binary) বোঝে, আর যারা বোঝে না! 💻😄`,
+        `কোডে ৯৯টা বাগ ছিল... ১টা বাগ ফিক্স করলাম, কম্পাইল দিলাম—এখন কোডে ১২৭টা বাগ! 🐛😅`
       ];
       const jokesEn = [
-        `😄 **Programmer Joke #1:**\nWhy do programmers prefer dark mode?\nBecause **light attracts bugs!** 🐛💻`,
-        `😂 **Tech Joke #2:**\nA SQL query walks into a bar, walks up to two tables and asks:\n*"Can I JOIN you?"* 🍻`,
-        `😄 **Developer Joke #3:**\nThere are 10 types of people in the world: those who understand **binary**, and those who don't! ⚡`
+        `Why do programmers prefer dark mode? Because light attracts bugs! 🐛💻`,
+        `A SQL query walks into a bar, walks up to two tables and asks: "Can I JOIN you?" 🍻`,
+        `There are 10 types of people in the world: those who understand binary, and those who don't! ⚡`
       ];
       const list = useBn || uiIsBn ? jokesBn : jokesEn;
       const pick = list[jokeIdx % list.length];
@@ -2708,15 +2794,15 @@ function setupGeminiChatbot() {
       return pick;
     }
 
-    // 7. Motivation / Advice / Sad mood ("মন খারাপ", "হতাশ", "motivation", "advice", "উপদেশ")
+    // 7. Motivation / Advice
     if (/\b(motivate|motivation|inspired|inspiration|sad|depressed|tired|mon kharap|hotash|upodesh|advice|quote|মন খারাপ|হতাশ|অনুপ্রেরণা|উপদেশ|ভালো লাগছে না|ক্লান্ত)\b/i.test(userText)) {
       const quotesBn = [
-        `🌟 **মনে রাখবেন:**\n*"কোনো নতুন যাত্রা শুরু করার জন্য কখনোই দেরি হয়ে যায় না।"*\nপ্রতিটি বড় সফটওয়্যার ইঞ্জিনিয়ার বা সফল মানুষ একদিন শূন্য থেকেই শুরু করেছিলেন। ছোট ছোট পদক্ষেপে প্রতিদিন একটু করে এগিয়ে যান—সাফল্য আসবেই! 💪✨`,
-        `💡 **অনুপ্রেরণা:**\nকখনো মন খারাপ বা ক্লান্ত লাগলে একটু বিরতি নিন, পানি পান করুন এবং নিজেকে সময় দিন। কোডের বাগ যেমন ধৈর্য ধরলে ফিক্স হয়ে যায়, জীবনের কঠিন সময়ও ধৈর্য ও চেষ্টায় কেটে যায়! আপনি পারবেন! 🚀`
+        `মন খারাপ করবেন না! মনে রাখবেন, প্রতিটি বড় সফটওয়্যার ইঞ্জিনিয়ার বা সফল মানুষ একদিন শূন্য থেকেই শুরু করেছিলেন। কোডের বাগ যেমন ধৈর্য ধরলে ফিক্স হয়ে যায়, জীবনের কঠিন সময়ও ধৈর্য ও চেষ্টায় কেটে যায়। প্রতিদিন একটু করে এগিয়ে যান—সাফল্য আসবেই! 💪✨`,
+        `কখনো ক্লান্ত লাগলে একটু বিরতি নিন, পানি পান করুন এবং নিজেকে সময় দিন। কোনো নতুন যাত্রা শুরু করার জন্য কখনোই দেরি হয়ে যায় না—আপনি অবশ্যই পারবেন! 🚀`
       ];
       const quotesEn = [
-        `🌟 **Keep Going:**\n*"It's never too late to start a journey."*\nEvery expert programmer once wrote their very first \`Hello World\`. Take it one step at a time—consistency always beats perfection! 💪✨`,
-        `💡 **Friendly Reminder:**\nIf you're feeling tired or stuck, take a short break and breathe. Just like debugging tough code, every challenge has a solution when you approach it step by step! 🚀`
+        `Don't feel down! Every expert programmer once wrote their very first "Hello World". Just like debugging tough code, every challenge has a solution when you take it one step at a time. Keep going! 💪✨`,
+        `If you're feeling tired or stuck, take a short break and breathe. Consistency always beats perfection! 🚀`
       ];
       const list = useBn || uiIsBn ? quotesBn : quotesEn;
       const pick = list[quoteIdx % list.length];
@@ -2724,150 +2810,69 @@ function setupGeminiChatbot() {
       return pick;
     }
 
-    // 8. Specific Portfolio Skill from SKILLS_LIST (when asked about Towasin's skill or clicking Orbit button)
-    if (/\b(ashraf|towasin|his|তোয়াসিন|আশরাফ|ওর|তার)\b/i.test(userText) || /tell me more about ashraf/i.test(userText)) {
-      for (const s of SKILLS_LIST) {
-        const matchEn = s.name_en.toLowerCase();
-        const matchBn = s.name_bn;
-        if (q.includes(matchEn) || userText.includes(matchBn)) {
-          if (useBn || (uiIsBn && userText.includes(matchBn))) {
-            return `**${s.name_bn} (${s.cat_bn})**\n• **অবস্থান:** ${s.status_bn}\n• **সংক্ষেপে:** ${s.tagline_bn}\n• **বিস্তারিত:** ${s.desc_bn}\n• **ট্যাগসমূহ:** ${s.tags_bn.join(' · ')}`;
-          }
-          return `**${s.name_en} (${s.cat_en})**\n• **Focus:** ${s.status_en}\n• **Summary:** ${s.tagline_en}\n• **Details:** ${s.desc_en}\n• **Key Areas:** ${s.tags_en.join(' · ')}`;
-        }
-      }
+    // 8. General Coding / Science / EEE / AI / Bangladesh Topics
+    if (/\b(python|পাইথন)\b/i.test(userText)) {
+      return (useBn || uiIsBn)
+        ? `পাইথন (Python) হলো বর্তমান বিশ্বের সবচেয়ে জনপ্রিয় ও সহজবোধ্য প্রোগ্রামিং ভাষাগুলোর একটি। ওয়েব ডেভেলপমেন্ট, অটোমেশন, ডেটা সায়েন্স এবং কৃত্রিম বুদ্ধিমত্তা (AI) তৈরিতে এটি ব্যাপকভাবে ব্যবহৃত হয়। তোয়াসিন তার EEE ইঞ্জিনিয়ারিং ল্যাব ও অটোমেশন স্ক্রিপ্টে নিয়মিত Python ব্যবহার করেন।`
+        : `Python is one of the world's most popular and versatile programming languages, heavily used in AI, data science, automation, and web backends. Ashraf actively uses Python in his EEE engineering labs and scripting projects.`;
     }
 
-    // 9. General Coding / Programming Questions & Tutorials (C, Python, JS, HTML/CSS, DSA, Software Engineering)
-    if (/\b(what is python|python ki|পাইথন কি|পাইথন কোড|python code|learn python)\b/i.test(userText)) {
-      if (useBn) {
-        return `🐍 **Python (পাইথন) কী?**\nপাইথন হলো বিশ্বের অন্যতম জনপ্রিয় ও সহজবোধ্য প্রোগ্রামিং ভাষা। ওয়েব ডেভেলপমেন্ট, ডেটা সায়েন্স, অটোমেশন, এবং এআই (AI) তৈরিতে এটি ব্যাপকভাবে ব্যবহৃত হয়।\n\nউদাহরণ কোড:\n\`\`\`for i in range(1, 6):\n    print(f"Step {i}: Keep Coding!")\`\`\`\nতোয়াসিন তার বরিশাল ইঞ্জিনিয়ারিং কলেজের EEE ল্যাব ও অটোমেশন প্রজেক্টে নিয়মিত Python ব্যবহার করেন!`;
-      }
-      return `🐍 **What is Python?**\nPython is a powerful, beginner-friendly programming language widely used in AI, backend web development, automation, and scientific computing.\n\nExample:\n\`\`\`for i in range(1, 6):\n    print(f"Step {i}: Keep Coding!")\`\`\`\nAshraf actively uses Python in his EEE engineering coursework and automation scripts!`;
-    }
-
-    if (/\b(what is c\b|c programming ki|pointer|পয়েন্টার|সি প্রোগ্রামিং কি|c code)\b/i.test(userText)) {
-      if (useBn) {
-        return `⚙️ **C Programming (সি প্রোগ্রামিং):**\nসি প্রোগ্রামিংকে বলা হয় **Mother of all modern programming languages**। মেমরি ম্যানেজমেন্ট (Pointers), ডেটা স্ট্রাকচার এবং কম্পিউটারের কোর লজিক বোঝার জন্য C সবচেয়ে সেরা ভাষা।\n\nউদাহরণ:\n\`\`\`#include <stdio.h>\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}\`\`\`\nতোয়াসিন কলেজ জীবন থেকেই C প্রোগ্রামিং ও অ্যালগরিদম চর্চা করে আসছেন।`;
-      }
-      return `⚙️ **C Programming:**\nC is the foundational language of computer science—ideal for mastering pointers, manual memory allocation, and fast algorithms.\n\nExample:\n\`\`\`#include <stdio.h>\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}\`\`\`\nAshraf built his core problem-solving and data structure foundations in C!`;
+    if (/\b(what is c\b|c programming|pointer|পয়েন্টার|সি প্রোগ্রামিং)\b/i.test(userText)) {
+      return (useBn || uiIsBn)
+        ? `সি প্রোগ্রামিং (C Programming)-কে বলা হয় আধুনিক প্রোগ্রামিং ভাষার জননী। কম্পিউটারের মেমরি কীভাবে কাজ করে (Pointers), ডেটা স্ট্রাকচার এবং ফাস্ট অ্যালগরিদম শেখার জন্য C সবচেয়ে সেরা ভাষা। তোয়াসিন কলেজ জীবন থেকেই C দিয়ে প্রবলেম সলভিং চর্চা করছেন।`
+        : `C Programming is the foundational language of computer science—ideal for mastering memory management (pointers), data structures, and fast algorithms.`;
     }
 
     if (/\b(how to learn programming|how to start coding|become a software engineer|প্রোগ্রামিং কিভাবে শিখব|কোডিং কিভাবে শিখব|সফটওয়্যার ইঞ্জিনিয়ার কিভাবে হব|kivabe coding shikhbo|kivabe programming shikhbo|coding kemne shikhbo)\b/i.test(userText)) {
-      if (useBn) {
-        return `🚀 **প্রোগ্রামিং ও সফটওয়্যার ইঞ্জিনিয়ারিং শেখার রোডম্যাপ:**\n১. **লজিক ও ভিত্তি (C অথবা Python):** প্রথমে যেকোনো একটি ভাষা দিয়ে ভেরিয়েবল, লুপ, ফাংশন ও কন্ডিশন ভালোভাবে শিখুন।\n২. **ডেটা স্ট্রাকচার ও অ্যালগরিদম (DSA):** প্রবলেম সলভিং স্কিল বাড়াতে নিয়মিত কোডিং প্র্যাকটিস করুন।\n৩. **ওয়েব ডেভেলপমেন্ট:** \`HTML5\`, \`CSS3\`, এবং \`JavaScript / TypeScript\` শিখে বাস্তব প্রজেক্ট বানানো শুরু করুন।\n৪. **Git ও GitHub:** নিজের কোডগুলো GitHub-এ রাখুন এবং প্রতিদিন অন্তত ১ ঘণ্টা কোড লিখুন!`;
-      }
-      return `🚀 **Roadmap to Learn Programming & Software Engineering:**\n1. **Master One Core Language:** Start with **C** (for deep logic & memory) or **Python** (for clean syntax).\n2. **Practice Problem Solving (DSA):** Solve algorithmic problems regularly to sharpen your analytical thinking.\n3. **Build for the Web:** Learn \`HTML5\`, \`CSS3\`, \`JavaScript/TypeScript\`, and modern frameworks like React.\n4. **Ship Real Projects:** Push your work to GitHub and practice consistently every day!`;
+      return (useBn || uiIsBn)
+        ? `প্রোগ্রামিং শেখা শুরু করার সবচেয়ে ভালো উপায় হলো প্রথমে **C** অথবা **Python** দিয়ে ভেরিয়েবল, লুপ, কন্ডিশন ও ফাংশনের লজিক পরিষ্কার করা। এরপর নিয়মিত প্রবলেম সলভিং (Data Structures & Algorithms) প্র্যাকটিস করা এবং **HTML, CSS ও JavaScript** শিখে ছোট ছোট বাস্তব প্রজেক্ট তৈরি করে GitHub-এ আপলোড করা। প্রতিদিন অন্তত ১ ঘণ্টা কোড লিখলে খুব দ্রুত দক্ষ হওয়া যায়!`
+        : `The best way to start coding is to master core logic using **C** or **Python** (variables, loops, functions), practice problem-solving (DSA), and build real projects with **HTML, CSS, and JavaScript** on GitHub. Consistency every day is the key!`;
     }
 
     if (/\b(what is eee|electrical|ohm|voltage|current|circuit|arduino|microcontroller|transistor|transformer|diode|kirchhoff|ইইই কি|তড়িৎ প্রকৌশল|সার্কিট|ওহমের সূত্র|ট্রানজিস্টর)\b/i.test(userText)) {
-      if (useBn) {
-        return `⚡ **Electrical & Electronic Engineering (EEE):**\nইইই হলো প্রকৌশলবিদ্যার অন্যতম প্রধান শাখা—যেখানে ইলেকট্রিসিটি, ইলেকট্রনিক সার্কিট, পাওয়ার সিস্টেম, টেলিকমিউনিকেশন এবং এমবেডেড সিস্টেম (Microcontroller / Robotics) নিয়ে কাজ করা হয়।\n• **ওহমের সূত্র (Ohm's Law):** \`V = I × R\` (ভোল্টেজ = কারেন্ট × রেজিস্ট্যান্স)।\n• **পাওয়ার সূত্র:** \`P = V × I\` (ওয়াট)।\n\nতোয়াসিন বর্তমানে **বরিশাল ইঞ্জিনিয়ারিং কলেজে** EEE বিভাগে পড়াশোনা করছেন এবং হার্ডওয়্যার-সফটওয়্যার ইন্টিগ্রেশন নিয়ে কাজ করছেন!`;
-      }
-      return `⚡ **Electrical & Electronic Engineering (EEE):**\nEEE covers power systems, electronics, circuit design, telecommunications, and embedded hardware-software integration.\n• **Ohm's Law:** \`V = I × R\` (Voltage = Current × Resistance).\n• **Electrical Power:** \`P = V × I\` (Watts).\n\nAshraf is currently pursuing his B.Sc. in EEE at **Barishal Engineering College**, combining hardware knowledge with software engineering!`;
+      return (useBn || uiIsBn)
+        ? `ইলেকট্রিক্যাল অ্যান্ড ইলেকট্রনিক ইঞ্জিনিয়ারিং (EEE) হলো প্রকৌশলবিদ্যার অন্যতম প্রধান শাখা—যেখানে পাওয়ার সিস্টেম, ইলেকট্রনিক সার্কিট, সেমিকন্ডাক্টর, রোবটিক্স এবং মাইক্রোকন্ট্রোলার নিয়ে কাজ করা হয়। এর সবচেয়ে মৌলিক সূত্র হলো ওহমের সূত্র (\`V = I × R\`, অর্থাৎ ভোল্টেজ = কারেন্ট × রেজিস্ট্যান্স)। তোয়াসিন বর্তমানে বরিশাল ইঞ্জিনিয়ারিং কলেজে এই EEE বিভাগেই পড়াশোনা করছেন।`
+        : `Electrical & Electronic Engineering (EEE) covers power generation, circuit design, electronics, telecommunications, and embedded robotics. Its foundational rule is Ohm's Law (\`V = I × R\`). Ashraf is currently pursuing his B.Sc. in EEE at Barishal Engineering College.`;
     }
 
-    if (/\b(what is ai|artificial intelligence|chatgpt|gemini|machine learning|এআই কি|কৃত্রিম বুদ্ধিমত্তা)\b/i.test(userText)) {
-      if (useBn) {
-        return `🤖 **Artificial Intelligence (কৃত্রিম বুদ্ধিমত্তা):**\nএআই হলো কম্পিউটার বিজ্ঞানের এমন একটি শাখা যা মেশিনকে মানুষের মতো চিন্তা করতে, শিখতে (Machine Learning), ভাষা বুঝতে (NLP) এবং সমস্যা সমাধান করতে শেখায়। যেমন আমি **Towasin AI** আপনাকে এই পোর্টফোলিওতে স্মার্টভাবে সাহায্য করছি!`;
-      }
-      return `🤖 **Artificial Intelligence (AI):**\nAI enables machines to learn from data, understand natural language, recognize patterns, and solve complex problems—just like I'm assisting you right now on Ashraf's portfolio!`;
+    if (/\b(bangladesh|bd|dhaka|capital|rajdhani|jela|district|river|nodi|1971|muktijuddho|national|jatio|বাংলাদেশ|ঢাকা|রাজধানী|জেলা|নদী|মুক্তিযুদ্ধ|জাতীয়)\b/i.test(userText)) {
+      return (useBn || uiIsBn)
+        ? `বাংলাদেশ দক্ষিণ এশিয়ার একটি সবুজ ও নদীমাতৃক দেশ। এর রাজধানী ঢাকা, মোট বিভাগ ৮টি এবং জেলা ৬৪টি। ১৯৭১ সালের মহান মুক্তিযুদ্ধের মাধ্যমে বাংলাদেশ স্বাধীনতা অর্জন করে (২৬ মার্চ স্বাধীনতা দিবস এবং ১৬ ডিসেম্বর বিজয় দিবস)। আমাদের জাতীয় সংগীত 'আমার সোনার বাংলা' এবং জাতীয় কবি কাজী নজরুল ইসলাম।`
+        : `Bangladesh is a vibrant riverine country in South Asia with Dhaka as its capital, consisting of 8 divisions and 64 districts. It gained independence in 1971 (26 March Independence Day, 16 December Victory Day).`;
     }
 
-    // 10. Check specific skill from SKILLS_LIST (general click or skill name query)
-    for (const s of SKILLS_LIST) {
-      const matchEn = s.name_en.toLowerCase();
-      const matchBn = s.name_bn;
-      if (
-        q.includes(matchEn) ||
-        userText.includes(matchBn) ||
-        (s.id === 'c' && /\b(c programming|c language|সি প্রোগ্রামিং)\b/i.test(userText)) ||
-        (s.id === 'cp' && /\b(competitive|algorithm|cp|কম্পিটিটিভ|অ্যালগরিদম)\b/i.test(userText)) ||
-        (s.id === 'ytseo' && /\b(youtube|seo|fiverr|ইউটিউব|এসইও|ফাইভার)\b/i.test(userText))
-      ) {
-        if (useBn || (uiIsBn && userText.includes(matchBn))) {
-          return `**${s.name_bn} (${s.cat_bn})**\n• **অবস্থান:** ${s.status_bn}\n• **সংক্ষেপে:** ${s.tagline_bn}\n• **বিস্তারিত:** ${s.desc_bn}\n• **ট্যাগসমূহ:** ${s.tags_bn.join(' · ')}`;
-        }
-        return `**${s.name_en} (${s.cat_en})**\n• **Focus:** ${s.status_en}\n• **Summary:** ${s.tagline_en}\n• **Details:** ${s.desc_en}\n• **Key Areas:** ${s.tags_en.join(' · ')}`;
-      }
-    }
-
-    // 11. Education / Journey
-    if (/\b(education|study|student|school|college|university|varsity|barishal|barisal|eee|journey|degree|gouripur|mosharraf|kothay pore|kothay poro|kon college|kon varsity|শিক্ষা|পড়াশোনা|স্কুল|কলেজ|বিশ্ববিদ্যালয়|ভার্সিটি|বরিশাল|যাত্রা|পড়ো|পড়ে|কোথায় পড়)\b/i.test(userText)) {
-      if (useBn) {
-        return `🎓 **আশরাফ সিদ্দিকী তোয়াসিনের শিক্ষাগত যাত্রা:**\n• **বিশ্ববিদ্যালয় (২০২৫ — বর্তমান):** বরিশাল ইঞ্জিনিয়ারিং কলেজে ইলেকট্রিক্যাল অ্যান্ড ইলেকট্রনিক ইঞ্জিনিয়ারিং (**EEE**) বিভাগে আন্ডারগ্র্যাজুয়েট অধ্যয়নরত।\n• **কলেজ (২০২৩ — ২০২৫):** ড. মোশাররফ ফাউন্ডেশন ডিগ্রি কলেজ (যেখানে C প্রোগ্রামিং, ডেটা স্ট্রাকচার ও HTML/CSS-এর ভিত্তি তৈরি হয়)।\n• **স্কুল (২০১৮ — ২০২৩):** গৌরীপুর এস.এ. হাই স্কুল (যেখান থেকে কোডিং ও সায়েন্স ক্লাবের যাত্রা শুরু)।`;
-      }
-      return `🎓 **Ashraf Siddiki Towasin's Education Journey:**\n• **University (2025 — Present):** Studying B.Sc. in Electrical & Electronic Engineering (**EEE**) at **Barishal Engineering College**.\n• **College (2023 — 2025):** **Dr. Mosharraf Foundation Degree College** — built strong foundations in C programming, data structures, and HTML/CSS.\n• **High School (2018 — 2023):** **Gouripur SA High School** — first exposure to coding, algorithmic problem-solving, and science clubs.`;
-    }
-
-    // 12. Skills / Programming Languages
-    if (/\b(skill|skills|language|languages|programming|code|coding|tech|stack|know|expertise|ki ki jane|ki ki paro|দক্ষতা|স্কিল|প্রোগ্রামিং|কোডিং|ভাষা|কি কি জানো|কি পারো)\b/i.test(userText)) {
-      if (useBn) {
-        return `💻 **তোয়াসিনের মূল প্রযুক্তিগত দক্ষতাসমূহ:**\n• **প্রোগ্রামিং ও অ্যালগরিদম:** C Programming, Python, Competitive Programming এবং গণিত (Mathematics)।\n• **ওয়েব ডেভেলপমেন্ট:** HTML5, CSS3, রেসপন্সিভ UI ডিজাইন ও আধুনিক ওয়েব ডেভেলপমেন্ট (১০ জানুয়ারি ২০২৩ থেকে নিয়মিত চর্চা)।\n• **ফ্রিল্যান্স সার্ভিস ও অন্যান্য:** YouTube SEO ([Fiverr-এ সক্রিয়](https://www.fiverr.com/s/7jjoqyL)) এবং Team Collaboration (Git ওয়ার্কফ্লো)।`;
-      }
-      return `💻 **Ashraf's Core Technical Skills:**\n• **Programming & Logic:** C Programming, Python, Competitive Programming, and Mathematics.\n• **Web Development:** HTML5, CSS3, Responsive UI/UX, and Modern Web Engineering (learning continuously since Jan 10, 2023).\n• **Services & Workflow:** YouTube SEO ([Active Fiverr Gig](https://www.fiverr.com/s/7jjoqyL)) and Team Collaboration (Git & open-source workflow).`;
-    }
-
-    // 13. Contact / Hire / Collaborate
-    if (/\b(contact|hire|collaborate|collaboration|reach|email|mail|whatsapp|phone|number|connect|social|facebook|linkedin|telegram|instagram|jogajog|যোগাযোগ|হোয়াটসঅ্যাপ|ইমেইল|মেইল|নাম্বার|কাজ দিতে|হায়ার)\b/i.test(userText)) {
-      if (useBn) {
-        return `🤝 **তোয়াসিনের সাথে সরাসরি যোগাযোগের মাধ্যম:**\n• **WhatsApp:** [+8801971124566](https://wa.me/8801971124566)\n• **Email:** [towasin344533@gmail.com](mailto:towasin344533@gmail.com)\n• **Fiverr (YouTube SEO):** [Fiverr Gig দেখুন](https://www.fiverr.com/s/7jjoqyL)\n• **GitHub:** [github.com/Towasin4578](https://github.com/Towasin4578)\n• **LinkedIn:** [Ashraf Siddiki Towasin](https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350)\n• **Facebook:** [facebook.com/towasinn](https://facebook.com/towasinn/)\n\nতিনি দলগত প্রজেক্ট, ইন্টার্নশিপ ও নতুন কলাবোরেশনের জন্য সবসময় প্রস্তুত!`;
-      }
-      return `🤝 **How to Collaborate or Connect with Ashraf:**\n• **WhatsApp:** [+8801971124566](https://wa.me/8801971124566)\n• **Email:** [towasin344533@gmail.com](mailto:towasin344533@gmail.com)\n• **Fiverr Gig (YouTube SEO):** [View on Fiverr](https://www.fiverr.com/s/7jjoqyL)\n• **GitHub:** [github.com/Towasin4578](https://github.com/Towasin4578)\n• **LinkedIn:** [Ashraf Siddiki Towasin](https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350)\n• **Facebook:** [facebook.com/towasinn](https://facebook.com/towasinn/)\n\nHe is open to team projects, internships, and freelance collaborations!`;
-    }
-
-    // 14. Projects / GitHub
-    if (/\b(project|projects|github|portfolio|work|build|building|প্রজেক্ট|গিটহাব|কাজ|তৈরি)\b/i.test(userText)) {
-      if (useBn) {
-        return `🚀 **প্রজেক্ট ও পোর্টফোলিও আপডেট:**\nতোয়াসিন প্রতিদিন নতুন প্রজেক্ট তৈরি ও কোডিং অনুশীলন করছেন। তার কোড ও নতুন রিপোজিটরিগুলো দেখতে ফলো করুন:\n• **GitHub:** [github.com/Towasin4578](https://github.com/Towasin4578)\n• এছাড়া তার **YouTube SEO** সার্ভিসের জন্য [Fiverr প্রোফাইল](https://www.fiverr.com/s/7jjoqyL) দেখতে পারেন।`;
-      }
-      return `🚀 **Projects & GitHub:**\nAshraf is actively building projects and practicing programming every day. You can explore his code and follow his latest work on:\n• **GitHub:** [github.com/Towasin4578](https://github.com/Towasin4578)\n• **Freelance Service:** Check out his YouTube SEO gig on [Fiverr](https://www.fiverr.com/s/7jjoqyL).`;
-    }
-
-    // 15. Bangladesh & General Knowledge (Capital, Districts, Rivers, Liberation War, National Symbols, Cumilla, Barishal)
-    if (/\b(bangladesh|bd|dhaka|capital|rajdhani|jela|district|river|nodi|1971|muktijuddho|national|jatio|cumilla|comilla|বাংলাদেশ|ঢাকা|রাজধানী|জেলা|নদী|মুক্তিযুদ্ধ|জাতীয়|কুমিল্লা)\b/i.test(userText)) {
-      if (/\b(capital|rajdhani|রাজধানী|jela|district|জেলা|1971|muktijuddho|মুক্তিযুদ্ধ|national|jatio|জাতীয়|river|nodi|নদী)\b/i.test(userText)) {
-        return useBn
-          ? `🇧🇩 **বাংলাদেশ সম্পর্কে গুরুত্বপূর্ণ তথ্য:**\n• **রাজধানী:** ঢাকা\n• **মোট বিভাগ ও জেলা:** ৮টি বিভাগ এবং ৬৪টি জেলা\n• **স্বাধীনতা ও বিজয় দিবস:** ২৬ মার্চ ১৯৭১ (স্বাধীনতা দিবস) ও ১৬ ডিসেম্বর ১৯৭১ (বিজয় দিবস)\n• **জাতীয় সংগীত:** আমার সোনার বাংলা (রবীন্দ্রনাথ ঠাকুর)\n• **জাতীয় কবি:** কাজী নজরুল ইসলাম`
-          : `🇧🇩 **Key Facts About Bangladesh:**\n• **Capital:** Dhaka\n• **Divisions & Districts:** 8 Divisions and 64 Districts\n• **Independence & Victory Day:** 26 March 1971 & 16 December 1971\n• **National Poet:** Kazi Nazrul Islam`;
-      }
-      if (useBn) {
-        return `🇧🇩 **বাংলাদেশ ও তোয়াসিনের অবস্থান:**\nআশরাফ সিদ্দিকী তোয়াসিন বাংলাদেশের সন্তান। তিনি কুমিল্লার গৌরীপুর ও দাউদকান্দি অঞ্চলে স্কুল ও কলেজ জীবন শেষ করে বর্তমানে **বরিশাল ইঞ্জিনিয়ারিং কলেজে** (Barishal Engineering College) EEE বিভাগে অধ্যয়ন করছেন।`;
-      }
-      return `🇧🇩 **Location & Roots:**\nAshraf Siddiki Towasin is from **Bangladesh**. After completing high school at Gouripur SA High School and college at Dr. Mosharraf Foundation Degree College, he is currently studying EEE at **Barishal Engineering College**.`;
-    }
-
-    // 16. Thanks / Compliments / Bye
+    // 9. Thanks / Compliments / Bye / Greetings
     if (/\b(thank|thanks|thx|tnx|dhonnobad|shukriya|ধন্যবাদ|থ্যাংকস|অসংখ্য ধন্যবাদ|nice|awesome|great|cool|sundor|darun|অসাধারণ|সুন্দর|দারুণ|valoi|bhaloi)\b/i.test(userText)) {
-      if (useBn) {
-        return `আপনাকেও অসংখ্য ধন্যবাদ! 😊💙 আপনার কথা শুনে খুব ভালো লাগলো। আর কোনো প্রশ্ন থাকলে বা যেকোনো বিষয়ে কথা বলতে চাইলে নির্দ্বিধায় বলুন!`;
-      }
-      return `You're most welcome! 😊💙 Glad I could help. Feel free to ask anything else or keep chatting!`;
+      return (useBn || uiIsBn)
+        ? `আপনাকেও অসংখ্য ধন্যবাদ! 😊 আপনার সাথে কথা বলে খুব ভালো লাগলো। আর কিছু জানতে চাইলে নির্দ্বিধায় বলুন!`
+        : `You're most welcome! 😊 Glad I could help. Feel free to ask anything else!`;
     }
 
     if (/\b(bye|goodbye|see ya|allah hafez|khoda hafez|good night|টাটা|বিদায়|আল্লাহ হাফেজ|শুভ রাত্রি|ভালো থেকো)\b/i.test(userText)) {
-      if (useBn) {
-        return `আল্লাহ হাফেজ! 👋 আপনার সময়টুকু দারুণ কাটুক। আবার যেকোনো সময় কথা হবে, ভালো থাকবেন! ✨`;
-      }
-      return `Goodbye and take care! 👋 Wishing you all the best—feel free to drop by anytime! ✨`;
+      return (useBn || uiIsBn)
+        ? `আল্লাহ হাফেজ! 👋 আপনার সময়টুকু দারুণ কাটুক, ভালো থাকবেন! ✨`
+        : `Goodbye and take care! 👋 Wishing you all the best! ✨`;
     }
 
-    // 17. Who are you / Greetings / Intro
-    if (/\b(hi|hello|hey|salam|assalamu|good morning|good evening|who are you|tumi ke|apni ke|tomar nam ki|about|towasin|ashraf|intro|হ্যালো|হাই|সালাম|আসসালামু|কে তুমি|তুমি কে|তোমার নাম কি|পরিচয়|তোয়াসিন|আশরাফ)\b/i.test(userText)) {
-      if (useBn) {
-        return `ওয়ালাইকুম আসসালাম / হ্যালো! 👋 আমি **Towasin AI** — আশরাফ সিদ্দিকী তোয়াসিনের স্মার্ট এআই সহকারী।\n\nআমি আপনাকে যেভাবে সাহায্য করতে পারি:\n• 🎓 **তোয়াসিন সম্পর্কে:** তার শিক্ষা (বরিশাল ইঞ্জিনিয়ারিং কলেজ - EEE), স্কিলস, প্রজেক্ট ও যোগাযোগ।\n• 💻 **প্রোগ্রামিং ও কোড:** C, Python, JavaScript কোড লেখা এবং ইঞ্জিনিয়ারিং গাইডলাইন।\n• 🧮 **গণিত, তারিখ ও সাধারণ জ্ঞান:** আজকের তারিখ/সময়, যেকোনো গাণিতিক হিসাব (যেমন \`25 * 48\` বা \`15% of 800\`), জোকস কিংবা সাধারণ জ্ঞান!\n\nবলুন, আজ কী নিয়ে কথা বলব? 😊`;
-      }
-      return `Hello! 👋 I'm **Towasin AI** — Ashraf Siddiki Towasin's intelligent assistant.\n\nHere's what I can do for you:\n• 🎓 **About Ashraf:** His EEE studies at Barishal Engineering College, skills, Fiverr service, and contact details.\n• 💻 **Tech & Code Generation:** Write C, Python, or JS programs and explain engineering concepts.\n• 🧮 **Math, Date & General Knowledge:** Live math calculations, current date/time, jokes, or general questions!\n\nWhat's on your mind today? 😊`;
+    if (/\b(hi|hello|hey|salam|assalamu|good morning|good evening|who are you|tumi ke|apni ke|tomar nam ki|intro|হ্যালো|হাই|সালাম|আসসালামু|কে তুমি|তুমি কে|তোমার নাম কি)\b/i.test(userText)) {
+      return (useBn || uiIsBn)
+        ? `ওয়ালাইকুম আসসালাম / হ্যালো! 👋 আমি **Towasin AI**। আপনি আমার সাথে যেকোনো বিষয়ে নরমাল গল্প করতে পারেন, সাধারণ জ্ঞান বা প্রোগ্রামিং নিয়ে প্রশ্ন করতে পারেন, কিংবা আশরাফ সিদ্দিকী তোয়াসিন সম্পর্কেও জানতে পারেন। বলুন, কী নিয়ে কথা বলব? 😊`
+        : `Hello! 👋 I'm **Towasin AI**. You can chat with me normally about anything, ask general knowledge, math, or coding questions, or learn all about Ashraf Siddiki Towasin. What's on your mind? 😊`;
     }
 
-    // If strictOnly mode is requested, return null so Cloud AI or Wikipedia can answer open-ended general questions first!
     if (strictOnly) return null;
 
-    // 18. Smart Context-Aware Conversational Fallback (Never shows repetitive robotic menu!)
+    // 10. Open-ended natural conversational reply (when offline/sandboxed and not matched above) — NO canned bullet menus!
     if (useBn || uiIsBn) {
-      return `আপনার প্রশ্নটি বুঝতে পেরেছি! 😊\n\nআপনি চাইলে আমাকে সরাসরি এভাবেও জিজ্ঞেস করতে পারেন:\n• 📅 **তারিখ ও সময়:** *"আজকে কয় তারিখ?"* বা *"কয়টা বাজে?"*\n• 🧮 **যেকোনো হিসাব:** যেমন \`125 * 48\`, \`500 এর 20%\`, \`৭ এর নামতা\`\n• 💻 **কোড লেখা:** যেমন *"Write a C program for prime number"* বা *"Python calculator code"*\n• 🎓 **তোয়াসিন সম্পর্কে:** *"তোয়াসিন কোথায় পড়ে?"* বা *"তার সাথে যোগাযোগ করব কীভাবে?"*`;
+      return pickVariant([
+        `আপনি বেশ দারুণ একটি কথা বলেছেন! 😊 আমি আপনার সাথে যেকোনো বিষয়েই আড্ডা দিতে বা আলোচনা করতে পারি। আপনি কি এই বিষয়টি নিয়ে আরও বিস্তারিত কিছু জানতে চাচ্ছেন, নাকি তোয়াসিন বা অন্য কোনো টপিক নিয়ে কথা বলব?`,
+        `হুম, বুঝতে পেরেছি! 😊 বলুন, এ বিষয়ে আপনার মনে আর কী প্রশ্ন আছে? চাইলে যেকোনো সাধারণ প্রশ্ন, বিজ্ঞান, কোডিং বা তোয়াসিন সম্পর্কেও জিজ্ঞেস করতে পারেন!`
+      ]);
     }
-    return `Got your message! 😊\n\nHere are some things I can answer right away:\n• 📅 **Date & Time:** *"What is today's date?"* or *"What time is it?"*\n• 🧮 **Math & Conversions:** e.g. \`125 * 48\`, \`20% of 500\`, \`37 C to F\`, \`table of 9\`\n• 💻 **Write Code:** e.g. *"C program for prime number"* or *"Python fibonacci code"*\n• 🎓 **About Ashraf:** His EEE journey at Barishal Engineering College, skills, or contact info.`;
+    return pickVariant([
+      `That's an interesting point! 😊 Feel free to tell me more or ask any specific question about it—or anything about coding, science, math, or Ashraf Siddiki Towasin!`,
+      `I hear you! 😊 What else would you like to explore or talk about?`
+    ]);
   }
 
   const CLOUD_AI_SYSTEM_PROMPT = `You are Towasin AI — a real, intelligent, warm, and conversational AI assistant on the portfolio website of Ashraf Siddiki Towasin (nicknamed Towasin), an undergraduate student in Electrical & Electronic Engineering (EEE) at Barishal Engineering College, programmer, and aspiring software engineer from Bangladesh.
@@ -3003,20 +3008,22 @@ Important Instructions:
       { role: 'user', content: userText },
     ];
 
-    // 2. Primary Free Keyless OpenAI-Compatible Cloud LLM Gateway (LLM7.io - CORS enabled, no API key required)
-    const llm7Models = ['default', 'fast', 'gpt-4o-mini'];
-    for (const modelName of llm7Models) {
+    // 2. Primary Free Keyless OpenAI-Compatible Cloud LLM Gateway (LLM7.io - no Authorization header so CORS preflight succeeds)
+    const llm7Endpoints = [
+      'https://api.llm7.io/v1/chat/completions',
+      'https://corsproxy.io/?https://api.llm7.io/v1/chat/completions',
+    ];
+    for (const endpointUrl of llm7Endpoints) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 9000);
-        const res = await fetch('https://api.llm7.io/v1/chat/completions', {
+        const timeoutId = setTimeout(() => controller.abort(), 7500);
+        const res = await fetch(endpointUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer unused',
           },
           body: JSON.stringify({
-            model: modelName,
+            model: 'default',
             messages: fullMessages,
             stream: false,
           }),
