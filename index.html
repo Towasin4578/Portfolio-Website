@@ -1642,7 +1642,20 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
         <strong id="chat-header-title">Towasin AI Assistant</strong>
         <span id="chat-header-sub">Portfolio Guide · Powered by Gemini</span>
       </div>
+      <button type="button" class="chat-minimize-btn" id="chat-key-btn" title="Set Gemini API Key (Optional)" aria-label="Set Gemini API Key" style="margin-right:6px;font-size:.82rem">🔑</button>
       <button type="button" class="chat-minimize-btn" id="chat-close-btn" aria-label="Close chat">✕</button>
+    </div>
+
+    <!-- Optional Gemini API Key Bar (toggled by 🔑 button) -->
+    <div id="chat-key-drawer" style="display:none;padding:8px 12px;background:rgba(14,18,32,.96);border-bottom:1px solid rgba(125,232,255,.18);font-size:.76rem;color:#c9d4f0">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+        <span>🔑 <strong>Google Gemini API Key</strong> <span style="opacity:.7">(aistudio.google.com)</span></span>
+        <span id="chat-key-status" style="font-size:.7rem;color:#7de8ff">Built-in Smart AI Active</span>
+      </div>
+      <div style="display:flex;gap:6px">
+        <input type="password" id="chat-key-input" placeholder="Paste AIzaSy... key here" autocomplete="off" style="flex:1;background:#080b12;border:1px solid rgba(255,255,255,.15);border-radius:7px;padding:5px 8px;color:#fff;font-size:.75rem;outline:none" />
+        <button type="button" id="chat-key-save" style="background:linear-gradient(135deg,#00d2ff,#3a7bd5);color:#fff;border:none;border-radius:7px;padding:5px 10px;font-size:.74rem;font-weight:600;cursor:pointer">Save</button>
+      </div>
     </div>
 
     <!-- Quick prompt chips -->
@@ -2304,16 +2317,72 @@ function setupGeminiChatbot() {
 
   let chatHistory = [];
   let isSending = false;
+  const GEMINI_KEY_STORAGE = 'towasin_gemini_api_key';
 
   const trigger = document.getElementById('chat-trigger-btn');
   const windowEl = document.getElementById('chat-window');
   const closeBtn = document.getElementById('chat-close-btn');
+  const keyBtn = document.getElementById('chat-key-btn');
+  const keyDrawer = document.getElementById('chat-key-drawer');
+  const keyInput = document.getElementById('chat-key-input');
+  const keySave = document.getElementById('chat-key-save');
+  const keyStatus = document.getElementById('chat-key-status');
   const form = document.getElementById('chat-input-form');
   const input = document.getElementById('chat-text-input');
   const messagesThread = document.getElementById('chat-messages-thread');
   const chipsContainer = document.getElementById('chat-quick-chips');
 
   if (!trigger || !windowEl || !closeBtn || !form || !input || !messagesThread) return;
+
+  function getStoredGeminiKey() {
+    try {
+      return (localStorage.getItem(GEMINI_KEY_STORAGE) || '').trim();
+    } catch (_e) {
+      return '';
+    }
+  }
+
+  function updateKeyUI() {
+    const k = getStoredGeminiKey();
+    if (keyInput && k) keyInput.value = k;
+    if (keyStatus) {
+      keyStatus.textContent = k ? '✅ Gemini API Connected' : '⚡ Smart Hybrid AI Active';
+      keyStatus.style.color = k ? '#4ade80' : '#7de8ff';
+    }
+    if (keyBtn) {
+      keyBtn.style.borderColor = k ? 'rgba(74,222,128,.55)' : '';
+    }
+  }
+  updateKeyUI();
+
+  if (keyBtn && keyDrawer) {
+    keyBtn.addEventListener('click', () => {
+      const open = keyDrawer.style.display === 'none';
+      keyDrawer.style.display = open ? 'block' : 'none';
+      if (open && keyInput) keyInput.focus();
+    });
+  }
+
+  if (keySave && keyInput) {
+    keySave.addEventListener('click', () => {
+      const val = keyInput.value.trim();
+      try {
+        if (val) {
+          localStorage.setItem(GEMINI_KEY_STORAGE, val);
+        } else {
+          localStorage.removeItem(GEMINI_KEY_STORAGE);
+        }
+      } catch (_e) {}
+      updateKeyUI();
+      if (keyDrawer) keyDrawer.style.display = 'none';
+      appendMessage(
+        'assistant',
+        val
+          ? '✅ **Google Gemini API Key সেভ করা হয়েছে!** এখন থেকে আপনার সব প্রশ্নের উত্তর সরাসরি Google Gemini 2.0/2.5 Flash মডেল থেকে আসবে।'
+          : 'ℹ️ API Key মুছে ফেলা হয়েছে। **Towasin Smart Hybrid AI** সক্রিয় আছে।'
+      );
+    });
+  }
 
   function toggleChat(open) {
     const shouldOpen = open !== undefined ? open : !windowEl?.classList.contains('active');
@@ -2337,8 +2406,8 @@ function setupGeminiChatbot() {
     const lang = document.documentElement.lang || 'en';
     const isBn = lang === 'bn';
     const greetingText = isBn
-      ? 'হ্যালো! 👋 আমি **Towasin AI**। তোয়াসিনের শিক্ষা, স্কিলস ও প্রজেক্ট ছাড়াও আপনি আমাকে **প্রোগ্রামিং, গণিত, বিজ্ঞান, ক্যারিয়ার টিপস কিংবা যেকোনো বিষয়ে** প্রশ্ন করতে পারেন বা গল্প করতে পারেন!'
-      : "Hello! 👋 I'm **Towasin AI**. Besides Ashraf's education, skills, and projects, you can ask me about **programming, math, science, career tips, or chat about anything**!";
+      ? 'হ্যালো! 👋 আমি **Towasin AI**। তোয়াসিনের শিক্ষা, স্কিলস ও প্রজেক্ট ছাড়াও আপনি আমাকে **আজকের তারিখ/সময়, যেকোনো গণিত, C/Python কোড, বিজ্ঞান, সাধারণ জ্ঞান কিংবা যেকোনো বিষয়ে** প্রশ্ন করতে পারেন!'
+      : "Hello! 👋 I'm **Towasin AI**. Besides Ashraf's education, skills, and projects, you can ask me **today's date/time, math problems, C/Python code, science, general knowledge, or anything at all**!";
     
     appendMessage('assistant', greetingText);
   }
@@ -2381,16 +2450,49 @@ function setupGeminiChatbot() {
   let jokeIdx = 0;
   let quoteIdx = 0;
 
-  function trySolveMath(input, useBn) {
+  // Convert Bengali digits (০-৯) to English digits (0-9) for math parsing
+  function normalizeDigits(str) {
+    const bnDigits = '০১২৩৪৫৬৭৮৯';
+    return str.replace(/[০-৯]/g, d => String(bnDigits.indexOf(d)));
+  }
+
+  function detectUseBn(userText) {
+    const q = userText.toLowerCase().trim();
+    const hasBengaliScript = /[\u0980-\u09FF]/.test(userText);
+    const hasBanglish = /\b(aske|ajke|aj|koy|koto|tarik|tarikh|sal|shal|mas|mash|bar|baar|somoy|shomoy|baje|tumi|tmr|tomar|apni|apnar|ami|amr|amar|kemon|kmn|acho|achen|aso|asen|kothay|poro|poren|pore|ki|ke|keno|kn|kivabe|kemne|kon|kobe|koro|koren|korbo|kore|batao|bolo|bolen|bol|daw|dao|de|den|shomporke|somporke|siksha|shiksha|porashona|jogajog|nam|naam|desh|bari|basha|kaj|pari|parbe|paro|jano|janis|khobor|valobashi|valo|bhalo|mon|kharap|moja|mojar|hashi|golpo|chobi|bhai|vai|bro|dost|bondhu|khaiso|khaicho|bhat|ghum|rat|din|namta|shekha|shikhte|chai|chao|ekta|akta|kisu|kichu|lekho|likho|banao|uttor|shotti|accha|achha|hmm|humm|kintu|ar|ebong|ba|naki|hoy|hoise|hobe|ache|ase|nai|nei)\b/i.test(q);
+    const uiIsBn = (document.documentElement.lang || 'en') === 'bn';
+    return hasBengaliScript || hasBanglish || (uiIsBn && !/^[a-z0-9\s?.,!'":;+\-*/^=()]+$/i.test(userText));
+  }
+
+  function trySolveMath(rawInput, useBn) {
+    const input = normalizeDigits(rawInput);
     const q = input.toLowerCase().trim();
 
-    // Percentage: e.g. "20% of 500" or "500 এর ২০%"
-    const pctMatch = q.match(/(\d+(?:\.\d+)?)\s*%\s*(?:of|এর)\s*(\d+(?:\.\d+)?)/i) ||
-                     q.match(/(\d+(?:\.\d+)?)\s*(?:এর)\s*(\d+(?:\.\d+)?)\s*%/i);
+    // Temperature conversion: e.g. "37 c to f" or "98.6 f to c"
+    const tempCF = q.match(/(-?\d+(?:\.\d+)?)\s*°?\s*(?:c|celsius)\s*(?:to|in|=|থেকে)\s*°?\s*(?:f|fahrenheit)/i);
+    if (tempCF) {
+      const c = parseFloat(tempCF[1]);
+      const f = (c * 9) / 5 + 32;
+      return useBn
+        ? `🌡️ **তাপমাত্রা রূপান্তর:**\n${c}°C = **${Number(f.toFixed(2))}°F**`
+        : `🌡️ **Temperature Conversion:**\n${c}°C = **${Number(f.toFixed(2))}°F**`;
+    }
+    const tempFC = q.match(/(-?\d+(?:\.\d+)?)\s*°?\s*(?:f|fahrenheit)\s*(?:to|in|=|থেকে)\s*°?\s*(?:c|celsius)/i);
+    if (tempFC) {
+      const f = parseFloat(tempFC[1]);
+      const c = ((f - 32) * 5) / 9;
+      return useBn
+        ? `🌡️ **তাপমাত্রা রূপান্তর:**\n${f}°F = **${Number(c.toFixed(2))}°C**`
+        : `🌡️ **Temperature Conversion:**\n${f}°F = **${Number(c.toFixed(2))}°C**`;
+    }
+
+    // Percentage: e.g. "20% of 500" or "500 এর ২০%" or "500 er 20%"
+    const pctMatch = q.match(/(\d+(?:\.\d+)?)\s*%\s*(?:of|এর|er)\s*(\d+(?:\.\d+)?)/i) ||
+                     q.match(/(\d+(?:\.\d+)?)\s*(?:এর|er)\s*(\d+(?:\.\d+)?)\s*%/i);
     if (pctMatch) {
       const a = parseFloat(pctMatch[1]);
       const b = parseFloat(pctMatch[2]);
-      const isSecondPct = /এর\s*\d+(?:\.\d+)?\s*%/.test(q);
+      const isSecondPct = /(?:এর|er)\s*\d+(?:\.\d+)?\s*%/i.test(q);
       const pct = isSecondPct ? b : a;
       const total = isSecondPct ? a : b;
       const ans = (pct / 100) * total;
@@ -2399,9 +2501,9 @@ function setupGeminiChatbot() {
         : `🧮 **Calculation Result:**\n${pct}% of ${total} = **${Number(ans.toFixed(4))}**`;
     }
 
-    // Square root: sqrt(144) or ১৪৪ এর বর্গমূল
-    const sqrtMatch = q.match(/(?:sqrt|square root of|বর্গমূল)\s*\(?(\d+(?:\.\d+)?)\)?/i) ||
-                      q.match(/(\d+(?:\.\d+)?)\s*(?:এর বর্গমূল)/i);
+    // Square root: sqrt(144) or ১৪৪ এর বর্গমূল or root 144
+    const sqrtMatch = q.match(/(?:sqrt|square root of|root|বর্গমূল)\s*\(?(\d+(?:\.\d+)?)\)?/i) ||
+                      q.match(/(\d+(?:\.\d+)?)\s*(?:এর বর্গমূল|er borgomul|er root)/i);
     if (sqrtMatch) {
       const n = parseFloat(sqrtMatch[1]);
       const ans = Math.sqrt(n);
@@ -2411,7 +2513,7 @@ function setupGeminiChatbot() {
     }
 
     // Factorial: 5! or factorial of 6
-    const factMatch = q.match(/\b(\d{1,2})\s*!/) || q.match(/(?:factorial of|ফ্যাক্টরিয়াল)\s*(\d{1,2})/i);
+    const factMatch = q.match(/\b(\d{1,2})\s*!/) || q.match(/(?:factorial of|factorial|ফ্যাক্টরিয়াল)\s*(\d{1,2})/i);
     if (factMatch) {
       const n = parseInt(factMatch[1], 10);
       if (n >= 0 && n <= 20) {
@@ -2436,10 +2538,24 @@ function setupGeminiChatbot() {
         : `📐 **Multiplication Table of ${n}:**\n` + rows.join('\n');
     }
 
+    // Prime check: "is 97 prime" or "97 ki moulik"
+    const primeMatch = q.match(/(?:is\s+)?(\d{1,9})\s*(?:ki\s+)?(?:a\s+)?(?:prime|moulik|মৌলিক)/i) ||
+                       q.match(/(?:prime|moulik|মৌলিক)\s*(?:check|number)?\s*(\d{1,9})/i);
+    if (primeMatch) {
+      const n = parseInt(primeMatch[1], 10);
+      let isP = n > 1;
+      for (let i = 2; i * i <= n; i++) {
+        if (n % i === 0) { isP = false; break; }
+      }
+      return useBn
+        ? `🔢 **মৌলিক সংখ্যা যাচাই:** **${n}** ${isP ? 'একটি **মৌলিক সংখ্যা (Prime Number)** ✅' : 'মৌলিক সংখ্যা **নয়** ❌'}।`
+        : `🔢 **Prime Check:** **${n}** is ${isP ? 'a **Prime Number** ✅' : '**NOT** a prime number ❌'}.`;
+    }
+
     // Pure or embedded arithmetic expression: e.g. "25 * 48", "what is 125 + 375", "150 / 6 koto"
     const cleaned = q
-      .replace(/^(?:what is|calculate|solve|eval|math|কত|হিসাব করো|মান কত)\s*/i, '')
-      .replace(/\s*(?:koto|কত|=|\?)+$/i, '')
+      .replace(/^(?:what is|calculate|solve|eval|math|কত|হিসাব করো|মান কত|বলো|বল)\s*/i, '')
+      .replace(/\s*(?:koto|কত|=|\?|bolo|bol|plz|please)+$/i, '')
       .replace(/×/g, '*')
       .replace(/÷/g, '/')
       .replace(/\^/g, '**')
@@ -2447,7 +2563,6 @@ function setupGeminiChatbot() {
 
     if (/^[0-9+\-*/().\s*]+$/.test(cleaned) && /[+\-*/]/.test(cleaned) && /\d/.test(cleaned)) {
       try {
-        // Safe evaluation of arithmetic expression
         const result = Function(`"use strict"; return (${cleaned});`)();
         if (typeof result === 'number' && isFinite(result)) {
           const formattedAns = Number.isInteger(result) ? result : Number(result.toFixed(6));
@@ -2455,54 +2570,140 @@ function setupGeminiChatbot() {
             ? `🧮 **গণিত সমাধান:**\n\`${cleaned.replace(/\*\*/g, '^')}\` = **${formattedAns}**`
             : `🧮 **Math Solution:**\n\`${cleaned.replace(/\*\*/g, '^')}\` = **${formattedAns}**`;
         }
-      } catch (_e) {
-        // Ignore invalid expression
-      }
+      } catch (_e) {}
     }
     return null;
   }
 
-  function generateSmartPortfolioReply(userText) {
+  // Date / Time / Day / Year / Month detector (handles Banglish like "aske koy tarik", "ajke ki bar", "koyta baje", etc.)
+  function tryAnswerDateTime(userText, useBn) {
     const q = userText.toLowerCase().trim();
-    const hasBengaliScript = /[\u0980-\u09FF]/.test(userText);
-    const hasBanglish = /\b(tumi|tomar|apni|apnar|kemon|acho|achen|kothay|poro|poren|ki|koro|koren|korbo|kivabe|batao|bolo|bolen|shomporke|siksha|shiksha|porashona|jogajog|nam|naam|desh|bari|kaj|pari|koto|keno|khobor|valobashi|valo|bhalo|mon|kharap|moja|hashi|golpo|chobi|bhai|bro|dost|bondhu|khaiso|khaicho|bhat|ghum|rat|din|baje|tarikh|bar|namta|shekha|shikhte|chai)\b/i.test(q);
+    const isDateTimeQuery =
+      /\b(tarik|tarikh|date|time|today|ajke|aske|aj|koyta baje|koita baje|baje koto|somoy koto|shomoy koto|ki bar|kon bar|koto sal|kon sal|kon mas|ki mas|what day|which year|current year|current time|todays date|today's date)\b/i.test(q) ||
+      /(তারিখ|কয়টা বাজে|কয়টা বাজে|সময় কত|সময় কত|আজকে কী বার|আজ কি বার|আজকে কি বার|কত সাল|কোন মাস|আজ কত তারিখ|আজকে কয় তারিখ|আজকে কয় তারিখ)/.test(userText);
+
+    if (!isDateTimeQuery) return null;
+
+    // Make sure words like "update" or "candidate" don't false-trigger unless actual date/time words exist
+    if (
+      !/\b(tarik|tarikh|date|time|baje|bar|sal|mas|somoy|shomoy|today)\b/i.test(q) &&
+      !/(তারিখ|বাজে|সময়|সময়|বার|সাল|মাস)/.test(userText)
+    ) {
+      return null;
+    }
+
+    const now = new Date();
     const uiIsBn = (document.documentElement.lang || 'en') === 'bn';
-    const useBn = hasBengaliScript || hasBanglish || (uiIsBn && !/^[a-z0-9\s?.,!'":;+\-*/^=()]+$/i.test(userText));
+    if (useBn || uiIsBn) {
+      const timeStr = now.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const dateStr = now.toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+      const dayStr = now.toLocaleDateString('bn-BD', { weekday: 'long' });
+      const enDateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      return `📅 **আজকের তারিখ ও সময়:**\n• **তারিখ:** ${dateStr} (${enDateStr})\n• **বার:** ${dayStr}\n• **বর্তমান সময়:** ${timeStr}\n\nআরও কিছু জানতে চাইলে নির্দ্বিধায় জিজ্ঞেস করতে পারেন! 😊`;
+    }
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    return `📅 **Today's Date & Current Time:**\n• **Date:** ${dateStr}\n• **Time:** ${timeStr}\n\nLet me know if you need anything else! 😊`;
+  }
+
+  // Built-in Code Generator for common programming tasks (C, Python, JS, HTML)
+  function tryGenerateCode(userText, useBn) {
+    const q = userText.toLowerCase().trim();
+    const wantsCode = /\b(code|program|script|function|algorithm|lekho|likho|write|make|banao|example|প্রোগ্রাম|কোড)\b/i.test(userText);
+    if (!wantsCode) return null;
+
+    const wantPython = /\b(python|পাইথন|py)\b/i.test(userText);
+    const wantJS = /\b(javascript|js|জাভাস্ক্রিপ্ট)\b/i.test(userText);
+
+    // 1. Prime number program
+    if (/\b(prime|moulik|মৌলিক)\b/i.test(userText)) {
+      if (wantPython) {
+        return (useBn ? `🐍 **Python-এ মৌলিক সংখ্যা (Prime Number) নির্ণয়ের কোড:**\n` : `🐍 **Python Program to Check Prime Number:**\n`) +
+          `\`\`\`def is_prime(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\nnum = int(input("Enter a number: "))\nprint("Prime!" if is_prime(num) else "Not Prime")\`\`\``;
+      }
+      return (useBn ? `⚙️ **C-তে মৌলিক সংখ্যা (Prime Number) নির্ণয়ের প্রোগ্রাম:**\n` : `⚙️ **C Program to Check Prime Number:**\n`) +
+        `\`\`\`#include <stdio.h>\nint main() {\n    int n, isPrime = 1;\n    printf("Enter a number: ");\n    scanf("%d", &n);\n    if (n < 2) isPrime = 0;\n    for (int i = 2; i * i <= n; i++) {\n        if (n % i == 0) { isPrime = 0; break; }\n    }\n    if (isPrime) printf("%d is Prime\\n", n);\n    else printf("%d is Not Prime\\n", n);\n    return 0;\n}\`\`\``;
+    }
+
+    // 2. Fibonacci series
+    if (/\b(fibonacci|ফিবোনাচ্চি)\b/i.test(userText)) {
+      if (wantPython) {
+        return (useBn ? `🐍 **Python-এ Fibonacci Series কোড:**\n` : `🐍 **Python Fibonacci Series:**\n`) +
+          `\`\`\`n = int(input("How many terms? "))\na, b = 0, 1\nfor _ in range(n):\n    print(a, end=" ")\n    a, b = b, a + b\`\`\``;
+      }
+      return (useBn ? `⚙️ **C-তে Fibonacci Series প্রোগ্রাম:**\n` : `⚙️ **C Program for Fibonacci Series:**\n`) +
+        `\`\`\`#include <stdio.h>\nint main() {\n    int n, a = 0, b = 1, next;\n    printf("Enter number of terms: ");\n    scanf("%d", &n);\n    for (int i = 1; i <= n; i++) {\n        printf("%d ", a);\n        next = a + b;\n        a = b;\n        b = next;\n    }\n    return 0;\n}\`\`\``;
+    }
+
+    // 3. Factorial program
+    if (/\b(factorial|ফ্যাক্টরিয়াল)\b/i.test(userText)) {
+      if (wantPython) {
+        return (useBn ? `🐍 **Python-এ Factorial নির্ণয়ের কোড:**\n` : `🐍 **Python Factorial Program:**\n`) +
+          `\`\`\`def factorial(n):\n    return 1 if n <= 1 else n * factorial(n - 1)\n\nprint("Factorial of 5:", factorial(5))\`\`\``;
+      }
+      return (useBn ? `⚙️ **C-তে Factorial নির্ণয়ের প্রোগ্রাম:**\n` : `⚙️ **C Program for Factorial:**\n`) +
+        `\`\`\`#include <stdio.h>\nint main() {\n    int n; unsigned long long fact = 1;\n    printf("Enter n: ");\n    scanf("%d", &n);\n    for (int i = 1; i <= n; i++) fact *= i;\n    printf("Factorial = %llu\\n", fact);\n    return 0;\n}\`\`\``;
+    }
+
+    // 4. Calculator program
+    if (/\b(calculator|ক্যালকুলেটর)\b/i.test(userText)) {
+      if (wantPython) {
+        return (useBn ? `🐍 **Python-এ সিম্পল ক্যালকুলেটর কোড:**\n` : `🐍 **Simple Calculator in Python:**\n`) +
+          `\`\`\`a = float(input("First number: "))\nop = input("Operator (+, -, *, /): ")\nb = float(input("Second number: "))\nif op == '+': print(a + b)\nelif op == '-': print(a - b)\nelif op == '*': print(a * b)\nelif op == '/': print(a / b if b != 0 else "Error")\`\`\``;
+      }
+      return (useBn ? `⚙️ **C-তে Switch-Case দিয়ে ক্যালকুলেটর প্রোগ্রাম:**\n` : `⚙️ **Simple Calculator in C:**\n`) +
+        `\`\`\`#include <stdio.h>\nint main() {\n    char op; double a, b;\n    printf("Enter expression (e.g. 5 + 3): ");\n    scanf("%lf %c %lf", &a, &op, &b);\n    switch (op) {\n        case '+': printf("%.2lf\\n", a + b); break;\n        case '-': printf("%.2lf\\n", a - b); break;\n        case '*': printf("%.2lf\\n", a * b); break;\n        case '/': if (b != 0) printf("%.2lf\\n", a / b); break;\n    }\n    return 0;\n}\`\`\``;
+    }
+
+    // 5. Even / Odd or Palindrome
+    if (/\b(even|odd|জোড়|বিজোড়|jor|bijor)\b/i.test(userText)) {
+      return (useBn ? `💻 **জোড়-বিজোড় (Even/Odd) নির্ণয়ের কোড (C ও Python):**\n` : `💻 **Even / Odd Check in C & Python:**\n`) +
+        `\`\`\`// C\nif (n % 2 == 0) printf("Even");\nelse printf("Odd");\n\n# Python\nprint("Even" if n % 2 == 0 else "Odd")\`\`\``;
+    }
+
+    if (wantJS) {
+      return (useBn ? `⚡ **JavaScript উদাহরণ কোড:**\n` : `⚡ **JavaScript Example Code:**\n`) +
+        `\`\`\`const greet = (name) => \`Hello, \${name}! Welcome to Towasin's Portfolio.\`;\nconsole.log(greet("Developer"));\`\`\``;
+    }
+
+    return null;
+  }
+
+  // strictOnly = true returns null if no specific rule matches (so Cloud AI / Wikipedia can be queried first before general conversational reply)
+  function generateSmartPortfolioReply(userText, strictOnly) {
+    const q = userText.toLowerCase().trim();
+    const uiIsBn = (document.documentElement.lang || 'en') === 'bn';
+    const useBn = detectUseBn(userText);
 
     // 1. Live Math Solver first!
     const mathAnswer = trySolveMath(userText, useBn || uiIsBn);
     if (mathAnswer) return mathAnswer;
 
-    // 2. Real-time Time / Date / Day queries
-    if (/\b(time|date|day today|what time|কয়টা বাজে|সময় কত|সময় কত|আজকে কী বার|আজ কি বার|তারিখ কত|আজকের তারিখ|koyta baje|ajke ki bar|tarikh koto)\b/i.test(userText)) {
-      const now = new Date();
-      if (useBn || uiIsBn) {
-        const timeStr = now.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        const dateStr = now.toLocaleDateString('bn-BD', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        return `🕒 **বর্তমান সময় ও তারিখ:**\n• **সময়:** ${timeStr}\n• **তারিখ:** ${dateStr}\n\nআপনার দিনটি দারুণ কাটুক! আজ আপনাকে কীভাবে সাহায্য করতে পারি?`;
-      }
-      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-      return `🕒 **Current Time & Date:**\n• **Time:** ${timeStr}\n• **Date:** ${dateStr}\n\nHope you're having a productive day! What would you like to explore?`;
-    }
+    // 2. Real-time Time / Date / Day / Year queries (including "aske koy tarik", "ajke ki bar", "koyta baje", etc.)
+    const dateTimeAnswer = tryAnswerDateTime(userText, useBn || uiIsBn);
+    if (dateTimeAnswer) return dateTimeAnswer;
 
-    // 3. Casual Social Conversation: "How are you / কেমন আছো / ki khobor"
-    if (/\b(how are you|how r u|how's it going|what's up|wassup|kemon acho|kemon achen|kmn acho|ki khobor|khobor ki|কেমন আছো|কেমন আছেন|কী খবর|কি খবর)\b/i.test(userText)) {
+    // 3. Code Generator for C / Python / JS
+    const codeAnswer = tryGenerateCode(userText, useBn || uiIsBn);
+    if (codeAnswer) return codeAnswer;
+
+    // 4. Casual Social Conversation: "How are you / কেমন আছো / ki khobor"
+    if (/\b(how are you|how r u|how's it going|what's up|wassup|kemon acho|kemon achen|kmn acho|kmn aso|kemon aso|ki khobor|khobor ki|কেমন আছো|কেমন আছেন|কী খবর|কি খবর|ভালো আছো)\b/i.test(userText)) {
       if (useBn) {
         return `আলহামদুলিল্লাহ, আমি বেশ ভালো আছি এবং পুরোপুরি অ্যাক্টিভ আছি! 😊✨\nআপনি কেমন আছেন? আপনার দিনকাল কেমন যাচ্ছে বলুন!`;
       }
       return `I'm doing great and running at 100% energy! 😊✨\nHow are you doing today? Feel free to ask me anything or just chat!`;
     }
 
-    // 4. Casual: "What are you doing / ki koro / খাইছো"
-    if (/\b(what are you doing|whatcha doing|ki koro|ki korcho|ki koren|khabar khaicho|bhat khaicho|khaiso|কী করছো|কি করো|কি করছ|ভাত খাইছো|খাবার খেয়েছো)\b/i.test(userText)) {
+    // 5. Casual: "What are you doing / ki koro / খাইছো"
+    if (/\b(what are you doing|whatcha doing|ki koro|ki korcho|ki korteso|ki koren|khabar khaicho|bhat khaicho|khaiso|কী করছো|কি করো|কি করছ|ভাত খাইছো|খাবার খেয়েছো)\b/i.test(userText)) {
       if (useBn) {
         return `আমি তো এআই, তাই আমার খাবার হলো **ডেটা আর ইলেকট্রিসিটি**! ⚡😄\nএই মুহূর্তে আপনার সাথে আড্ডা দিচ্ছি এবং তোয়াসিনের পোর্টফোলিওতে ভিজিটরদের সাহায্য করছি। আপনি কী করছেন এখন?`;
       }
       return `Since I'm an AI, I run on clean code and electricity! ⚡😄\nRight now I'm hanging out here chatting with you. What are you up to?`;
     }
 
-    // 5. Jokes / Fun ("joke", "কৌতুক", "মজার কিছু বলো", "হাসাও")
+    // 6. Jokes / Fun ("joke", "কৌতুক", "মজার কিছু বলো", "হাসাও")
     if (/\b(joke|jokes|funny|make me laugh|koutuk|moja|mojar|hashao|কৌতুক|জোকস|মজার কিছু|হাসাও)\b/i.test(userText)) {
       const jokesBn = [
         `😄 **প্রোগ্রামারদের জোকস #১:**\nএকজন প্রোগ্রামারকে তার স্ত্রী বলল: "বাজার থেকে ১ প্যাকেট দুধ আনবে, আর যদি ডিম দেখো তবে ৬টা আনবে।"\nপ্রোগ্রামার ৬ প্যাকেট দুধ নিয়ে ফিরে এলো!\nস্ত্রী: "৬ প্যাকেট দুধ আনলে কেন?!"\nপ্রোগ্রামার: "কারণ বাজারে ডিম ছিল!" 😂 (If-condition লজিক!)`,
@@ -2520,7 +2721,7 @@ function setupGeminiChatbot() {
       return pick;
     }
 
-    // 6. Motivation / Advice / Sad mood ("মন খারাপ", "হতাশ", "motivation", "advice", "উপদেশ")
+    // 7. Motivation / Advice / Sad mood ("মন খারাপ", "হতাশ", "motivation", "advice", "উপদেশ")
     if (/\b(motivate|motivation|inspired|inspiration|sad|depressed|tired|mon kharap|hotash|upodesh|advice|quote|মন খারাপ|হতাশ|অনুপ্রেরণা|উপদেশ|ভালো লাগছে না|ক্লান্ত)\b/i.test(userText)) {
       const quotesBn = [
         `🌟 **মনে রাখবেন:**\n*"কোনো নতুন যাত্রা শুরু করার জন্য কখনোই দেরি হয়ে যায় না।"*\nপ্রতিটি বড় সফটওয়্যার ইঞ্জিনিয়ার বা সফল মানুষ একদিন শূন্য থেকেই শুরু করেছিলেন। ছোট ছোট পদক্ষেপে প্রতিদিন একটু করে এগিয়ে যান—সাফল্য আসবেই! 💪✨`,
@@ -2536,7 +2737,7 @@ function setupGeminiChatbot() {
       return pick;
     }
 
-    // 7. Specific Portfolio Skill from SKILLS_LIST (when asked about Towasin's skill or clicking Orbit button)
+    // 8. Specific Portfolio Skill from SKILLS_LIST (when asked about Towasin's skill or clicking Orbit button)
     if (/\b(ashraf|towasin|his|তোয়াসিন|আশরাফ|ওর|তার)\b/i.test(userText) || /tell me more about ashraf/i.test(userText)) {
       for (const s of SKILLS_LIST) {
         const matchEn = s.name_en.toLowerCase();
@@ -2550,7 +2751,7 @@ function setupGeminiChatbot() {
       }
     }
 
-    // 8. General Coding / Programming Questions & Tutorials (C, Python, JS, HTML/CSS, DSA, Software Engineering)
+    // 9. General Coding / Programming Questions & Tutorials (C, Python, JS, HTML/CSS, DSA, Software Engineering)
     if (/\b(what is python|python ki|পাইথন কি|পাইথন কোড|python code|learn python)\b/i.test(userText)) {
       if (useBn) {
         return `🐍 **Python (পাইথন) কী?**\nপাইথন হলো বিশ্বের অন্যতম জনপ্রিয় ও সহজবোধ্য প্রোগ্রামিং ভাষা। ওয়েব ডেভেলপমেন্ট, ডেটা সায়েন্স, অটোমেশন, এবং এআই (AI) তৈরিতে এটি ব্যাপকভাবে ব্যবহৃত হয়।\n\nউদাহরণ কোড:\n\`\`\`for i in range(1, 6):\n    print(f"Step {i}: Keep Coding!")\`\`\`\nতোয়াসিন তার বরিশাল ইঞ্জিনিয়ারিং কলেজের EEE ল্যাব ও অটোমেশন প্রজেক্টে নিয়মিত Python ব্যবহার করেন!`;
@@ -2565,18 +2766,18 @@ function setupGeminiChatbot() {
       return `⚙️ **C Programming:**\nC is the foundational language of computer science—ideal for mastering pointers, manual memory allocation, and fast algorithms.\n\nExample:\n\`\`\`#include <stdio.h>\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}\`\`\`\nAshraf built his core problem-solving and data structure foundations in C!`;
     }
 
-    if (/\b(how to learn programming|how to start coding|become a software engineer|প্রোগ্রামিং কিভাবে শিখব|কোডিং কিভাবে শিখব|সফটওয়্যার ইঞ্জিনিয়ার কিভাবে হব|kivabe coding shikhbo|kivabe programming shikhbo)\b/i.test(userText)) {
+    if (/\b(how to learn programming|how to start coding|become a software engineer|প্রোগ্রামিং কিভাবে শিখব|কোডিং কিভাবে শিখব|সফটওয়্যার ইঞ্জিনিয়ার কিভাবে হব|kivabe coding shikhbo|kivabe programming shikhbo|coding kemne shikhbo)\b/i.test(userText)) {
       if (useBn) {
         return `🚀 **প্রোগ্রামিং ও সফটওয়্যার ইঞ্জিনিয়ারিং শেখার রোডম্যাপ:**\n১. **লজিক ও ভিত্তি (C অথবা Python):** প্রথমে যেকোনো একটি ভাষা দিয়ে ভেরিয়েবল, লুপ, ফাংশন ও কন্ডিশন ভালোভাবে শিখুন।\n২. **ডেটা স্ট্রাকচার ও অ্যালগরিদম (DSA):** প্রবলেম সলভিং স্কিল বাড়াতে নিয়মিত কোডিং প্র্যাকটিস করুন।\n৩. **ওয়েব ডেভেলপমেন্ট:** \`HTML5\`, \`CSS3\`, এবং \`JavaScript / TypeScript\` শিখে বাস্তব প্রজেক্ট বানানো শুরু করুন।\n৪. **Git ও GitHub:** নিজের কোডগুলো GitHub-এ রাখুন এবং প্রতিদিন অন্তত ১ ঘণ্টা কোড লিখুন!`;
       }
       return `🚀 **Roadmap to Learn Programming & Software Engineering:**\n1. **Master One Core Language:** Start with **C** (for deep logic & memory) or **Python** (for clean syntax).\n2. **Practice Problem Solving (DSA):** Solve algorithmic problems regularly to sharpen your analytical thinking.\n3. **Build for the Web:** Learn \`HTML5\`, \`CSS3\`, \`JavaScript/TypeScript\`, and modern frameworks like React.\n4. **Ship Real Projects:** Push your work to GitHub and practice consistently every day!`;
     }
 
-    if (/\b(what is eee|electrical|ohm|voltage|current|circuit|arduino|microcontroller|ইইই কি|তড়িৎ প্রকৌশল|সার্কিট)\b/i.test(userText)) {
+    if (/\b(what is eee|electrical|ohm|voltage|current|circuit|arduino|microcontroller|transistor|transformer|diode|kirchhoff|ইইই কি|তড়িৎ প্রকৌশল|সার্কিট|ওহমের সূত্র|ট্রানজিস্টর)\b/i.test(userText)) {
       if (useBn) {
-        return `⚡ **Electrical & Electronic Engineering (EEE):**\nইইই হলো প্রকৌশলবিদ্যার অন্যতম প্রধান শাখা—যেখানে ইলেকট্রিসিটি, ইলেকট্রনিক সার্কিট, পাওয়ার সিস্টেম, টেলিকমিউনিকেশন এবং এমবেডেড সিস্টেম (Microcontroller / Robotics) নিয়ে কাজ করা হয়।\n• **ওহমের সূত্র (Ohm's Law):** \`V = I × R\` (ভোল্টেজ = কারেন্ট × রেজিস্ট্যান্স)।\n\nতোয়াসিন বর্তমানে **বরিশাল ইঞ্জিনিয়ারিং কলেজে** EEE বিভাগে পড়াশোনা করছেন এবং হার্ডওয়্যার-সফটওয়্যার ইন্টিগ্রেশন নিয়ে কাজ করছেন!`;
+        return `⚡ **Electrical & Electronic Engineering (EEE):**\nইইই হলো প্রকৌশলবিদ্যার অন্যতম প্রধান শাখা—যেখানে ইলেকট্রিসিটি, ইলেকট্রনিক সার্কিট, পাওয়ার সিস্টেম, টেলিকমিউনিকেশন এবং এমবেডেড সিস্টেম (Microcontroller / Robotics) নিয়ে কাজ করা হয়।\n• **ওহমের সূত্র (Ohm's Law):** \`V = I × R\` (ভোল্টেজ = কারেন্ট × রেজিস্ট্যান্স)।\n• **পাওয়ার সূত্র:** \`P = V × I\` (ওয়াট)।\n\nতোয়াসিন বর্তমানে **বরিশাল ইঞ্জিনিয়ারিং কলেজে** EEE বিভাগে পড়াশোনা করছেন এবং হার্ডওয়্যার-সফটওয়্যার ইন্টিগ্রেশন নিয়ে কাজ করছেন!`;
       }
-      return `⚡ **Electrical & Electronic Engineering (EEE):**\nEEE covers power systems, electronics, circuit design, telecommunications, and embedded hardware-software integration.\n• **Ohm's Law:** \`V = I × R\` (Voltage = Current × Resistance).\n\nAshraf is currently pursuing his B.Sc. in EEE at **Barishal Engineering College**, combining hardware knowledge with software engineering!`;
+      return `⚡ **Electrical & Electronic Engineering (EEE):**\nEEE covers power systems, electronics, circuit design, telecommunications, and embedded hardware-software integration.\n• **Ohm's Law:** \`V = I × R\` (Voltage = Current × Resistance).\n• **Electrical Power:** \`P = V × I\` (Watts).\n\nAshraf is currently pursuing his B.Sc. in EEE at **Barishal Engineering College**, combining hardware knowledge with software engineering!`;
     }
 
     if (/\b(what is ai|artificial intelligence|chatgpt|gemini|machine learning|এআই কি|কৃত্রিম বুদ্ধিমত্তা)\b/i.test(userText)) {
@@ -2586,7 +2787,7 @@ function setupGeminiChatbot() {
       return `🤖 **Artificial Intelligence (AI):**\nAI enables machines to learn from data, understand natural language, recognize patterns, and solve complex problems—just like I'm assisting you right now on Ashraf's portfolio!`;
     }
 
-    // 9. Check specific skill from SKILLS_LIST (general click or skill name query)
+    // 10. Check specific skill from SKILLS_LIST (general click or skill name query)
     for (const s of SKILLS_LIST) {
       const matchEn = s.name_en.toLowerCase();
       const matchBn = s.name_bn;
@@ -2604,31 +2805,31 @@ function setupGeminiChatbot() {
       }
     }
 
-    // 10. Education / Journey
-    if (/\b(education|study|student|school|college|university|varsity|barishal|barisal|eee|journey|degree|gouripur|mosharraf|শিক্ষা|পড়াশোনা|স্কুল|কলেজ|বিশ্ববিদ্যালয়|ভার্সিটি|বরিশাল|যাত্রা|পড়ো|পড়ে|কোথায় পড়)\b/i.test(userText)) {
+    // 11. Education / Journey
+    if (/\b(education|study|student|school|college|university|varsity|barishal|barisal|eee|journey|degree|gouripur|mosharraf|kothay pore|kothay poro|kon college|kon varsity|শিক্ষা|পড়াশোনা|স্কুল|কলেজ|বিশ্ববিদ্যালয়|ভার্সিটি|বরিশাল|যাত্রা|পড়ো|পড়ে|কোথায় পড়)\b/i.test(userText)) {
       if (useBn) {
         return `🎓 **আশরাফ সিদ্দিকী তোয়াসিনের শিক্ষাগত যাত্রা:**\n• **বিশ্ববিদ্যালয় (২০২৫ — বর্তমান):** বরিশাল ইঞ্জিনিয়ারিং কলেজে ইলেকট্রিক্যাল অ্যান্ড ইলেকট্রনিক ইঞ্জিনিয়ারিং (**EEE**) বিভাগে আন্ডারগ্র্যাজুয়েট অধ্যয়নরত।\n• **কলেজ (২০২৩ — ২০২৫):** ড. মোশাররফ ফাউন্ডেশন ডিগ্রি কলেজ (যেখানে C প্রোগ্রামিং, ডেটা স্ট্রাকচার ও HTML/CSS-এর ভিত্তি তৈরি হয়)।\n• **স্কুল (২০১৮ — ২০২৩):** গৌরীপুর এস.এ. হাই স্কুল (যেখান থেকে কোডিং ও সায়েন্স ক্লাবের যাত্রা শুরু)।`;
       }
       return `🎓 **Ashraf Siddiki Towasin's Education Journey:**\n• **University (2025 — Present):** Studying B.Sc. in Electrical & Electronic Engineering (**EEE**) at **Barishal Engineering College**.\n• **College (2023 — 2025):** **Dr. Mosharraf Foundation Degree College** — built strong foundations in C programming, data structures, and HTML/CSS.\n• **High School (2018 — 2023):** **Gouripur SA High School** — first exposure to coding, algorithmic problem-solving, and science clubs.`;
     }
 
-    // 11. Skills / Programming Languages
-    if (/\b(skill|skills|language|languages|programming|code|coding|tech|stack|know|expertise|দক্ষতা|স্কিল|প্রোগ্রামিং|কোডিং|ভাষা|কি কি জানো|কি পারো)\b/i.test(userText)) {
+    // 12. Skills / Programming Languages
+    if (/\b(skill|skills|language|languages|programming|code|coding|tech|stack|know|expertise|ki ki jane|ki ki paro|দক্ষতা|স্কিল|প্রোগ্রামিং|কোডিং|ভাষা|কি কি জানো|কি পারো)\b/i.test(userText)) {
       if (useBn) {
         return `💻 **তোয়াসিনের মূল প্রযুক্তিগত দক্ষতাসমূহ:**\n• **প্রোগ্রামিং ও অ্যালগরিদম:** C Programming, Python, Competitive Programming এবং গণিত (Mathematics)।\n• **ওয়েব ডেভেলপমেন্ট:** HTML5, CSS3, রেসপন্সিভ UI ডিজাইন ও আধুনিক ওয়েব ডেভেলপমেন্ট (১০ জানুয়ারি ২০২৩ থেকে নিয়মিত চর্চা)।\n• **ফ্রিল্যান্স সার্ভিস ও অন্যান্য:** YouTube SEO ([Fiverr-এ সক্রিয়](https://www.fiverr.com/s/7jjoqyL)) এবং Team Collaboration (Git ওয়ার্কফ্লো)।`;
       }
       return `💻 **Ashraf's Core Technical Skills:**\n• **Programming & Logic:** C Programming, Python, Competitive Programming, and Mathematics.\n• **Web Development:** HTML5, CSS3, Responsive UI/UX, and Modern Web Engineering (learning continuously since Jan 10, 2023).\n• **Services & Workflow:** YouTube SEO ([Active Fiverr Gig](https://www.fiverr.com/s/7jjoqyL)) and Team Collaboration (Git & open-source workflow).`;
     }
 
-    // 12. Contact / Hire / Collaborate
-    if (/\b(contact|hire|collaborate|collaboration|reach|email|mail|whatsapp|phone|number|connect|social|facebook|linkedin|telegram|instagram|যোগাযোগ|হোয়াটসঅ্যাপ|ইমেইল|মেইল|নাম্বার|কাজ দিতে|হায়ার)\b/i.test(userText)) {
+    // 13. Contact / Hire / Collaborate
+    if (/\b(contact|hire|collaborate|collaboration|reach|email|mail|whatsapp|phone|number|connect|social|facebook|linkedin|telegram|instagram|jogajog|যোগাযোগ|হোয়াটসঅ্যাপ|ইমেইল|মেইল|নাম্বার|কাজ দিতে|হায়ার)\b/i.test(userText)) {
       if (useBn) {
         return `🤝 **তোয়াসিনের সাথে সরাসরি যোগাযোগের মাধ্যম:**\n• **WhatsApp:** [+8801971124566](https://wa.me/8801971124566)\n• **Email:** [towasin344533@gmail.com](mailto:towasin344533@gmail.com)\n• **Fiverr (YouTube SEO):** [Fiverr Gig দেখুন](https://www.fiverr.com/s/7jjoqyL)\n• **GitHub:** [github.com/Towasin4578](https://github.com/Towasin4578)\n• **LinkedIn:** [Ashraf Siddiki Towasin](https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350)\n• **Facebook:** [facebook.com/towasinn](https://facebook.com/towasinn/)\n\nতিনি দলগত প্রজেক্ট, ইন্টার্নশিপ ও নতুন কলাবোরেশনের জন্য সবসময় প্রস্তুত!`;
       }
       return `🤝 **How to Collaborate or Connect with Ashraf:**\n• **WhatsApp:** [+8801971124566](https://wa.me/8801971124566)\n• **Email:** [towasin344533@gmail.com](mailto:towasin344533@gmail.com)\n• **Fiverr Gig (YouTube SEO):** [View on Fiverr](https://www.fiverr.com/s/7jjoqyL)\n• **GitHub:** [github.com/Towasin4578](https://github.com/Towasin4578)\n• **LinkedIn:** [Ashraf Siddiki Towasin](https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350)\n• **Facebook:** [facebook.com/towasinn](https://facebook.com/towasinn/)\n\nHe is open to team projects, internships, and freelance collaborations!`;
     }
 
-    // 13. Projects / GitHub
+    // 14. Projects / GitHub
     if (/\b(project|projects|github|portfolio|work|build|building|প্রজেক্ট|গিটহাব|কাজ|তৈরি)\b/i.test(userText)) {
       if (useBn) {
         return `🚀 **প্রজেক্ট ও পোর্টফোলিও আপডেট:**\nতোয়াসিন প্রতিদিন নতুন প্রজেক্ট তৈরি ও কোডিং অনুশীলন করছেন। তার কোড ও নতুন রিপোজিটরিগুলো দেখতে ফলো করুন:\n• **GitHub:** [github.com/Towasin4578](https://github.com/Towasin4578)\n• এছাড়া তার **YouTube SEO** সার্ভিসের জন্য [Fiverr প্রোফাইল](https://www.fiverr.com/s/7jjoqyL) দেখতে পারেন।`;
@@ -2636,16 +2837,21 @@ function setupGeminiChatbot() {
       return `🚀 **Projects & GitHub:**\nAshraf is actively building projects and practicing programming every day. You can explore his code and follow his latest work on:\n• **GitHub:** [github.com/Towasin4578](https://github.com/Towasin4578)\n• **Freelance Service:** Check out his YouTube SEO gig on [Fiverr](https://www.fiverr.com/s/7jjoqyL).`;
     }
 
-    // 14. Bangladesh / Country / Home
-    if (/\b(bangladesh|bd|dhaka|country|where from|desh|bari kothay|বাংলাদেশ|দেশ|বাড়ি কোথায়|বাসা কোথায়)\b/i.test(userText)) {
-      if (useBn) {
-        return `🇧🇩 **বাংলাদেশ ও অবস্থান:**\nআশরাফ সিদ্দিকী তোয়াসিন বাংলাদেশের সন্তান। তিনি কুমিল্লার গৌরীপুর ও দাউদকান্দি অঞ্চলে স্কুল ও কলেজ জীবন শেষ করে বর্তমানে **বরিশাল ইঞ্জিনিয়ারিং কলেজে** (Barishal Engineering College) অধ্যয়ন করছেন।`;
+    // 15. Bangladesh & General Knowledge (Capital, Districts, Rivers, Liberation War, National Symbols, Cumilla, Barishal)
+    if (/\b(bangladesh|bd|dhaka|capital|rajdhani|jela|district|river|nodi|1971|muktijuddho|national|jatio|cumilla|comilla|বাংলাদেশ|ঢাকা|রাজধানী|জেলা|নদী|মুক্তিযুদ্ধ|জাতীয়|কুমিল্লা)\b/i.test(userText)) {
+      if (/\b(capital|rajdhani|রাজধানী|jela|district|জেলা|1971|muktijuddho|মুক্তিযুদ্ধ|national|jatio|জাতীয়|river|nodi|নদী)\b/i.test(userText)) {
+        return useBn
+          ? `🇧🇩 **বাংলাদেশ সম্পর্কে গুরুত্বপূর্ণ তথ্য:**\n• **রাজধানী:** ঢাকা\n• **মোট বিভাগ ও জেলা:** ৮টি বিভাগ এবং ৬৪টি জেলা\n• **স্বাধীনতা ও বিজয় দিবস:** ২৬ মার্চ ১৯৭১ (স্বাধীনতা দিবস) ও ১৬ ডিসেম্বর ১৯৭১ (বিজয় দিবস)\n• **জাতীয় সংগীত:** আমার সোনার বাংলা (রবীন্দ্রনাথ ঠাকুর)\n• **জাতীয় কবি:** কাজী নজরুল ইসলাম`
+          : `🇧🇩 **Key Facts About Bangladesh:**\n• **Capital:** Dhaka\n• **Divisions & Districts:** 8 Divisions and 64 Districts\n• **Independence & Victory Day:** 26 March 1971 & 16 December 1971\n• **National Poet:** Kazi Nazrul Islam`;
       }
-      return `🇧🇩 **Location & Roots:**\nAshraf Siddiki Towasin is from **Bangladesh**. After completing high school at Gouripur SA High School and college at Dr. Mosharraf Foundation Degree College, he is currently studying at **Barishal Engineering College**.`;
+      if (useBn) {
+        return `🇧🇩 **বাংলাদেশ ও তোয়াসিনের অবস্থান:**\nআশরাফ সিদ্দিকী তোয়াসিন বাংলাদেশের সন্তান। তিনি কুমিল্লার গৌরীপুর ও দাউদকান্দি অঞ্চলে স্কুল ও কলেজ জীবন শেষ করে বর্তমানে **বরিশাল ইঞ্জিনিয়ারিং কলেজে** (Barishal Engineering College) EEE বিভাগে অধ্যয়ন করছেন।`;
+      }
+      return `🇧🇩 **Location & Roots:**\nAshraf Siddiki Towasin is from **Bangladesh**. After completing high school at Gouripur SA High School and college at Dr. Mosharraf Foundation Degree College, he is currently studying EEE at **Barishal Engineering College**.`;
     }
 
-    // 15. Thanks / Compliments / Bye
-    if (/\b(thank|thanks|thx|tnx|dhonnobad|shukriya|ধন্যবাদ|থ্যাংকস|অসংখ্য ধন্যবাদ|nice|awesome|great|cool|sundor|darun|অসাধারণ|সুন্দর|দারুণ)\b/i.test(userText)) {
+    // 16. Thanks / Compliments / Bye
+    if (/\b(thank|thanks|thx|tnx|dhonnobad|shukriya|ধন্যবাদ|থ্যাংকস|অসংখ্য ধন্যবাদ|nice|awesome|great|cool|sundor|darun|অসাধারণ|সুন্দর|দারুণ|valoi|bhaloi)\b/i.test(userText)) {
       if (useBn) {
         return `আপনাকেও অসংখ্য ধন্যবাদ! 😊💙 আপনার কথা শুনে খুব ভালো লাগলো। আর কোনো প্রশ্ন থাকলে বা যেকোনো বিষয়ে কথা বলতে চাইলে নির্দ্বিধায় বলুন!`;
       }
@@ -2659,50 +2865,221 @@ function setupGeminiChatbot() {
       return `Goodbye and take care! 👋 Wishing you all the best—feel free to drop by anytime! ✨`;
     }
 
-    // 16. Who are you / Greetings / Intro
-    if (/\b(hi|hello|hey|salam|assalamu|good morning|good evening|who are you|tumi ke|apni ke|about|towasin|ashraf|intro|হ্যালো|হাই|সালাম|আসসালামু|কে তুমি|তুমি কে|পরিচয়|তোয়াসিন|আশরাফ)\b/i.test(userText)) {
+    // 17. Who are you / Greetings / Intro
+    if (/\b(hi|hello|hey|salam|assalamu|good morning|good evening|who are you|tumi ke|apni ke|tomar nam ki|about|towasin|ashraf|intro|হ্যালো|হাই|সালাম|আসসালামু|কে তুমি|তুমি কে|তোমার নাম কি|পরিচয়|তোয়াসিন|আশরাফ)\b/i.test(userText)) {
       if (useBn) {
-        return `ওয়ালাইকুম আসসালাম / হ্যালো! 👋 আমি **Towasin AI** — আশরাফ সিদ্দিকী তোয়াসিনের স্মার্ট এআই সহকারী।\n\nআমি আপনাকে যেভাবে সাহায্য করতে পারি:\n• 🎓 **তোয়াসিন সম্পর্কে:** তার শিক্ষা (বরিশাল ইঞ্জিনিয়ারিং কলেজ - EEE), স্কিলস, প্রজেক্ট ও যোগাযোগ।\n• 💻 **প্রোগ্রামিং ও টেক:** C, Python, Web Development, কোডিং শেখার গাইডলাইন ও ইঞ্জিনিয়ারিং।\n• 🧮 **গণিত ও আড্ডা:** যেকোনো গাণিতিক হিসাব (যেমন \`25 * 48\` বা \`15% of 800\`), জোকস, অনুপ্রেরণা কিংবা সাধারণ জ্ঞান!\n\nবলুন, আজ কী নিয়ে কথা বলব? 😊`;
+        return `ওয়ালাইকুম আসসালাম / হ্যালো! 👋 আমি **Towasin AI** — আশরাফ সিদ্দিকী তোয়াসিনের স্মার্ট এআই সহকারী।\n\nআমি আপনাকে যেভাবে সাহায্য করতে পারি:\n• 🎓 **তোয়াসিন সম্পর্কে:** তার শিক্ষা (বরিশাল ইঞ্জিনিয়ারিং কলেজ - EEE), স্কিলস, প্রজেক্ট ও যোগাযোগ।\n• 💻 **প্রোগ্রামিং ও কোড:** C, Python, JavaScript কোড লেখা এবং ইঞ্জিনিয়ারিং গাইডলাইন।\n• 🧮 **গণিত, তারিখ ও সাধারণ জ্ঞান:** আজকের তারিখ/সময়, যেকোনো গাণিতিক হিসাব (যেমন \`25 * 48\` বা \`15% of 800\`), জোকস কিংবা সাধারণ জ্ঞান!\n\nবলুন, আজ কী নিয়ে কথা বলব? 😊`;
       }
-      return `Hello! 👋 I'm **Towasin AI** — Ashraf Siddiki Towasin's intelligent assistant.\n\nHere's what I can do for you:\n• 🎓 **About Ashraf:** His EEE studies at Barishal Engineering College, skills, Fiverr service, and contact details.\n• 💻 **Tech & Coding:** C, Python, Web Dev, algorithms, and software engineering tips.\n• 🧮 **Math & General Chat:** Live math calculations (try \`25 * 48\` or \`sqrt(144)\`), jokes, motivation, or general questions!\n\nWhat's on your mind today? 😊`;
+      return `Hello! 👋 I'm **Towasin AI** — Ashraf Siddiki Towasin's intelligent assistant.\n\nHere's what I can do for you:\n• 🎓 **About Ashraf:** His EEE studies at Barishal Engineering College, skills, Fiverr service, and contact details.\n• 💻 **Tech & Code Generation:** Write C, Python, or JS programs and explain engineering concepts.\n• 🧮 **Math, Date & General Knowledge:** Live math calculations, current date/time, jokes, or general questions!\n\nWhat's on your mind today? 😊`;
     }
 
-    // 17. Conversational & Open-Ended General Fallback
-    if (useBn) {
-      return `দারুণ একটি বিষয় বলেছেন! 😊 ("*${userText}*")\n\nআমি **Towasin AI** হিসেবে আপনাকে যেকোনো বিষয়ে সাহায্য করতে প্রস্তুত:\n• আপনি চাইলে **প্রোগ্রামিং (C, Python, Web Dev)** বা **ইঞ্জিনিয়ারিং (EEE)** নিয়ে প্রশ্ন করতে পারেন।\n• যেকোনো **গণিত বা হিসাব** (যেমন \`45 * 12\`, \`৭ এর নামতা\`, \`144 এর বর্গমূল\`) করতে পারেন।\n• **মজার জোকস**, **অনুপ্রেরণামূলক কথা**, কিংবা **আশরাফ সিদ্দিকী তোয়াসিনের** শিক্ষা ও প্রজেক্ট সম্পর্কে জানতে পারেন।\n\nএছাড়া তোয়াসিনের সাথে সরাসরি কথা বলতে চাইলে [WhatsApp (+8801971124566)](https://wa.me/8801971124566)-এ নক দিতে পারেন!`;
+    // If strictOnly mode is requested, return null so Cloud AI or Wikipedia can answer open-ended general questions first!
+    if (strictOnly) return null;
+
+    // 18. Smart Context-Aware Conversational Fallback (Never shows repetitive robotic menu!)
+    if (useBn || uiIsBn) {
+      return `আপনার প্রশ্নটি বুঝতে পেরেছি! 😊\n\nআপনি চাইলে আমাকে সরাসরি এভাবেও জিজ্ঞেস করতে পারেন:\n• 📅 **তারিখ ও সময়:** *"আজকে কয় তারিখ?"* বা *"কয়টা বাজে?"*\n• 🧮 **যেকোনো হিসাব:** যেমন \`125 * 48\`, \`500 এর 20%\`, \`৭ এর নামতা\`\n• 💻 **কোড লেখা:** যেমন *"Write a C program for prime number"* বা *"Python calculator code"*\n• 🎓 **তোয়াসিন সম্পর্কে:** *"তোয়াসিন কোথায় পড়ে?"* বা *"তার সাথে যোগাযোগ করব কীভাবে?"*\n\n💡 *(টিপস: চ্যাটবক্সের উপরের **🔑** বাটনে ক্লিক করে আপনার ফ্রি Google Gemini API Key বসালে যেকোনো জটিল বিষয়েরও সম্পূর্ণ লাইভ উত্তর পাবেন!)*`;
     }
-    return `That's an interesting topic! 😊 ("*${userText}*")\n\nAs **Towasin AI**, I can help you with:\n• 💻 **Programming & Engineering:** Ask about C, Python, Web Development, EEE concepts, or how to start coding.\n• 🧮 **Live Math & Calculations:** Try asking \`25 * 48\`, \`15% of 800\`, \`sqrt(225)\`, or \`table of 9\`.\n• 😄 **Fun & Advice:** Ask for a programmer joke, motivation, current time/date, or anything about **Ashraf Siddiki Towasin**!\n\nYou can also reach Ashraf directly on [WhatsApp (+8801971124566)](https://wa.me/8801971124566)!`;
+    return `Got your message! 😊\n\nHere are some things I can answer right away:\n• 📅 **Date & Time:** *"What is today's date?"* or *"What time is it?"*\n• 🧮 **Math & Conversions:** e.g. \`125 * 48\`, \`20% of 500\`, \`37 C to F\`, \`table of 9\`\n• 💻 **Write Code:** e.g. *"C program for prime number"* or *"Python fibonacci code"*\n• 🎓 **About Ashraf:** His EEE journey at Barishal Engineering College, skills, or contact info.\n\n💡 *(Tip: Click the **🔑** button at the top of the chat to add a free Google Gemini API key for unlimited live Gemini 2.0 Flash responses!)*`;
   }
 
-  const CLOUD_AI_SYSTEM_PROMPT = `You are Towasin AI — the polite, intelligent, and versatile AI Assistant on the portfolio website of Ashraf Siddiki Towasin (also known as Towasin), an undergraduate student in Electrical & Electronic Engineering (EEE) at Barishal Engineering College, programmer, and aspiring software engineer from Bangladesh.
-Key facts about Ashraf Siddiki Towasin:
-- Education: High School at Gouripur SA High School (2018-2023), College at Dr. Mosharraf Foundation Degree College (2023-2025), B.Sc. in EEE at Barishal Engineering College (2025-Present).
-- Skills: C Programming, Python, HTML5, CSS3, Web Development (started Jan 10, 2023), Mathematics, Competitive Programming, YouTube SEO, Team Collaboration.
-- Contact & Links: WhatsApp +8801971124566 (https://wa.me/8801971124566), Email towasin344533@gmail.com, Fiverr YouTube SEO Gig (https://www.fiverr.com/s/7jjoqyL), GitHub (https://github.com/Towasin4578), LinkedIn (https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350).
-Instructions:
-- Answer questions about Ashraf accurately AND answer ANY general question (coding, math, science, general knowledge, career advice, casual friendly conversation) naturally and helpfully!
-- If the user writes in Bengali or Banglish (Bengali written in English alphabet), reply warmly in fluent Bengali (বাংলা). If in English, reply in friendly English. Keep responses concise and well-formatted.`;
+  const CLOUD_AI_SYSTEM_PROMPT = `You are Towasin AI — a real, intelligent, warm, and conversational AI assistant on the portfolio website of Ashraf Siddiki Towasin (nicknamed Towasin), an undergraduate student in Electrical & Electronic Engineering (EEE) at Barishal Engineering College, programmer, and aspiring software engineer from Bangladesh.
+
+Complete Profile of Ashraf Siddiki Towasin (use this knowledge to answer any question about him naturally in your own words):
+- Full Name: Ashraf Siddiki Towasin (আশরাফ সিদ্দিকী তোয়াসিন)
+- Current Role: B.Sc. Undergraduate Student in Electrical & Electronic Engineering (EEE) at Barishal Engineering College (বরিশাল ইঞ্জিনিয়ারিং কলেজ), 2025 — Present.
+- Previous Education:
+  * College (HSC, 2023 — 2025): Dr. Mosharraf Foundation Degree College (ড. মোশাররফ ফাউন্ডেশন ডিগ্রি কলেজ), where he mastered C programming, pointers, data structures, and HTML/CSS.
+  * High School (SSC, 2018 — 2023): Gouripur SA High School (গৌরীপুর এস.এ. হাই স্কুল), Cumilla — where his passion for coding, science clubs, and problem-solving began.
+- Hometown & Country: Gouripur / Cumilla, Bangladesh (currently studying in Barishal).
+- Technical Skills: C Programming (core logic, pointers, memory allocation), Python (automation, scripting, EEE computing), Web Development (HTML5, CSS3, modern responsive UI — practicing continuously since January 10, 2023), Competitive Programming (algorithms & data structures), Mathematics, YouTube SEO (active freelancer on Fiverr), and Team Collaboration (Git & GitHub workflow).
+- Contact & Social Links:
+  * WhatsApp: +8801971124566 (https://wa.me/8801971124566)
+  * Email: towasin344533@gmail.com
+  * Fiverr (YouTube SEO Service): https://www.fiverr.com/s/7jjoqyL
+  * GitHub: https://github.com/Towasin4578
+  * LinkedIn: https://www.linkedin.com/in/ashraf-siddiki-towasin-b69863350
+  * Facebook: https://facebook.com/towasinn/
+  * Instagram: https://www.instagram.com/towasinn
+  * Telegram: https://t.me/Towasin14
+
+Important Instructions:
+1. Answer EVERY question naturally in your own words like ChatGPT/Gemini — never sound like a pre-written template.
+2. You can answer ANY general question on Earth (science, coding, math, general knowledge, history, daily life, casual conversation, jokes, advice, etc.) as well as anything about Ashraf Siddiki Towasin.
+3. Language Match: If the user writes in Bengali (বাংলা) or Banglish (Bengali written in English letters, like "aske koy tarik", "tumi ke", "towasin kothay pore"), reply in natural, friendly Bengali (বাংলা). If the user writes in English, reply in friendly English.`;
+
+  function buildDynamicSystemPrompt() {
+    const now = new Date();
+    const bnDate = now.toLocaleDateString('bn-BD', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const enDate = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    return `${CLOUD_AI_SYSTEM_PROMPT}\n\n[Live Context — Today's Date: ${enDate} (${bnDate}), Current Time: ${timeStr}]`;
+  }
+
+  // Direct Browser-Side Google Gemini REST API Call (when user sets their Gemini API key)
+  async function fetchDirectGeminiAPI(userText, apiKey) {
+    const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+    const contents = chatHistory.slice(-8).map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }],
+    }));
+    contents.push({ role: 'user', parts: [{ text: userText }] });
+
+    for (const model of models) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: {
+              parts: [{ text: buildDynamicSystemPrompt() }],
+            },
+            contents,
+          }),
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+          const data = await res.json();
+          const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (reply && reply.trim().length > 1) return reply.trim();
+        }
+      } catch (_e) {}
+    }
+    return null;
+  }
+
+  // Live Wikipedia Knowledge Lookup (fallback when LLM endpoints are unreachable)
+  async function fetchWikipediaSummary(userText, useBn) {
+    const cleaned = userText
+      .replace(/^(?:what is|who is|tell me about|explain|define|কে এই|কী এই|সম্পর্কে বলো|বলো|কি|কে)\s+/i, '')
+      .replace(/\s*(?:কি|কী|কে|সম্পর্কে বলো|সম্পর্কে জানাও|ka ke bole|kake bole|ki|ke|\?)+$/i, '')
+      .trim();
+    if (!cleaned || cleaned.length < 2 || cleaned.split(/\s+/).length > 7) return null;
+
+    const langs = useBn ? ['bn', 'en'] : ['en', 'bn'];
+    for (const lang of langs) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5500);
+        const searchUrl = `https://${lang}.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(cleaned)}&limit=1&namespace=0&format=json&origin=*`;
+        const searchRes = await fetch(searchUrl, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (!searchRes.ok) continue;
+        const searchData = await searchRes.json();
+        const bestTitle = searchData?.[1]?.[0];
+        if (!bestTitle) continue;
+
+        const sumController = new AbortController();
+        const sumTimeout = setTimeout(() => sumController.abort(), 5500);
+        const sumUrl = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(bestTitle)}`;
+        const sumRes = await fetch(sumUrl, { signal: sumController.signal });
+        clearTimeout(sumTimeout);
+        if (!sumRes.ok) continue;
+        const sumData = await sumRes.json();
+        if (sumData?.extract && sumData.extract.length > 25 && sumData.type !== 'disambiguation') {
+          const pageUrl = sumData?.content_urls?.desktop?.page || `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(bestTitle)}`;
+          return `🌐 **${sumData.title}:**\n${sumData.extract}\n\n🔗 [আরও পড়ুন (Wikipedia)](${pageUrl})`;
+        }
+      } catch (_e) {}
+    }
+    return null;
+  }
+
+  function isValidCloudText(txt) {
+    if (!txt || txt.length < 2) return false;
+    if (/IMPORTANT NOTICE|pollinations\.ai|deprecated|rate limit|Too Many Requests|cloudflare|502 Bad Gateway/i.test(txt)) {
+      return false;
+    }
+    return true;
+  }
 
   async function fetchFreeCloudAI(userText) {
+    // 1. If user has saved a Google Gemini API key, call Google Gemini directly first!
+    const storedKey = getStoredGeminiKey();
+    if (storedKey) {
+      const geminiReply = await fetchDirectGeminiAPI(userText, storedKey);
+      if (geminiReply) return geminiReply;
+    }
+
+    const sysPrompt = buildDynamicSystemPrompt();
     const recentMessages = chatHistory.slice(-6).map(m => ({
       role: m.role,
       content: m.content,
     }));
+    const fullMessages = [
+      { role: 'system', content: sysPrompt },
+      ...recentMessages,
+      { role: 'user', content: userText },
+    ];
 
-    // 1. Primary multi-turn OpenAI-compatible Cloud AI endpoint
+    // 2. Primary Free Keyless OpenAI-Compatible Cloud LLM Gateway (LLM7.io - CORS enabled, no API key required)
+    const llm7Models = ['default', 'fast', 'gpt-4o-mini'];
+    for (const modelName of llm7Models) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 9000);
+        const res = await fetch('https://api.llm7.io/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer unused',
+          },
+          body: JSON.stringify({
+            model: modelName,
+            messages: fullMessages,
+            stream: false,
+          }),
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+        if (res.ok) {
+          const data = await res.json();
+          const msg = data?.choices?.[0]?.message?.content;
+          if (msg && isValidCloudText(String(msg).trim())) {
+            return String(msg).trim();
+          }
+        }
+      } catch (_errLlm7) {}
+    }
+
+    // 3. Secondary Free Keyless Cloud LLM Endpoint (OVHcloud AI Endpoints - Llama 3.3 70B Instruct)
+    try {
+      const controllerOvh = new AbortController();
+      const timeoutOvh = setTimeout(() => controllerOvh.abort(), 9000);
+      const resOvh = await fetch('https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'Meta-Llama-3_3-70B-Instruct',
+          messages: fullMessages,
+          max_tokens: 600,
+        }),
+        signal: controllerOvh.signal,
+      });
+      clearTimeout(timeoutOvh);
+      if (resOvh.ok) {
+        const dataOvh = await resOvh.json();
+        const msgOvh = dataOvh?.choices?.[0]?.message?.content;
+        if (msgOvh && isValidCloudText(String(msgOvh).trim())) {
+          return String(msgOvh).trim();
+        }
+      }
+    } catch (_errOvh) {}
+
+    // 4. Tertiary Cloud AI endpoint
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const timeoutId = setTimeout(() => controller.abort(), 6500);
       const res = await fetch('https://text.pollinations.ai/openai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'openai',
-          messages: [
-            { role: 'system', content: CLOUD_AI_SYSTEM_PROMPT },
-            ...recentMessages,
-            { role: 'user', content: userText },
-          ],
+          messages: fullMessages,
         }),
         signal: controller.signal,
       });
@@ -2713,26 +3090,13 @@ Instructions:
           try {
             const parsed = JSON.parse(raw);
             const msg = parsed?.choices?.[0]?.message?.content || parsed?.reply || parsed?.content;
-            if (msg && String(msg).trim().length > 1) return String(msg).trim();
+            if (msg && isValidCloudText(String(msg).trim())) return String(msg).trim();
           } catch (_e) {}
-        } else if (raw.length > 2) {
+        } else if (isValidCloudText(raw)) {
           return raw;
         }
       }
     } catch (_err1) {}
-
-    // 2. Zero-preflight GET Cloud AI fallback (works across all browsers & static hosts)
-    try {
-      const controller2 = new AbortController();
-      const timeoutId2 = setTimeout(() => controller2.abort(), 10000);
-      const url = `https://text.pollinations.ai/${encodeURIComponent(userText)}?model=openai&system=${encodeURIComponent(CLOUD_AI_SYSTEM_PROMPT)}`;
-      const res2 = await fetch(url, { method: 'GET', signal: controller2.signal });
-      clearTimeout(timeoutId2);
-      if (res2.ok) {
-        const text = (await res2.text()).trim();
-        if (text && text.length > 2) return text;
-      }
-    } catch (_err2) {}
 
     return null;
   }
@@ -2740,6 +3104,18 @@ Instructions:
   async function handleSend(userText) {
     const trimmed = userText.trim();
     if (!trimmed || isSending) return;
+
+    // Allow pasting a Google Gemini API key directly in chat (e.g. "AIzaSy..." or "/key AIzaSy...")
+    const keyMatch = trimmed.match(/^(?:\/key\s+)?(AIza[0-9A-Za-z\-_]{30,})$/);
+    if (keyMatch) {
+      const newKey = keyMatch[1];
+      try { localStorage.setItem(GEMINI_KEY_STORAGE, newKey); } catch (_e) {}
+      updateKeyUI();
+      input.value = '';
+      appendMessage('user', '🔑 API Key: AIza••••••••••••••••');
+      appendMessage('assistant', '✅ **Google Gemini API Key সফলভাবে কানেক্ট হয়েছে!** এখন থেকে আপনি যেকোনো প্রশ্ন করলে সরাসরি **Google Gemini AI** নিজের ভাষায় গুছিয়ে উত্তর দেবে।');
+      return;
+    }
 
     isSending = true;
     input.value = '';
@@ -2749,13 +3125,25 @@ Instructions:
     const typingEl = showTypingIndicator();
 
     try {
-      // Directly use Free Cloud AI on static hosts (.pages.dev, .github.io, etc.) without waiting on /api/chat
-      const cloudReply = await fetchFreeCloudAI(trimmed);
-      if (!cloudReply) {
-        await new Promise(resolve => setTimeout(resolve, 320));
+      const useBn = detectUseBn(trimmed);
+
+      // Step 1 (ALWAYS FIRST): Ask Real Cloud LLM (Gemini / LLM7 GPT-4o-mini / Llama-3.3-70B)
+      // so the AI composes every answer dynamically in its own words ("মন মতো গুছিয়ে")!
+      let finalReply = await fetchFreeCloudAI(trimmed);
+
+      // Step 2: Only if offline or all Cloud LLMs are unreachable (e.g. inside an offline sandbox),
+      // use local fallback + Wikipedia so it still never breaks!
+      if (!finalReply) {
+        finalReply =
+          trySolveMath(trimmed, useBn) ||
+          tryAnswerDateTime(trimmed, useBn) ||
+          tryGenerateCode(trimmed, useBn) ||
+          generateSmartPortfolioReply(trimmed, true) ||
+          (await fetchWikipediaSummary(trimmed, useBn)) ||
+          generateSmartPortfolioReply(trimmed, false);
       }
+
       typingEl.remove();
-      const finalReply = cloudReply || generateSmartPortfolioReply(trimmed);
       appendMessage('assistant', finalReply);
       chatHistory.push({ role: 'assistant', content: finalReply });
     } finally {
