@@ -1642,20 +1642,7 @@ document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*
         <strong id="chat-header-title">Towasin AI Assistant</strong>
         <span id="chat-header-sub">Portfolio Guide · Powered by Gemini</span>
       </div>
-      <button type="button" class="chat-minimize-btn" id="chat-key-btn" title="Set Gemini API Key (Optional)" aria-label="Set Gemini API Key" style="margin-right:6px;font-size:.82rem">🔑</button>
       <button type="button" class="chat-minimize-btn" id="chat-close-btn" aria-label="Close chat">✕</button>
-    </div>
-
-    <!-- Optional Gemini API Key Bar (toggled by 🔑 button) -->
-    <div id="chat-key-drawer" style="display:none;padding:8px 12px;background:rgba(14,18,32,.96);border-bottom:1px solid rgba(125,232,255,.18);font-size:.76rem;color:#c9d4f0">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-        <span>🔑 <strong>Google Gemini API Key</strong> <span style="opacity:.7">(aistudio.google.com)</span></span>
-        <span id="chat-key-status" style="font-size:.7rem;color:#7de8ff">Built-in Smart AI Active</span>
-      </div>
-      <div style="display:flex;gap:6px">
-        <input type="password" id="chat-key-input" placeholder="Paste AIzaSy... key here" autocomplete="off" style="flex:1;background:#080b12;border:1px solid rgba(255,255,255,.15);border-radius:7px;padding:5px 8px;color:#fff;font-size:.75rem;outline:none" />
-        <button type="button" id="chat-key-save" style="background:linear-gradient(135deg,#00d2ff,#3a7bd5);color:#fff;border:none;border-radius:7px;padding:5px 10px;font-size:.74rem;font-weight:600;cursor:pointer">Save</button>
-      </div>
     </div>
 
     <!-- Quick prompt chips -->
@@ -2878,9 +2865,9 @@ function setupGeminiChatbot() {
 
     // 18. Smart Context-Aware Conversational Fallback (Never shows repetitive robotic menu!)
     if (useBn || uiIsBn) {
-      return `আপনার প্রশ্নটি বুঝতে পেরেছি! 😊\n\nআপনি চাইলে আমাকে সরাসরি এভাবেও জিজ্ঞেস করতে পারেন:\n• 📅 **তারিখ ও সময়:** *"আজকে কয় তারিখ?"* বা *"কয়টা বাজে?"*\n• 🧮 **যেকোনো হিসাব:** যেমন \`125 * 48\`, \`500 এর 20%\`, \`৭ এর নামতা\`\n• 💻 **কোড লেখা:** যেমন *"Write a C program for prime number"* বা *"Python calculator code"*\n• 🎓 **তোয়াসিন সম্পর্কে:** *"তোয়াসিন কোথায় পড়ে?"* বা *"তার সাথে যোগাযোগ করব কীভাবে?"*\n\n💡 *(টিপস: চ্যাটবক্সের উপরের **🔑** বাটনে ক্লিক করে আপনার ফ্রি Google Gemini API Key বসালে যেকোনো জটিল বিষয়েরও সম্পূর্ণ লাইভ উত্তর পাবেন!)*`;
+      return `আপনার প্রশ্নটি বুঝতে পেরেছি! 😊\n\nআপনি চাইলে আমাকে সরাসরি এভাবেও জিজ্ঞেস করতে পারেন:\n• 📅 **তারিখ ও সময়:** *"আজকে কয় তারিখ?"* বা *"কয়টা বাজে?"*\n• 🧮 **যেকোনো হিসাব:** যেমন \`125 * 48\`, \`500 এর 20%\`, \`৭ এর নামতা\`\n• 💻 **কোড লেখা:** যেমন *"Write a C program for prime number"* বা *"Python calculator code"*\n• 🎓 **তোয়াসিন সম্পর্কে:** *"তোয়াসিন কোথায় পড়ে?"* বা *"তার সাথে যোগাযোগ করব কীভাবে?"*`;
     }
-    return `Got your message! 😊\n\nHere are some things I can answer right away:\n• 📅 **Date & Time:** *"What is today's date?"* or *"What time is it?"*\n• 🧮 **Math & Conversions:** e.g. \`125 * 48\`, \`20% of 500\`, \`37 C to F\`, \`table of 9\`\n• 💻 **Write Code:** e.g. *"C program for prime number"* or *"Python fibonacci code"*\n• 🎓 **About Ashraf:** His EEE journey at Barishal Engineering College, skills, or contact info.\n\n💡 *(Tip: Click the **🔑** button at the top of the chat to add a free Google Gemini API key for unlimited live Gemini 2.0 Flash responses!)*`;
+    return `Got your message! 😊\n\nHere are some things I can answer right away:\n• 📅 **Date & Time:** *"What is today's date?"* or *"What time is it?"*\n• 🧮 **Math & Conversions:** e.g. \`125 * 48\`, \`20% of 500\`, \`37 C to F\`, \`table of 9\`\n• 💻 **Write Code:** e.g. *"C program for prime number"* or *"Python fibonacci code"*\n• 🎓 **About Ashraf:** His EEE journey at Barishal Engineering College, skills, or contact info.`;
   }
 
   const CLOUD_AI_SYSTEM_PROMPT = `You are Towasin AI — a real, intelligent, warm, and conversational AI assistant on the portfolio website of Ashraf Siddiki Towasin (nicknamed Towasin), an undergraduate student in Electrical & Electronic Engineering (EEE) at Barishal Engineering College, programmer, and aspiring software engineer from Bangladesh.
