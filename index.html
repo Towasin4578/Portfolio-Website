@@ -60,21 +60,21 @@ nav a.on:after,nav a:hover:after{transform:scaleX(1)}
 .lang-opt{color:#777;font-weight:500;transition:color .2s ease,font-weight .2s ease}
 .lang-opt.active{color:#fff;font-weight:700}
 .lang-div{color:#555;font-size:.65rem}
-@media(max-width:768px){nav{padding:10px 14px;gap:8px}nav b{font-size:.74rem}nav .nl{gap:11px;font-size:.66rem;flex:1}}
-@media(max-width:560px){nav b{display:none}nav{padding:9px 12px;gap:8px;justify-content:space-between}nav .nl{gap:9px;font-size:.64rem;flex:1}}
+@media(max-width:768px){nav{padding:10px 12px;gap:8px}nav b{font-size:.72rem}nav .nl{gap:10px;font-size:.64rem;flex:1}}
+@media(max-width:560px){nav b{display:none}nav{padding:9px 8px;gap:6px;justify-content:space-between}nav .nl{gap:7px;font-size:.58rem;flex:1;justify-content:space-between}.lang-btn{padding:3px 8px;font-size:.62rem;gap:2px}}
 /* hero */
-#hero{position:relative;background:#000;height:100svh;min-height:560px;text-align:center;overflow:hidden;width:100%;max-width:100vw}
-.ttl{position:absolute;z-index:1;left:50%;bottom:calc(var(--hbh,64px) + 3.5vh + 18px);transform:translateX(-50%);white-space:nowrap;font-weight:700;font-size:clamp(2.1rem,8.5vw,5.4rem);line-height:1;letter-spacing:-.025em;opacity:0;pointer-events:none;max-width:94vw}
+#hero{position:relative;background:#000;height:100svh;min-height:520px;text-align:center;overflow:hidden;width:100%;max-width:100vw}
+.ttl{position:absolute;z-index:2;left:50%;top:400px;bottom:auto;transform:translateX(-50%);white-space:nowrap;font-weight:700;font-size:clamp(2.25rem,7.2vw,4.8rem);line-height:1;letter-spacing:-.025em;opacity:0;pointer-events:none;max-width:94vw}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.hero-b{position:absolute;z-index:3;left:4vw;right:4vw;bottom:3.5vh;display:flex;justify-content:space-between;align-items:center;gap:16px;opacity:0;transition:opacity 1s;max-width:92vw;margin:0 auto}
+.hero-b{position:absolute;z-index:3;left:50%;right:auto;top:470px;bottom:auto;transform:translateX(-50%);width:min(92vw,760px);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;opacity:0;transition:opacity 1s;margin:0 auto}
 .hero-b.on{opacity:1}
-.hero-b p{font-size:1.14rem;color:#d4d4d4;text-align:left;font-style:normal;font-weight:400;letter-spacing:.015em;max-width:100%;overflow-wrap:break-word}
+.hero-b p{font-size:1.06rem;color:#d4d4d4;text-align:center;font-style:normal;font-weight:400;letter-spacing:.015em;max-width:100%;overflow-wrap:break-word;line-height:1.45}
 .hero-b p b{color:#fff;font-style:normal;font-weight:600}
 .hb{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-.hb a{padding:12px 26px;border:1px solid var(--l);border-radius:26px;font-size:.88rem;font-weight:500;color:#ddd;background:#0009;transition:.3s;white-space:nowrap}
+.hb a{padding:11px 24px;border:1px solid var(--l);border-radius:26px;font-size:.86rem;font-weight:500;color:#ddd;background:#0009;transition:.3s;white-space:nowrap}
 .hb a.fill{background:#ece8dc;color:#111;border-color:#ece8dc}
 .hb a:hover{transform:translateY(-2px)}
-@media(max-width:720px){#hero{min-height:520px}.ttl{font-size:clamp(1.95rem,10.5vw,3.4rem);bottom:calc(var(--hbh,80px) + 2.5vh + 14px)}.hero-b{flex-direction:column;bottom:2.2vh;gap:10px;left:14px;right:14px;max-width:calc(100vw - 28px)}.hero-b p{text-align:center;font-size:.86rem;line-height:1.45;padding:0 4px}.hb{gap:8px;width:100%}.hb a{padding:9px 18px;font-size:.78rem}}
+@media(max-width:720px){#hero{min-height:480px}.ttl{font-size:clamp(2.15rem,11vw,3.3rem)}.hero-b{gap:12px;width:calc(100vw - 28px)}.hero-b p{text-align:center;font-size:.86rem;line-height:1.45;padding:0 4px}.hb{gap:10px;width:100%}.hb a{padding:9px 20px;font-size:.8rem}}
 /* top reading scroll progress bar */
 #scroll-progress{position:fixed;top:0;left:0;height:2.5px;width:0%;background:linear-gradient(90deg,#7de8ff 0%,#ffffff 50%,#a78bfa 100%);z-index:120;pointer-events:none;box-shadow:0 0 10px rgba(125,232,255,.6);transition:width .08s ease-out}
 
@@ -689,6 +689,7 @@ h2.connect-chromatic{
     if(done)return;done=true;timers.forEach(clearTimeout);
     window.dustStart=performance.now();document.body.classList.remove('lock');
     if(skip===true||!word.textContent.trim()){intro.classList.add('out');showHero();setTimeout(()=>intro.remove(),1000);return}
+    if(window.__fitHero)window.__fitHero();
     const wr=word.getBoundingClientRect(),tr=title.getBoundingClientRect();
     const dx=(tr.left+tr.width/2)-(wr.left+wr.width/2),dy=(tr.top+tr.height/2)-(wr.top+wr.height/2),sc=tr.width/wr.width;
     intro.classList.add('fly');
@@ -763,31 +764,75 @@ h2.connect-chromatic{
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.15});
 document.querySelectorAll('.r').forEach((el,i)=>{el.style.transitionDelay=(i%4)*.08+'s';io.observe(el)});
 
-/* ===== HERO LAYOUT: keeps the subtitle and photo clear of the big title with guaranteed breathing room ===== */
+/* ===== HERO LAYOUT: keeps the photo, TOWASIN title, and subtitle/buttons in a tight, harmonious group on both mobile & laptop ===== */
 (function(){
-  const hero=document.getElementById('hero'),hb=document.querySelector('.hero-b'),ttl=document.getElementById('ttl'),pt=document.getElementById('pt');
+  const hero=document.getElementById('hero'),hb=document.querySelector('.hero-b'),ttl=document.getElementById('ttl'),pt=document.getElementById('pt'),navEl=document.querySelector('nav');
   function fit(){
-    hero.style.setProperty('--hbh',hb.offsetHeight+'px');
     const ar=parseFloat(getComputedStyle(pt).getPropertyValue('--ar'))||.75;
-    const hr=hero.getBoundingClientRect(),tr=ttl.getBoundingClientRect();
-    const isMobile=window.innerWidth<=640;
-    const isSmall=window.innerWidth<=380;
-    const top0=isMobile?58:76;
-    const gap=isMobile?12:24;
-    // Available vertical space between top nav and title
-    const room=Math.max(115, tr.top - hr.top - top0 - gap);
-    // Proportionate photo height across all devices
-    const maxH=isSmall?225:(isMobile?260:380);
-    const maxW=isMobile?(window.innerWidth*0.58):(window.innerWidth*0.35);
-    const s=Math.max(120, Math.min(room, maxH, maxW/ar));
-    pt.style.setProperty('--s',Math.round(s)+'px');
-    const ptTop=top0 + Math.max(0, Math.round((room - s)/2));
-    pt.style.top=ptTop+'px';
+    const vw=window.innerWidth,vh=window.innerHeight;
+    const isMobile=vw<=720;
+    const isSmall=vw<=380;
+    const navH=navEl?navEl.offsetHeight:(isMobile?44:54);
+    const ttlH=ttl.offsetHeight||44;
+    const hbH=hb.offsetHeight||82;
+
+    // Tight, harmonious spacing between Photo -> TOWASIN -> Subtitle/Buttons
+    const gapPhotoToTitle=isMobile?16:20;
+    const gapTitleToBar=isMobile?12:16;
+
+    if(isMobile){
+      // On mobile: compact top breathing space, proportional photo, and tight stack with zero excess void
+      const topPad=navH+20;
+      const botPad=28;
+      const maxH=isSmall?245:285;
+      const maxW=vw*0.62;
+      const s=Math.round(Math.max(185,Math.min(maxH,maxW/ar)));
+      pt.style.setProperty('--s',s+'px');
+      pt.style.top=topPad+'px';
+
+      const ttlTop=topPad+s+gapPhotoToTitle;
+      ttl.style.top=ttlTop+'px';
+      ttl.style.bottom='auto';
+
+      const hbTop=ttlTop+ttlH+gapTitleToBar;
+      hb.style.top=hbTop+'px';
+      hb.style.bottom='auto';
+
+      const totalHeroH=hbTop+hbH+botPad;
+      hero.style.height=totalHeroH+'px';
+      hero.style.minHeight=totalHeroH+'px';
+    }else{
+      // On laptop / desktop: center the cohesive [Photo + TOWASIN + Subtitle/Buttons] group vertically in the viewport
+      const topPad=navH+24;
+      const botPad=28;
+      const availH=Math.max(480,vh-topPad-botPad);
+      const availForPhoto=availH-ttlH-hbH-gapPhotoToTitle-gapTitleToBar;
+      const maxH=330;
+      const maxW=Math.min(285,vw*0.3);
+      const s=Math.round(Math.max(190,Math.min(availForPhoto,maxH,maxW/ar)));
+      pt.style.setProperty('--s',s+'px');
+
+      const groupH=s+gapPhotoToTitle+ttlH+gapTitleToBar+hbH;
+      const totalHeroH=Math.max(vh,groupH+topPad+botPad);
+      hero.style.height=totalHeroH+'px';
+      hero.style.minHeight=totalHeroH+'px';
+
+      const ptTop=topPad+Math.max(0,Math.round((totalHeroH-topPad-botPad-groupH)*0.48));
+      pt.style.top=ptTop+'px';
+
+      const ttlTop=ptTop+s+gapPhotoToTitle;
+      ttl.style.top=ttlTop+'px';
+      ttl.style.bottom='auto';
+
+      const hbTop=ttlTop+ttlH+gapTitleToBar;
+      hb.style.top=hbTop+'px';
+      hb.style.bottom='auto';
+    }
   }
-  if('ResizeObserver' in window){new ResizeObserver(fit).observe(hb);new ResizeObserver(fit).observe(hero)}
+  if('ResizeObserver' in window){new ResizeObserver(fit).observe(hb)}
   addEventListener('resize',fit);addEventListener('load',fit);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
-  fit();setTimeout(fit,600);window.__fitHero=fit;
+  fit();setTimeout(fit,300);setTimeout(fit,700);window.__fitHero=fit;
 })();
 
 /* ===== HERO PHOTO CINEMATIC 3D TILT & HOLOGRAPHIC REVEAL ===== */
